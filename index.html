@@ -118,7 +118,7 @@ label{display:block;font-size:.75rem;font-weight:600;color:var(--muted);margin-b
 @media(max-width:768px){.sidebar{display:none}.main{margin-left:0}.form-row{grid-template-columns:1fr}}
 </style>
 </head>
-<body> <div class="topbar">
+<body><div class="topbar">
   <div class="logo">Sports <span>803</span> <span style="font-size:.65rem;color:var(--muted);font-weight:400;margin-left:4px">AI Auto-Post v5 (Logo Fix)</span></div>
   <div class="topbar-right">
     <span id="auth-status" style="font-size:.75rem;color:var(--muted)">⚪ Not signed in</span>
@@ -452,7 +452,7 @@ label{display:block;font-size:.75rem;font-weight:600;color:var(--muted);margin-b
 </div>
 
 <div id="toast-container"></div>
-<script src="https://accounts.google.com/gsi/client" async></script> <script>
+<script src="https://accounts.google.com/gsi/client" async></script><script>
 'use strict';
 
 // ==================== CONSTANTS ====================
@@ -699,7 +699,7 @@ function renderEventCards(events) { ... } // keep original
 // We need to replace drawMatchThumb and drawRaceThumb to use loadLogoWithFallback
 // I'll provide these updated functions in the next part because they are large.
 
-// ... (continue in next part) // ==================== THUMBNAIL BUILDER (with enhanced logo loading) ====================
+// ... (continue in next part)// ==================== THUMBNAIL BUILDER (with enhanced logo loading) ====================
 // Helper functions for canvas drawing
 function drawS803Badge(ctx, W, H, scale=1) {
   const pad=Math.round(12*scale), bw=Math.round(120*scale), bh=Math.round(30*scale);
@@ -1028,7 +1028,7 @@ function updateStatBar(){...}
 function openModal(id){...}
 function closeModal(id){...}
 document.querySelectorAll('.modal-overlay').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open');}));
-function toast(msg,type='info'){...} // ==================== AI CONTENT (unchanged) ====================
+function toast(msg,type='info'){...}// ==================== AI CONTENT (unchanged) ====================
 function generateAIContent() {
   const title = document.getElementById('post-title').value;
   if (!title) { toast('Enter a title first','info'); return; }
