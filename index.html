@@ -480,17 +480,38 @@ async function fetchTheSportsDB(teamName) {
   if (!teamName) return '';
   const key = teamName.toLowerCase().trim();
   if (LOGO_CACHE[key] !== undefined) return LOGO_CACHE[key];
-  try {
-    const res = await fetch(`https://www.thesportsdb.com/api/v1/json/3/searchteams.php?t=${encodeURIComponent(teamName)}`);
-    const data = await res.json();
-    const team = data?.teams?.[0];
-    const url = team?.strTeamBadge || team?.strTeamLogo || '';
-    LOGO_CACHE[key] = url;
-    return url;
-  } catch {
-    LOGO_CACHE[key] = '';
-    return '';
+  
+  // Try original name, then without common suffixes
+  const variations = [teamName];
+  // Remove "FC", "SC", "United", etc.
+  let cleaned = teamName.replace(/\s*(FC|SC|CF|UD|CD|Racing|Club|Sporting|Athletic)\s*$/i, '').trim();
+  if (cleaned !== teamName) variations.push(cleaned);
+  // Also try just the first word
+  const firstWord = teamName.split(/\s+/)[0];
+  if (firstWord !== teamName && !variations.includes(firstWord)) variations.push(firstWord);
+  
+  for (const name of variations) {
+    try {
+      console.log(`[Logo] Trying TheSportsDB for "${name}"`);
+      const res = await fetch(`https://www.thesportsdb.com/api/v1/json/3/searchteams.php?t=${encodeURIComponent(name)}`);
+      const data = await res.json();
+      const team = data?.teams?.[0];
+      if (team) {
+        const url = team.strTeamBadge || team.strTeamLogo || '';
+        if (url) {
+          LOGO_CACHE[key] = url;
+          console.log(`[Logo] Found: ${url}`);
+          return url;
+        }
+      }
+    } catch (e) {
+      console.warn(`[Logo] TheSportsDB error for ${name}:`, e.message);
+    }
   }
+  LOGO_CACHE[key] = '';
+  console.log(`[Logo] No logo found for ${teamName}`);
+  return '';
+}
 }
 
 async function fetchTheSportsDBPlayer(playerName) {
@@ -541,47 +562,55 @@ async function fetchFighterImage(fighterName, leagueId) {
 }
 
 async function resolveLogo(espnLogoUrl, teamName, leagueId) {
+  console.log(`[Logo] Resolving for ${teamName} (${leagueId}), ESPN URL:`, espnLogoUrl);
   // 1. Use ESPN if available
   if (espnLogoUrl) {
-    // Rewrite ESPN logo to CDN
     let cleaned = espnLogoUrl.replace(/^http:/, 'https:');
     if (cleaned.includes('a.espncdn.com')) {
       cleaned = cleaned.replace(/\/\d+\.png/, '/500.png');
     }
+    console.log(`[Logo] Using ESPN: ${cleaned}`);
     return cleaned;
   }
   // 2. For MMA/Boxing, try fighter images
   if (leagueId === 'ufc' || leagueId === 'boxing') {
     const fighter = await fetchFighterImage(teamName, leagueId);
-    if (fighter) return fighter;
+    if (fighter) {
+      console.log(`[Logo] Fighter image: ${fighter}`);
+      return fighter;
+    }
   }
   // 3. Cricket special
   if (leagueId === 'cricket') {
     const cricket = await fetchCricketLogo(teamName);
-    if (cricket) return cricket;
+    if (cricket) {
+      console.log(`[Logo] Cricket logo: ${cricket}`);
+      return cricket;
+    }
   }
   // 4. TheSportsDB team
   const tsdb = await fetchTheSportsDB(teamName);
-  if (tsdb) return tsdb;
+  if (tsdb) {
+    console.log(`[Logo] TheSportsDB: ${tsdb}`);
+    return tsdb;
+  }
   // 5. Return empty (will show placeholder)
+  console.log(`[Logo] No logo found for ${teamName}`);
   return '';
 }
 
 // Batch enrich events with resolved logos
 async function enrichEventLogos(events) {
+  console.log(`[Logo] Enriching ${events.length} events...`);
   for (const ev of events) {
     if (ev.type === 'match') {
-      if (!ev.home.logo) {
-        ev.home.logo = await resolveLogo(ev.home.logo, ev.home.name, ev.league.id);
-      } else {
-        ev.home.logo = await resolveLogo(ev.home.logo, ev.home.name, ev.league.id);
-      }
-      if (!ev.away.logo) {
-        ev.away.logo = await resolveLogo(ev.away.logo, ev.away.name, ev.league.id);
-      } else {
-        ev.away.logo = await resolveLogo(ev.away.logo, ev.away.name, ev.league.id);
-      }
+      console.log(`[Logo] Processing ${ev.home.name} vs ${ev.away.name} (${ev.league.id})`);
+      ev.home.logo = await resolveLogo(ev.home.logo, ev.home.name, ev.league.id);
+      ev.away.logo = await resolveLogo(ev.away.logo, ev.away.name, ev.league.id);
     }
+  }
+  console.log('[Logo] Enrichment complete');
+}
   }
 }
 
