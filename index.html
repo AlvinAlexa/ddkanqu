@@ -512,7 +512,6 @@ async function fetchTheSportsDB(teamName) {
   console.log(`[Logo] No logo found for ${teamName}`);
   return '';
 }
-}
 
 async function fetchTheSportsDBPlayer(playerName) {
   if (!playerName) return '';
@@ -563,23 +562,37 @@ async function fetchFighterImage(fighterName, leagueId) {
 
 async function resolveLogo(espnLogoUrl, teamName, leagueId) {
   console.log(`[Logo] Resolving for ${teamName} (${leagueId}), ESPN URL:`, espnLogoUrl);
-  // 1. Use ESPN if available
+  
+  // 1. Use ESPN team logo if available and NOT a flag/athlete image
   if (espnLogoUrl) {
     let cleaned = espnLogoUrl.replace(/^http:/, 'https:');
     if (cleaned.includes('a.espncdn.com')) {
       cleaned = cleaned.replace(/\/\d+\.png/, '/500.png');
     }
-    console.log(`[Logo] Using ESPN: ${cleaned}`);
-    return cleaned;
+    // Skip ESPN flag/athlete images — these are country flags, not team logos
+    // (This is why UFC shows flags: ESPN returns athlete.flag.href for fighters)
+    const isFlagOrAthlete = cleaned.includes('/flag/') || cleaned.includes('/athlete/') || cleaned.includes('flag_');
+    if (!isFlagOrAthlete) {
+      console.log(`[Logo] Using ESPN: ${cleaned}`);
+      return cleaned;
+    }
+    console.log(`[Logo] Skipping ESPN flag/athlete image, trying better sources`);
   }
-  // 2. For MMA/Boxing, try fighter images
+  
+  // 2. For MMA/Boxing, try TheSportsDB player image first (headshot > flag)
   if (leagueId === 'ufc' || leagueId === 'boxing') {
     const fighter = await fetchFighterImage(teamName, leagueId);
     if (fighter) {
       console.log(`[Logo] Fighter image: ${fighter}`);
       return fighter;
     }
+    // Fall back to the ESPN flag if we have it and nothing better
+    if (espnLogoUrl) {
+      console.log(`[Logo] UFC/Boxing fallback to ESPN flag: ${espnLogoUrl.replace(/^http:/,'https:')}`);
+      return espnLogoUrl.replace(/^http:/, 'https:');
+    }
   }
+  
   // 3. Cricket special
   if (leagueId === 'cricket') {
     const cricket = await fetchCricketLogo(teamName);
@@ -588,13 +601,20 @@ async function resolveLogo(espnLogoUrl, teamName, leagueId) {
       return cricket;
     }
   }
-  // 4. TheSportsDB team
+  
+  // 4. TheSportsDB team lookup
   const tsdb = await fetchTheSportsDB(teamName);
   if (tsdb) {
     console.log(`[Logo] TheSportsDB: ${tsdb}`);
     return tsdb;
   }
-  // 5. Return empty (will show placeholder)
+  
+  // 5. Use any ESPN URL we have as last resort (even flags are better than initials)
+  if (espnLogoUrl) {
+    console.log(`[Logo] Last resort ESPN fallback: ${espnLogoUrl}`);
+    return espnLogoUrl.replace(/^http:/, 'https:');
+  }
+  
   console.log(`[Logo] No logo found for ${teamName}`);
   return '';
 }
@@ -610,8 +630,6 @@ async function enrichEventLogos(events) {
     }
   }
   console.log('[Logo] Enrichment complete');
-}
-  }
 }
 
 // loadImg for canvas – uses wsrv.nl as final proxy (CORS-friendly)
@@ -1131,7 +1149,10 @@ function parseESPNEvent(ev, league) {
   const getESPNLogo = (comp) => {
     const logos = comp.team?.logos || [];
     const best = logos.find(l=>l.href&&l.width>=40) || logos[0];
-    return best?.href || comp.athlete?.flag?.href || '';
+    // Do NOT use athlete.flag.href as generic fallback — flags are country images, not team logos.
+    // Exception: MMA/UFC uses flags intentionally (handled by resolveLogo's flag detection).
+    const isMMA = league.id === 'ufc' || league.id === 'boxing';
+    return best?.href || (isMMA ? (comp.athlete?.flag?.href || '') : '');
   };
   
   return {
@@ -1175,11 +1196,12 @@ function setPostLog(ev, data) { postLog[getEventKey(ev)] = {...(postLog[getEvent
 // RENDER CARDS — with resolved logo images
 // ═══════════════════════════════════════════════════════════
 function logoImg(url, teamName, cls='ec-team-logo') {
-  if (!url) {
-    const initial = teamName ? teamName[0].toUpperCase() : '?';
-    return `<div class="ec-team-placeholder" style="width:40px;height:40px;background:var(--bg3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:var(--muted)">${initial}</div>`;
-  }
-  return `<img class="${cls}" src="${url}" onerror="this.onerror=null; this.outerHTML='<div class=\"ec-team-placeholder\" style=\"width:40px;height:40px;background:var(--bg3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:var(--muted)\">${teamName?teamName[0].toUpperCase():'?'}</div>';" alt="${teamName||''}" style="width:40px;height:40px;object-fit:contain" loading="lazy">`;
+  const placeholder = `<div class="ec-team-placeholder" style="width:40px;height:40px;background:var(--bg3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:var(--muted)">${teamName?teamName[0].toUpperCase():'?'}</div>`;
+  if (!url) return placeholder;
+  // Route all external logo URLs through wsrv.nl proxy to bypass CORS restrictions
+  // (same proxy used by loadImg for canvas — this is why UFC flags worked there but not here)
+  const proxied = `https://wsrv.nl/?url=${encodeURIComponent(url)}&w=80&h=80&fit=contain&n=-1`;
+  return `<img class="${cls}" src="${proxied}" onerror="this.onerror=null;this.outerHTML='${placeholder.replace(/'/g,"\\'")}';" alt="${teamName||''}" style="width:40px;height:40px;object-fit:contain" loading="lazy">`;
 }
 
 function renderMatchCard(ev) {
