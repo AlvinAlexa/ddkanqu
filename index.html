@@ -353,14 +353,17 @@ label{display:block;font-size:.7rem;font-weight:700;color:var(–muted);margin-b
 
 <div class="page" id="page-events">
   <div class="page-header">
-    <div class="page-title">Live <span>Events</span></div>
-<div style="display:flex;align-items:center;gap:6px">
-  <label style="font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin:0">Target Date</label>
-  <input type="date" id="target-date" style="background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:5px 9px;font-size:.75rem;width:145px">
-</div>      <button class="btn" onclick="fetchAllEvents()"><span id="fetch-spinner" style="display:none" class="spinner"></span>🔄 Fetch All</button>
-      <button class="btn-orange" onclick="checkHighlights()">🎬 Post Highlights</button>
-      <button class="btn-green" onclick="bulkPostAll()">📤 Bulk Post All</button>
+  <div class="page-title">Live <span>Events</span></div>
+  <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+    <div style="display:flex;align-items:center;gap:6px">
+      <label style="font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin:0;white-space:nowrap">Target Date</label>
+      <input type="date" id="target-date" style="background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:5px 9px;font-size:.75rem;width:145px">
     </div>
+    <button class="btn" onclick="fetchAllEvents()"><span id="fetch-spinner" style="display:none" class="spinner"></span>🔄 Fetch All</button>
+    <button class="btn-orange" onclick="checkHighlights()">🎬 Post Highlights</button>
+    <button class="btn-green" onclick="bulkPostAll()">📤 Bulk Post All</button>
+  </div>
+</div>
   </div>
   <div class="league-pills" id="league-filter-pills"></div>
   <div class="search-bar"><input type="text" id="event-search" placeholder="Search events, teams, leagues…" oninput="filterEvents()"></div>
@@ -498,7 +501,24 @@ label{display:block;font-size:.7rem;font-weight:700;color:var(–muted);margin-b
       <div class="ij-text"><div class="ij-title">H2H Record</div><div class="ij-desc">Head-to-head historical summary</div></div>
     </button>
   </div>
-
+  <!-- Structural Headers -->
+  <div class="card">
+    <div class="card-title">🏷️ Insert Headers</div>
+    <div style="display:flex;flex-wrap:wrap;gap:5px">
+      <button class="btn-ghost btn-xs" onclick="insertHeader('h2','Head-to-Head Record')">H2 H2H</button>
+      <button class="btn-ghost btn-xs" onclick="insertHeader('h2','Predicted Lineups')">H2 Lineups</button>
+      <button class="btn-ghost btn-xs" onclick="insertHeader('h2','How to Watch')">H2 Watch</button>
+      <button class="btn-ghost btn-xs" onclick="insertHeader('h2','Match Preview')">H2 Preview</button>
+      <button class="btn-ghost btn-xs" onclick="insertHeader('h3','Key Players to Watch')">H3 Players</button>
+      <button class="btn-ghost btn-xs" onclick="insertHeader('h3','Recent Form')">H3 Form</button>
+    </div>
+    <div style="margin-top:8px">
+      <button class="injector-btn" onclick="insertMatchStatsTable()">
+        <span class="ij-icon">📋</span>
+        <div class="ij-text"><div class="ij-title">Match Details Table</div><div class="ij-desc">League · Teams · Time · Venue</div></div>
+      </button>
+    </div>
+  </div>
   <!-- Auto-labels -->
   <div class="card">
     <div class="card-title">🏷️ Label Presets</div>
@@ -611,7 +631,14 @@ label{display:block;font-size:.7rem;font-weight:700;color:var(–muted);margin-b
           <div><label>BG Color 2</label><input type="color" id="tb-bg2" value="#1a0010" oninput="debuildThumbnail()"></div>
         </div>
         <div class="form-group"><label>Race/Event Banner URL (optional)</label><input type="text" id="tb-banner" placeholder="Auto-fetched for known circuits" oninput="debuildThumbnail()"></div>
-        <div class="form-group"><label>Quality Preset</label>
+        <div class="form-group"><label>Aspect Ratio</label>
+          <select id="tb-aspect" onchange="debuildThumbnail()">
+            <option value="16:9">Blog / YouTube (16:9)</option>
+            <option value="1:1">Social Square (1:1)</option>
+            <option value="9:16">Stories / Reels (9:16)</option>
+          </select>
+        </div>
+         <div class="form-group"><label>Quality Preset</label>
           <select id="tb-quality" onchange="debuildThumbnail()">
             <option value="800">Standard (800×420)</option>
             <option value="1200">HD (1200×630)</option>
@@ -1834,7 +1861,38 @@ function applyLabelPreset(labels) {
   updateSEOMeter();
   toast('Labels applied ✓','success');
 }
+function insertHeader(tag, text) {
+  const body = document.getElementById('post-body');
+  const styled = tag==='h2'
+    ? `\n\n<${tag} style="color:#4cc9f0;font-size:1.1rem;font-weight:900;border-left:3px solid #e63946;padding-left:10px;margin:18px 0 10px">${text}</${tag}>\n`
+    : `\n\n<${tag} style="color:#e2e8f0;font-size:.95rem;font-weight:800;margin:14px 0 8px">${text}</${tag}>\n`;
+  body.value += styled;
+  updateSEOMeter();
+  toast(`${tag.toUpperCase()} "${text}" inserted ✓`,'success');
+}
 
+function insertMatchStatsTable() {
+  const title  = document.getElementById('post-title').value;
+  const parts  = title.split(/\s+vs\s+/i);
+  const home   = parts[0]?.trim() || 'Home Team';
+  const away   = parts[1]?.split(/[–\-|]/)[0]?.trim() || 'Away Team';
+  const labels = document.getElementById('post-labels').value;
+  const league = labels.split(',')[0]?.trim() || 'League';
+  const dt     = new Date().toLocaleString(undefined,{weekday:'long',year:'numeric',month:'long',day:'numeric',hour:'2-digit',minute:'2-digit'});
+  const table  = `\n\n<div style="background:#0e1320;border:1px solid #1e2d45;border-radius:10px;padding:16px;margin:16px 0;overflow-x:auto">
+<h3 style="color:#4cc9f0;font-size:.95rem;margin-bottom:12px;font-weight:800">📋 Match Details</h3>
+<table style="width:100%;border-collapse:collapse;font-size:.83rem">
+<tr style="border-bottom:1px solid #1e2d45"><td style="padding:8px 12px;color:#8a9bb5;width:38%">Competition</td><td style="padding:8px 12px;color:#e2e8f0;font-weight:700">${league}</td></tr>
+<tr style="border-bottom:1px solid #1e2d45"><td style="padding:8px 12px;color:#8a9bb5">Home Team</td><td style="padding:8px 12px;color:#e63946;font-weight:700">${home}</td></tr>
+<tr style="border-bottom:1px solid #1e2d45"><td style="padding:8px 12px;color:#8a9bb5">Away Team</td><td style="padding:8px 12px;color:#4cc9f0;font-weight:700">${away}</td></tr>
+<tr style="border-bottom:1px solid #1e2d45"><td style="padding:8px 12px;color:#8a9bb5">Date & Time</td><td style="padding:8px 12px;color:#e2e8f0">${dt}</td></tr>
+<tr style="border-bottom:1px solid #1e2d45"><td style="padding:8px 12px;color:#8a9bb5">Venue</td><td style="padding:8px 12px;color:#e2e8f0">TBC</td></tr>
+<tr><td style="padding:8px 12px;color:#8a9bb5">Live Stream</td><td style="padding:8px 12px;color:#06d6a0;font-weight:700">Sports 803 — Free HD</td></tr>
+</table></div>\n`;
+  document.getElementById('post-body').value += table;
+  updateSEOMeter();
+  toast('Match details table inserted ✓','success');
+}
 // ═══════════════════════════════════════════════════════════
 // OAUTH + BLOGGER
 // ═══════════════════════════════════════════════════════════
@@ -2052,11 +2110,18 @@ function removeStreamSource(btn) {
   updateIframePreviewBox();
 }
 function getMoraUrls() { return Array.from(document.querySelectorAll('.mora-input')).map(i=>i.value.trim()).filter(Boolean); }
-function buildIframeHtml(moraUrls) {
+function buildIframeHtml(moraUrls, includeBackups = false) {
   const base   = (document.getElementById('player-base')?.value||CFG.playerBase||PLAYER_BASE_DEFAULT).trim();
   const params = moraUrls.map(u=>`mora=${encodeURIComponent(u)}`).join('&');
   const src    = params ? `${base}?${params}` : base;
-  return `<div style="margin:18px 0"><iframe loading="lazy" sandbox="allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation" allow="encrypted-media" width="100%" height="500" src="${src}" frameborder="0" scrolling="no" allowfullscreen></iframe></div>`;
+  let html = `<div style="margin:18px 0"><iframe loading="lazy" sandbox="allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation" allow="encrypted-media" width="100%" height="500" src="${src}" frameborder="0" scrolling="no" allowfullscreen></iframe></div>`;
+  if (includeBackups && moraUrls.length > 0) {
+    const links = moraUrls.map((u,i) =>
+      `<a href="${base}?mora=${encodeURIComponent(u)}" target="_blank" rel="noopener" style="display:inline-block;background:#0e1320;border:1px solid #1e2d45;color:#4cc9f0;padding:6px 14px;border-radius:6px;font-size:.78rem;text-decoration:none;margin:3px">▶ Stream Source ${i+1}</a>`
+    ).join('');
+    html += `\n<div style="background:#07100c;border:1px solid rgba(6,214,160,.2);border-radius:8px;padding:12px 16px;margin-top:8px"><p style="color:#06d6a0;font-size:.75rem;font-weight:800;margin-bottom:8px">🔁 BACKUP STREAM LINKS — use if player above is blocked</p>${links}</div>`;
+  }
+  return html;
 }
 function updateIframePreviewBox() {
   const urls = getMoraUrls();
@@ -2068,8 +2133,7 @@ function buildAndInsertIframe() {
   const urls = getMoraUrls();
   if (!urls.length) { toast('Add at least one stream URL','info'); return; }
   const body = document.getElementById('post-body');
-  body.value += (body.value?'\n\n':'') + buildIframeHtml(urls);
-  updateSEOMeter();
+body.value += (body.value?'\n\n':'') + buildIframeHtml(urls, true);  updateSEOMeter();
   toast('iframe inserted ✓','success');
 }
 function previewIframe() {
@@ -2553,9 +2617,12 @@ function debuildThumbnail() {
 function getThumbSize() { return parseInt(document.getElementById('tb-quality')?.value||800); }
 
 function buildThumbnail() {
-  const size = getThumbSize();
-  const cv   = document.getElementById('thumb-canvas-big');
-  cv.width   = size; cv.height = Math.round(size * 0.525);
+  const size   = getThumbSize();
+  const cv     = document.getElementById('thumb-canvas-big');
+  const aspect = document.getElementById('tb-aspect')?.value || '16:9';
+  const ratios = {'16:9':0.5625,'1:1':1,'9:16':1.778};
+  cv.width  = aspect==='9:16' ? Math.round(size*0.5625) : size;
+  cv.height = Math.round(cv.width * (ratios[aspect]||0.5625));
   const home  = document.getElementById('tb-home').value||'Event';
   const away  = document.getElementById('tb-away').value||'';
   const lg    = document.getElementById('tb-league').value||'';
