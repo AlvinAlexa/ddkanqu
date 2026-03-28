@@ -253,7 +253,7 @@ async function goToStream(i) {
 window.StreamPlayer = {
   retryCurrent: () => goToStream(currentIndex),
   switchNext: () => goToStream((currentIndex + 1) % streams.length)
-};
+}; 
 
 // INIT
 (async () => {
