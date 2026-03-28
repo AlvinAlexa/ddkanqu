@@ -36,7 +36,6 @@
       position: fixed;
     }
 
-    /* MAIN PLAYER STAGE */
     .player-stage {
       position: relative;
       width: 100%;
@@ -46,7 +45,7 @@
       flex-direction: column;
     }
 
-    /* VIDEO & IFRAME CONTAINERS */
+    /* Video & iframe containers */
     .video-wrapper, .iframe-wrapper {
       position: absolute;
       top: 0;
@@ -74,10 +73,10 @@
       background: #000;
     }
 
-    /* BUTTON BAR (Server selector) */
+    /* Top button bar (repositioned above video) */
     .server-bar {
       position: absolute;
-      bottom: 20px;
+      top: 0;
       left: 0;
       right: 0;
       z-index: 30;
@@ -86,19 +85,19 @@
       justify-content: center;
       gap: 10px;
       padding: 12px 16px;
-      background: rgba(0,0,0,0.7);
+      background: rgba(0,0,0,0.6);
       backdrop-filter: blur(12px);
-      border-top: 1px solid rgba(255,255,255,0.15);
-      border-bottom: 1px solid rgba(255,255,255,0.15);
+      border-bottom: 1px solid rgba(255,255,255,0.2);
       transition: opacity 0.3s;
+      pointer-events: auto;
     }
     .server-btn {
       background: rgba(20,20,30,0.9);
       border: none;
       color: #eee;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 600;
-      padding: 10px 18px;
+      padding: 8px 16px;
       border-radius: 60px;
       cursor: pointer;
       transition: all 0.2s ease;
@@ -106,7 +105,7 @@
       letter-spacing: 0.3px;
       box-shadow: 0 1px 3px rgba(0,0,0,0.3);
       font-family: inherit;
-      min-width: 70px;
+      white-space: nowrap;
     }
     .server-btn.active {
       background: #e10600;
@@ -123,11 +122,11 @@
     }
     .server-btn:active { transform: scale(0.96); }
 
-    /* QUALITY SELECTOR (visible only when supported) */
+    /* Quality selector (top right, stays on top) */
     .quality-panel {
       position: absolute;
-      top: 20px;
-      right: 20px;
+      top: 12px;
+      right: 16px;
       z-index: 35;
       background: rgba(0,0,0,0.7);
       backdrop-filter: blur(12px);
@@ -159,7 +158,7 @@
       outline: none;
     }
 
-    /* CENTER PLAY BUTTON (for direct streams) */
+    /* Center play button */
     .big-play {
       position: absolute;
       top: 50%;
@@ -190,7 +189,7 @@
     }
     .big-play:active { transform: translate(-50%, -50%) scale(0.94); }
 
-    /* TOAST NOTIFICATIONS */
+    /* Toast */
     .toast-msg {
       position: absolute;
       bottom: 100px;
@@ -214,7 +213,7 @@
       opacity: 1;
     }
 
-    /* ERROR OVERLAY */
+    /* Error overlay */
     .error-overlay {
       position: absolute;
       inset: 0;
@@ -236,19 +235,9 @@
       opacity: 1;
       visibility: visible;
     }
-    .error-icon {
-      font-size: 56px;
-    }
-    .error-title {
-      font-size: 20px;
-      font-weight: 700;
-      color: #ff5c4c;
-    }
-    .error-message {
-      color: #ccc;
-      font-size: 14px;
-      max-width: 280px;
-    }
+    .error-icon { font-size: 56px; }
+    .error-title { font-size: 20px; font-weight: 700; color: #ff5c4c; }
+    .error-message { color: #ccc; font-size: 14px; max-width: 280px; }
     .error-retry-btn {
       background: #e10600;
       border: none;
@@ -260,7 +249,7 @@
       cursor: pointer;
     }
 
-    /* LOADING INDICATOR */
+    /* Loading indicator */
     .loading-indicator {
       position: absolute;
       inset: 0;
@@ -273,9 +262,7 @@
       z-index: 50;
       backdrop-filter: blur(4px);
     }
-    .loading-indicator.active {
-      display: flex;
-    }
+    .loading-indicator.active { display: flex; }
     .spinner {
       width: 44px;
       height: 44px;
@@ -285,13 +272,9 @@
       animation: spin 0.8s linear infinite;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
-    .loading-text {
-      color: white;
-      font-size: 13px;
-      letter-spacing: 0.5px;
-    }
+    .loading-text { color: white; font-size: 13px; letter-spacing: 0.5px; }
 
-    /* first-tap fullscreen hint */
+    /* fullscreen hint */
     .fullscreen-hint {
       position: absolute;
       bottom: 90px;
@@ -310,8 +293,8 @@
     }
 
     @media (max-width: 680px) {
-      .server-btn { padding: 8px 14px; font-size: 12px; min-width: 60px; }
-      .quality-panel { top: 12px; right: 12px; padding: 4px 8px; }
+      .server-btn { padding: 6px 12px; font-size: 11px; }
+      .quality-panel { top: 8px; right: 8px; padding: 4px 8px; }
       #qualitySelect { padding: 4px 8px; font-size: 10px; }
       .big-play { width: 70px; height: 70px; }
       .big-play svg { width: 36px; height: 36px; }
@@ -371,25 +354,43 @@
       return 'iframe';
     }
 
+    // Generate friendly button label based on type, order, and optional custom label
+    function generateFriendlyLabel(stream, index, totalStreams) {
+      // If custom label provided via URL|Name, use it
+      if (stream.customLabel) return stream.customLabel;
+
+      const type = stream.type;
+      // Count how many of same type before this stream
+      let typeCounter = 1;
+      for (let i = 0; i < index; i++) {
+        if (streams[i] && streams[i].type === type) typeCounter++;
+      }
+
+      if (type === 'hls') {
+        if (typeCounter === 1) return '📱 iPhone / iOS';
+        else return `📱 Backup HD ${typeCounter}`;
+      } else if (type === 'dash') {
+        if (typeCounter === 1) return '💻 HD Stream';
+        else return `💻 Stream ${typeCounter}`;
+      } else { // iframe / embed
+        if (typeCounter === 1) return '🌐 Alt Stream';
+        else return `🌐 Stream ${typeCounter}`;
+      }
+    }
+
     function parseStreamItem(rawUrl, sourceType = 'mora') {
       let url = rawUrl.trim();
-      let label = '';
+      let customLabel = '';
       if (url.includes('|')) {
         const parts = url.split('|');
         url = parts[0].trim();
-        label = parts[1].trim();
+        customLabel = parts[1].trim();
       }
       const type = detectStreamType(url);
-      if (!label) {
-        if (type === 'hls') label = 'HLS';
-        else if (type === 'dash') label = 'DASH';
-        else label = 'EMBED';
-      }
-      return { url, type, label, original: rawUrl, sourceType };
+      return { url, type, label: '', customLabel, original: rawUrl, sourceType };
     }
 
     // Priority for sorting: for iOS, HLS > iframe > DASH (but DASH will be skipped later)
-    // For non-iOS: HLS > DASH > iframe
     function priorityWeight(stream, ios) {
       if (ios) {
         if (stream.type === 'hls') return 1;
@@ -409,7 +410,6 @@
       embedList.forEach(raw => {
         const embedStream = parseStreamItem(raw, 'embed');
         embedStream.type = 'iframe';
-        embedStream.label = embedStream.label || 'EMBED';
         streams.push(embedStream);
       });
       if (streams.length === 0) {
@@ -417,6 +417,10 @@
       }
       const ios = isIOS();
       streams.sort((a,b) => priorityWeight(a, ios) - priorityWeight(b, ios));
+      // Assign friendly labels after sorting
+      streams.forEach((stream, idx) => {
+        stream.label = generateFriendlyLabel(stream, idx, streams.length);
+      });
       return streams;
     }
 
@@ -689,7 +693,6 @@
         showLoading(false);
         updateServerButtonsActive(index);
         retryCounter = 0;
-        // handle big play button for video players
         if (currentPlayerType !== 'iframe') {
           videoElement.addEventListener('play', () => bigPlayBtn.classList.remove('visible'), { once: true });
           videoElement.addEventListener('pause', () => { if (!videoElement.paused) return; bigPlayBtn.classList.add('visible'); });
@@ -738,6 +741,7 @@
 
     function renderServerButtons() {
       serverBar.innerHTML = '';
+      // Auto button
       const autoBtn = document.createElement('button');
       autoBtn.className = 'server-btn auto';
       autoBtn.textContent = '⚡ AUTO';
@@ -754,11 +758,7 @@
       streams.forEach((stream, idx) => {
         const btn = document.createElement('button');
         btn.className = 'server-btn';
-        let displayName = stream.label;
-        if (stream.type === 'hls') displayName = `📱 ${displayName}`;
-        else if (stream.type === 'dash') displayName = `💻 ${displayName}`;
-        else displayName = `🌐 ${displayName}`;
-        btn.textContent = displayName;
+        btn.textContent = stream.label;
         btn.dataset.index = idx;
         btn.onclick = () => switchToStream(idx);
         serverBar.appendChild(btn);
