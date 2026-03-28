@@ -1,720 +1,806 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>SPORTS STREAM · INTELLIGENT MULTI-SOURCE · MOBILE READY</title>
-  <!-- Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y5EVJ9NQ5B"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-Y5EVJ9NQ5B', { 'send_page_view': true, 'transport_type': 'beacon' });
-    function trackEvent(category, action, label = null, value = null, nonInteraction = false) {
-      const eventParams = { event_category: category, event_label: label, non_interaction: nonInteraction };
-      if (value !== null) eventParams.value = value;
-      gtag('event', action, eventParams);
-      console.log(`📊 GA Event: ${category} - ${action}`, { label, value });
-    }
-  </script>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; -webkit-tap-highlight-color: transparent; }
-    body { background: #000; font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; overflow: hidden; height: 100vh; width: 100vw; position: fixed; }
-    .player-stage { position: relative; width: 100%; height: 100%; background: #000; display: flex; flex-direction: column; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>SPORTS STREAM · INTELLIGENT MULTI-SOURCE · MOBILE READY</title>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Y5EVJ9NQ5B"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-Y5EVJ9NQ5B', { 'send_page_view': true, 'transport_type': 'beacon' });
+  function trackEvent(category, action, label = null, value = null, nonInteraction = false) {
+    const eventParams = { event_category: category, event_label: label, non_interaction: nonInteraction };
+    if (value !== null) eventParams.value = value;
+    gtag('event', action, eventParams);
+    console.log(`📊 GA Event: ${category} - ${action}`, { label, value });
+  }
+</script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --accent: #e10600;
+  --accent-hover: #ff2a1a;
+  --glass-bg: rgba(0,0,0,0.6);
+  --glass-border: rgba(255,255,255,0.15);
+  --glass-blur: blur(12px);
+  --transition: 0.2s cubic-bezier(0.4,0,0.2,1);
+  --font: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
+}
+html, body { width: 100%; height: 100%; overflow: hidden; background: #000; font-family: var(--font); }
 
-    /* Top bar – scrollable */
-    .source-bar {
-      flex-shrink: 0;
-      background: rgba(0, 0, 0, 0.85);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-      padding: 8px 12px;
-      display: flex;
-      flex-wrap: nowrap;
-      overflow-x: auto;
-      scrollbar-width: thin;
-      gap: 10px;
-      white-space: nowrap;
-      -webkit-overflow-scrolling: touch;
-      z-index: 20;
-    }
-    .source-bar::-webkit-scrollbar { height: 3px; background: rgba(255,255,255,0.1); }
-    .source-bar::-webkit-scrollbar-thumb { background: #e10600; border-radius: 10px; }
-    .source-btn {
-      background: rgba(20, 20, 30, 0.9);
-      border: none;
-      color: #eee;
-      font-size: 13px;
-      font-weight: 600;
-      padding: 8px 16px;
-      border-radius: 60px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      letter-spacing: 0.3px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.3);
-      font-family: inherit;
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
-    .source-btn.active { background: #e10600; color: white; box-shadow: 0 0 10px rgba(225,6,0,0.6); }
-    .source-btn.auto { background: #2c3e66; border: 1px solid #5a7db0; }
-    .source-btn.auto.active { background: #e10600; border-color: #ff6b5c; }
-    .source-btn:active { transform: scale(0.96); }
+/* ===== SOURCE BAR (scrollable, with auto button) ===== */
+.source-bar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  background: rgba(0,0,0,0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--glass-border);
+  padding: 8px 12px;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  gap: 10px;
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
+}
+.source-bar::-webkit-scrollbar { height: 3px; background: rgba(255,255,255,0.1); }
+.source-bar::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
+.source-btn {
+  background: rgba(20,20,30,0.9);
+  border: none;
+  color: #eee;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 60px;
+  cursor: pointer;
+  transition: all var(--transition);
+  letter-spacing: 0.3px;
+  font-family: inherit;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.source-btn.active { background: var(--accent); color: white; box-shadow: 0 0 10px rgba(225,6,0,0.6); }
+.source-btn.auto { background: #2c3e66; border: 1px solid #5a7db0; }
+.source-btn.auto.active { background: var(--accent); border-color: #ff6b5c; }
+.source-btn:active { transform: scale(0.96); }
 
-    /* Video area */
-    .video-area { flex: 1; position: relative; background: #000; overflow: hidden; }
-    .video-wrapper, .iframe-wrapper { position: absolute; inset: 0; background: #000; display: none; justify-content: center; align-items: center; }
-    .video-wrapper.active, .iframe-wrapper.active { display: flex; }
-    video { width: 100%; height: 100%; object-fit: contain; background: #000; }
-    iframe { width: 100%; height: 100%; border: none; background: #000; }
+/* Video area */
+#stage {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: #000;
+}
+#stage.tabs-visible { top: 54px; } /* space for source bar */
+.video-area { position: relative; width: 100%; height: 100%; background: #000; }
+#player-host, #embed-host { position: absolute; inset: 0; background: #000; }
+#player-host { z-index: 2; display: none; }
+#embed-host { z-index: 3; display: none; flex-direction: column; }
+#embed-host.active { display: flex; }
+#embed-frame { width: 100%; height: 100%; border: none; background: #000; }
 
-    /* Quality selector (floating) */
-    .quality-panel {
-      position: absolute; top: 16px; right: 16px; z-index: 35;
-      background: rgba(0,0,0,0.7); backdrop-filter: blur(12px);
-      border-radius: 40px; padding: 6px 12px; display: none;
-      align-items: center; gap: 8px; border: 1px solid rgba(255,255,255,0.2);
-    }
-    .quality-panel.visible { display: flex; }
-    .quality-label { color: rgba(255,255,255,0.6); font-size: 11px; font-weight: 500; }
-    #qualitySelect { background: #1e1e2a; border: 1px solid #3a3a4a; color: white; padding: 6px 12px; border-radius: 40px; font-size: 12px; font-weight: 500; cursor: pointer; outline: none; }
+/* Quality & Controls Overlay (mobile friendly) */
+#playback-controls {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  z-index: 15;
+  background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 100%);
+  padding: 40px 20px 20px;
+  opacity: 0;
+  transition: opacity var(--transition);
+  pointer-events: none;
+}
+#stage.overlay-active #playback-controls { opacity: 1; pointer-events: auto; }
+.controls-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.control-group { display: flex; gap: 8px; align-items: center; }
+.control-slider { width: 100px; height: 4px; background: rgba(255,255,255,0.2); border-radius: 2px; cursor: pointer; -webkit-appearance: none; }
+.control-slider::-webkit-slider-thumb { width: 12px; height: 12px; background: var(--accent); border-radius: 50%; cursor: pointer; }
+.quality-selector {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: var(--glass-blur);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 11px;
+  cursor: pointer;
+}
+.mini-ctrl {
+  width: 32px; height: 32px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: var(--glass-blur);
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.mini-ctrl svg { width: 16px; height: 16px; fill: currentColor; }
+.control-label { font-size: 10px; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 0.05em; }
 
-    /* ----- MOBILE CONTROLS (NEW) ----- */
-    .mobile-controls {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0) 100%);
-      padding: 20px 12px 12px 12px;
-      z-index: 45;
-      opacity: 0;
-      transition: opacity 0.25s ease;
-      pointer-events: none;
-    }
-    .mobile-controls.visible {
-      opacity: 1;
-      pointer-events: auto;
-    }
-    .controls-row {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-    .ctrl-btn {
-      background: rgba(0,0,0,0.6);
-      backdrop-filter: blur(8px);
-      border: none;
-      border-radius: 50px;
-      width: 44px;
-      height: 44px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-size: 20px;
-      cursor: pointer;
-      transition: 0.1s;
-    }
-    .ctrl-btn:active { transform: scale(0.92); background: #e10600; }
-    .progress-container {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(0,0,0,0.5);
-      border-radius: 60px;
-      padding: 4px 12px;
-    }
-    .time-label {
-      color: white;
-      font-size: 12px;
-      font-weight: 500;
-      font-variant-numeric: tabular-nums;
-      min-width: 90px;
-    }
-    .seek-slider {
-      flex: 1;
-      height: 4px;
-      -webkit-appearance: none;
-      background: rgba(255,255,255,0.3);
-      border-radius: 5px;
-      outline: none;
-    }
-    .seek-slider::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      width: 16px;
-      height: 16px;
-      background: #e10600;
-      border-radius: 50%;
-      cursor: pointer;
-      box-shadow: 0 0 4px white;
-    }
-    .volume-slider {
-      width: 80px;
-      height: 4px;
-      -webkit-appearance: none;
-      background: rgba(255,255,255,0.3);
-      border-radius: 5px;
-    }
-    .volume-slider::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      width: 12px;
-      height: 12px;
-      background: white;
-      border-radius: 50%;
-    }
-    @media (max-width: 680px) {
-      .ctrl-btn { width: 40px; height: 40px; font-size: 18px; }
-      .time-label { font-size: 10px; min-width: 80px; }
-      .volume-slider { width: 60px; }
-    }
+/* Center play button */
+#center-play {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  width: 80px; height: 80px; background: rgba(225,6,0,0.85); border-radius: 50%;
+  display: none; align-items: center; justify-content: center; cursor: pointer; z-index: 40;
+  backdrop-filter: blur(8px); border: 2px solid rgba(255,255,255,0.3);
+}
+#center-play svg { width: 42px; height: 42px; fill: white; margin-left: 6px; }
+#center-play.visible { display: flex; }
 
-    /* Big play button (center) */
-    .big-play {
-      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-      width: 80px; height: 80px; background: rgba(225,6,0,0.85); border-radius: 50%;
-      display: none; align-items: center; justify-content: center; cursor: pointer; z-index: 40;
-      backdrop-filter: blur(8px); transition: 0.2s; box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-      border: 2px solid rgba(255,255,255,0.3);
-    }
-    .big-play svg { width: 42px; height: 42px; fill: white; margin-left: 6px; }
-    .big-play.visible { display: flex; }
-    .big-play:active { transform: translate(-50%, -50%) scale(0.94); }
+/* Toast, loading, error */
+#toast {
+  position: absolute; bottom: 90px; left: 50%; transform: translateX(-50%);
+  background: rgba(0,0,0,0.85); backdrop-filter: blur(16px); color: white;
+  padding: 10px 20px; border-radius: 60px; font-size: 13px; font-weight: 500;
+  z-index: 60; white-space: nowrap; pointer-events: none; opacity: 0; transition: opacity 0.2s;
+}
+#toast.show { opacity: 1; }
+#loading {
+  position: absolute; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px);
+  display: none; flex-direction: column; align-items: center; justify-content: center; gap: 12px; z-index: 50;
+}
+#loading.active { display: flex; }
+.spinner { width: 44px; height: 44px; border: 3px solid rgba(255,255,255,0.2); border-top: 3px solid var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+#error-panel {
+  position: absolute; inset: 0; background: rgba(0,0,0,0.9); backdrop-filter: blur(8px);
+  display: none; flex-direction: column; align-items: center; justify-content: center; gap: 20px; z-index: 70;
+}
+#error-panel.active { display: flex; }
+.error-btn { background: var(--accent); border: none; padding: 12px 28px; border-radius: 60px; color: white; font-weight: bold; cursor: pointer; }
 
-    .toast-msg {
-      position: absolute; bottom: 90px; left: 50%; transform: translateX(-50%);
-      background: rgba(0,0,0,0.85); backdrop-filter: blur(16px); color: white;
-      padding: 10px 20px; border-radius: 60px; font-size: 13px; font-weight: 500;
-      z-index: 60; white-space: nowrap; pointer-events: none; opacity: 0; transition: opacity 0.2s;
-      border: 1px solid rgba(255,255,255,0.2);
-    }
-    .toast-msg.show { opacity: 1; }
-    .error-overlay {
-      position: absolute; inset: 0; background: rgba(0,0,0,0.9); backdrop-filter: blur(8px);
-      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px;
-      z-index: 70; opacity: 0; visibility: hidden; transition: 0.2s; padding: 24px; text-align: center;
-    }
-    .error-overlay.active { opacity: 1; visibility: visible; }
-    .error-retry-btn { background: #e10600; border: none; padding: 12px 28px; border-radius: 60px; color: white; font-weight: bold; font-size: 14px; cursor: pointer; }
-    .loading-indicator {
-      position: absolute; inset: 0; background: rgba(0,0,0,0.6); display: none;
-      align-items: center; justify-content: center; flex-direction: column; gap: 12px; z-index: 50;
-      backdrop-filter: blur(4px);
-    }
-    .loading-indicator.active { display: flex; }
-    .spinner { width: 44px; height: 44px; border: 3px solid rgba(255,255,255,0.2); border-top: 3px solid #e10600; border-radius: 50%; animation: spin 0.8s linear infinite; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .fullscreen-hint {
-      position: absolute; bottom: 90px; left: 50%; transform: translateX(-50%);
-      background: rgba(0,0,0,0.6); padding: 6px 14px; border-radius: 40px;
-      font-size: 11px; color: rgba(255,255,255,0.7); pointer-events: none;
-      white-space: nowrap; z-index: 25; backdrop-filter: blur(4px);
-    }
-  </style>
+/* Live badge */
+#stream-badge {
+  position: absolute; top: 70px; left: 16px; z-index: 12;
+  background: var(--glass-bg); border: 1px solid var(--glass-border);
+  backdrop-filter: var(--glass-blur); padding: 6px 14px; border-radius: 100px;
+  display: flex; align-items: center; gap: 8px; opacity: 0; transition: opacity 0.3s;
+  pointer-events: none;
+}
+#stream-badge.visible { opacity: 1; }
+.live-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); animation: pulse 1.6s infinite; }
+@keyframes pulse { 0%,100%{ opacity:1; } 50%{ opacity:0.4; } }
+#stream-label { color: white; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
+#gesture-hint {
+  position: absolute; bottom: 80px; left: 50%; transform: translateX(-50%);
+  background: var(--glass-bg); backdrop-filter: blur(8px); color: white;
+  padding: 6px 14px; border-radius: 40px; font-size: 12px; opacity: 0; transition: opacity 0.3s; pointer-events: none;
+  white-space: nowrap; z-index: 25;
+}
+#gesture-hint.show { opacity: 1; }
+#bandwidth-indicator {
+  position: absolute; top: 70px; right: 16px; z-index: 12;
+  background: var(--glass-bg); border: 1px solid var(--glass-border);
+  backdrop-filter: var(--glass-blur); padding: 5px 12px; border-radius: 100px;
+  font-size: 10px; color: rgba(255,255,255,0.7); display: flex; gap: 6px; align-items: center;
+  opacity: 0; transition: opacity 0.3s; pointer-events: none;
+}
+#bandwidth-indicator.visible { opacity: 1; }
+.bw-bars { display: flex; gap: 2px; align-items: flex-end; height: 12px; }
+.bw-bar { width: 3px; background: rgba(255,255,255,0.2); border-radius: 1px; transition: background 0.2s; }
+.bw-bar.active { background: var(--accent); }
+.bw-bar:nth-child(1) { height: 4px; }
+.bw-bar:nth-child(2) { height: 7px; }
+.bw-bar:nth-child(3) { height: 10px; }
+.bw-bar:nth-child(4) { height: 12px; }
+
+@media (max-width: 680px) {
+  .source-btn { padding: 6px 12px; font-size: 11px; }
+  #stage.tabs-visible { top: 48px; }
+  .controls-row .control-group:first-child { display: none; }
+  .control-slider { width: 70px; }
+  .quality-selector { padding: 4px 8px; font-size: 10px; }
+  #stream-badge { top: 60px; left: 8px; padding: 4px 10px; }
+  #bandwidth-indicator { top: 60px; right: 8px; padding: 4px 8px; font-size: 9px; }
+}
+</style>
 </head>
 <body>
-<div class="player-stage" id="playerStage">
+<div id="stage">
   <div class="source-bar" id="sourceBar"></div>
   <div class="video-area">
-    <div class="video-wrapper" id="videoContainer">
-      <video id="videoElement" playsinline muted></video>
-      <div class="big-play" id="bigPlayBtn"><svg viewBox="0 0 24 24"><polygon points="8,5 8,19 19,12" fill="white"/></svg></div>
+    <div id="player-host"></div>
+    <div id="embed-host">
+      <iframe id="embed-frame" allow="autoplay; encrypted-media; fullscreen; picture-in-picture" referrerpolicy="no-referrer-when-downgrade" sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-presentation allow-top-navigation-by-user-activation"></iframe>
     </div>
-    <div class="iframe-wrapper" id="iframeContainer">
-      <iframe id="embedIframe" allow="autoplay; encrypted-media; fullscreen; picture-in-picture" referrerpolicy="no-referrer-when-downgrade" sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-presentation allow-top-navigation-by-user-activation"></iframe>
+    <div id="center-play" onclick="StreamPlayer.togglePlayPause()">
+      <svg viewBox="0 0 24 24"><polygon points="8,5 8,19 19,12" fill="white"/></svg>
     </div>
-    <div class="quality-panel" id="qualityPanel"><span class="quality-label">🔘 QUALITY</span><select id="qualitySelect"></select></div>
-    <!-- MOBILE CONTROLS BAR -->
-    <div class="mobile-controls" id="mobileControls">
+    <div id="playback-controls">
       <div class="controls-row">
-        <button class="ctrl-btn" id="playPauseCtrl">▶️</button>
-        <div class="progress-container">
-          <span class="time-label" id="timeDisplay">0:00 / 0:00</span>
-          <input type="range" class="seek-slider" id="seekSlider" value="0" step="0.1">
+        <div class="control-group">
+          <span class="control-label">Vol</span>
+          <input type="range" id="volume-slider" class="control-slider" min="0" max="100" value="100">
         </div>
-        <input type="range" class="volume-slider" id="volumeSlider" min="0" max="1" step="0.02" value="1">
-        <button class="ctrl-btn" id="fullscreenCtrl">⛶</button>
+        <div class="control-group">
+          <span class="control-label">Speed</span>
+          <select id="speed-select" class="quality-selector">
+            <option value="0.5">0.5x</option><option value="1" selected>1x</option>
+            <option value="1.5">1.5x</option><option value="2">2x</option>
+          </select>
+        </div>
+        <div class="control-group">
+          <select id="quality-select" class="quality-selector"><option value="-1">Quality: Auto</option></select>
+        </div>
+        <div class="control-group">
+          <button class="mini-ctrl" id="btn-pip" title="Picture-in-Picture">⛶</button>
+          <button class="mini-ctrl" id="btn-fullscreen" title="Fullscreen">⤢</button>
+        </div>
       </div>
     </div>
+    <div id="stream-badge"><span class="live-dot"></span><span id="stream-label">LIVE</span></div>
+    <div id="bandwidth-indicator"><div class="bw-bars"><div class="bw-bar"></div><div class="bw-bar"></div><div class="bw-bar"></div><div class="bw-bar"></div></div><span id="bw-label">Measuring…</span></div>
+    <div id="gesture-hint"></div>
   </div>
-  <div class="toast-msg" id="toastMsg"></div>
-  <div class="error-overlay" id="errorOverlay"><div class="error-icon">⚠️</div><div class="error-title" id="errorTitle">Stream Unavailable</div><div class="error-message" id="errorMsg">Unable to load this source.</div><button class="error-retry-btn" id="errorRetryBtn">RETRY NOW</button></div>
-  <div class="loading-indicator" id="loadingIndicator"><div class="spinner"></div><div class="loading-text" id="loadingText">Loading stream...</div></div>
-  <div class="fullscreen-hint" id="fullscreenHint">👇 Tap anywhere → fullscreen</div>
+  <div id="loading"><div class="spinner"></div><div id="loading-text">Loading stream…</div></div>
+  <div id="error-panel"><div class="error-icon">⚠️</div><div class="error-title">Stream Failed</div><div class="error-message">Unable to load this source.</div><button class="error-btn" id="error-retry">RETRY NOW</button></div>
+  <div id="toast"></div>
 </div>
 <script>
-  (function(){
-    // ========== CONFIG ==========
-    const CONFIG = {
-      CACHE_TTL_MS: 5 * 60 * 1000,
-      PROXY_FACTORIES: [
-        url => `https://corsproxy.io/?url=${encodeURIComponent(url)}`,
-        url => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
-        url => `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`,
-      ],
-      PROXY_SCORES: [0,0,0]
-    };
-    let streams = [];            // resolved stream objects
-    let currentStreamIndex = -1;
-    let currentPlayerType = null;
-    let hlsPlayer = null;
-    let dashPlayer = null;
-    let videoElement = document.getElementById('videoElement');
-    let iframeElement = document.getElementById('embedIframe');
-    let videoContainer = document.getElementById('videoContainer');
-    let iframeContainer = document.getElementById('iframeContainer');
-    let sourceBar = document.getElementById('sourceBar');
-    let qualityPanel = document.getElementById('qualityPanel');
-    let qualitySelect = document.getElementById('qualitySelect');
-    let toastMsg = document.getElementById('toastMsg');
-    let errorOverlay = document.getElementById('errorOverlay');
-    let errorTitleSpan = document.getElementById('errorTitle');
-    let errorMsgSpan = document.getElementById('errorMsg');
-    let loadingDiv = document.getElementById('loadingIndicator');
-    let loadingTextSpan = document.getElementById('loadingText');
-    let bigPlayBtn = document.getElementById('bigPlayBtn');
-    let fullscreenHint = document.getElementById('fullscreenHint');
-    let retryCounter = 0;
-    const MAX_RETRIES = 2;
-    let controlsTimeout = null;
-    const mobileControls = document.getElementById('mobileControls');
-    const playPauseCtrl = document.getElementById('playPauseCtrl');
-    const seekSlider = document.getElementById('seekSlider');
-    const timeDisplay = document.getElementById('timeDisplay');
-    const volumeSlider = document.getElementById('volumeSlider');
-    const fullscreenCtrl = document.getElementById('fullscreenCtrl');
+(function(){
+  // ========== CONFIG ==========
+  const CONFIG = {
+    CACHE_TTL_MS: 5 * 60 * 1000,
+    PLAYER_TIMEOUT: 15000,
+    MAX_RETRIES: 2,
+    GESTURE_THRESHOLD: 60,
+    PROXY_FACTORIES: [
+      url => `https://corsproxy.io/?url=${encodeURIComponent(url)}`,
+      url => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
+      url => `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`,
+    ],
+    PROXY_SCORES: [0,0,0],
+    ALLOWED_PROTOCOLS: new Set(['http:', 'https:']),
+  };
 
-    function isIOS() { return /iPhone|iPad|iPod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1); }
-    function showToast(text, duration=2200) { toastMsg.textContent = text; toastMsg.classList.add('show'); setTimeout(() => toastMsg.classList.remove('show'), duration); }
-    function showLoading(show, text='Loading...') { if(show){ loadingTextSpan.textContent = text; loadingDiv.classList.add('active'); } else loadingDiv.classList.remove('active'); }
-    function hideErrorOverlay() { errorOverlay.classList.remove('active'); }
-    function showErrorOverlay(title, msg) { errorTitleSpan.textContent = title; errorMsgSpan.textContent = msg; errorOverlay.classList.add('active'); trackEvent('Player','Error Overlay',title); }
+  // ========== DOM elements ==========
+  const DOM = {
+    stage: document.getElementById('stage'),
+    sourceBar: document.getElementById('sourceBar'),
+    playerHost: document.getElementById('player-host'),
+    embedHost: document.getElementById('embed-host'),
+    embedFrame: document.getElementById('embed-frame'),
+    loading: document.getElementById('loading'),
+    loadingText: document.getElementById('loading-text'),
+    errorPanel: document.getElementById('error-panel'),
+    errorRetry: document.getElementById('error-retry'),
+    toast: document.getElementById('toast'),
+    streamBadge: document.getElementById('stream-badge'),
+    streamLabel: document.getElementById('stream-label'),
+    centerPlay: document.getElementById('center-play'),
+    playbackControls: document.getElementById('playback-controls'),
+    volumeSlider: document.getElementById('volume-slider'),
+    speedSelect: document.getElementById('speed-select'),
+    qualitySelect: document.getElementById('quality-select'),
+    bwIndicator: document.getElementById('bandwidth-indicator'),
+    bwLabel: document.getElementById('bw-label'),
+    bwBars: document.querySelectorAll('.bw-bar'),
+    gestureHint: document.getElementById('gesture-hint'),
+    btnPip: document.getElementById('btn-pip'),
+    btnFullscreen: document.getElementById('btn-fullscreen'),
+  };
 
-    // ========== PROXY + FETCH ==========
-    async function fetchWithProxies(url) {
-      const order = [...CONFIG.PROXY_SCORES.keys()].sort((a,b) => CONFIG.PROXY_SCORES[b] - CONFIG.PROXY_SCORES[a]);
-      for (let i of order) {
-        const proxyUrl = CONFIG.PROXY_FACTORIES[i](url);
-        const ac = new AbortController();
-        const tid = setTimeout(() => ac.abort(), 10000);
-        try {
-          const res = await fetch(proxyUrl, { signal: ac.signal, headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' } });
-          clearTimeout(tid);
-          if (!res.ok) throw new Error(`HTTP ${res.status}`);
-          let text = await res.text();
-          if (proxyUrl.includes('allorigins')) {
-            try { const json = JSON.parse(text); if (json.contents !== undefined) text = json.contents; } catch {}
-          }
-          CONFIG.PROXY_SCORES[i] = Math.min(10, CONFIG.PROXY_SCORES[i] + 1);
-          return text;
-        } catch (err) {
-          clearTimeout(tid);
-          CONFIG.PROXY_SCORES[i] = Math.max(0, CONFIG.PROXY_SCORES[i] - 1);
-        }
-      }
-      throw new Error('All proxies failed');
-    }
+  let streams = [];
+  let currentIndex = 0;
+  let currentStream = null;
+  let currentPlayer = null;
+  let hlsPlayer = null;
+  let dashPlayer = null;
+  let playGeneration = 0;
+  let retryCount = 0;
+  let controlsTimer = null;
+  let gestureTimer = null;
+  let currentAdapter = '';
 
-    // ========== ENHANCED EXTRACTION (deep iframe & JSON) ==========
-    function extractAllUrlsFromHtml(html, baseUrl) {
-      const candidates = [];
-      // direct m3u8 / mpd regex
-      const directMatches = [...html.matchAll(/https?:\/\/[^\s"'`<>\\]+\.(m3u8|mpd)(?:\?[^\s"'`<>]*)?/gi)];
-      for (let m of directMatches) if (!candidates.includes(m[0])) candidates.push({ url: m[0], type: m[1] === 'm3u8' ? 'hls' : 'dash' });
-      // JSON config patterns
-      const jsonConfigRegex = /(?:file|src|source|url|manifest|stream|playlist)\s*:\s*["'](https?:\/\/[^"']+\.(?:m3u8|mpd)[^"']*)["']/gi;
-      let match;
-      while ((match = jsonConfigRegex.exec(html)) !== null) {
-        let url = match[1];
-        let type = url.includes('.m3u8') ? 'hls' : 'dash';
-        if (!candidates.some(c => c.url === url)) candidates.push({ url, type });
-      }
-      // iframe extraction (for further recursion)
-      const iframeUrls = [];
-      const iframeRe = /<iframe[^>]+src=["']([^"']+)["']/gi;
-      let iframeMatch;
-      while ((iframeMatch = iframeRe.exec(html)) !== null) {
-        let url = iframeMatch[1].replace(/&amp;/g, '&');
-        if (url.startsWith('//')) url = 'https:' + url;
-        if (url.startsWith('/')) url = new URL(url, baseUrl).href;
-        if (url && (url.includes('m3u8') || url.includes('mpd') || url.match(/\.(m3u8|mpd)/i))) {
-          let type = url.includes('.m3u8') ? 'hls' : 'dash';
-          if (!candidates.some(c => c.url === url)) candidates.push({ url, type });
-        } else {
-          iframeUrls.push(url);
-        }
-      }
-      return { candidates, iframeUrls };
-    }
+  // ========== Helper functions ==========
+  function isIOS() { return /iPhone|iPad|iPod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1); }
+  function showToast(msg, duration=2200) {
+    DOM.toast.textContent = msg;
+    DOM.toast.classList.add('show');
+    setTimeout(() => DOM.toast.classList.remove('show'), duration);
+  }
+  function showLoading(show, text='Loading...') { DOM.loadingText.textContent = text; DOM.loading.classList.toggle('active', show); }
+  function hideError() { DOM.errorPanel.classList.remove('active'); }
+  function showError(title, msg) {
+    DOM.errorPanel.querySelector('.error-title').textContent = title;
+    DOM.errorPanel.querySelector('.error-message').textContent = msg;
+    DOM.errorPanel.classList.add('active');
+  }
+  function updateBadge(label) { DOM.streamLabel.textContent = label; DOM.streamBadge.classList.add('visible'); }
 
-    async function deepExtractFromPage(url, depth = 1) {
-      if (depth <= 0) return [];
-      const html = await fetchWithProxies(url);
-      let { candidates, iframeUrls } = extractAllUrlsFromHtml(html, url);
-      // if we found manifest directly, return those
-      if (candidates.length) return candidates;
-      // else try to fetch iframes recursively
-      for (let iframeSrc of iframeUrls.slice(0, 2)) {
-        try {
-          const iframeHtml = await fetchWithProxies(iframeSrc);
-          const deeper = extractAllUrlsFromHtml(iframeHtml, iframeSrc);
-          for (let cand of deeper.candidates) if (!candidates.some(c => c.url === cand.url)) candidates.push(cand);
-          if (candidates.length) break;
-        } catch(e) { console.warn("Iframe fetch failed", iframeSrc); }
-      }
-      return candidates;
-    }
-
-    async function resolveStreamEnhanced(url, isMora) {
-      if (!isMora) return [{ type: 'iframe', url, isEmbed: true }];
-      const lower = url.toLowerCase();
-      if (lower.includes('.m3u8')) return [{ type: 'hls', url }];
-      if (lower.includes('.mpd')) return [{ type: 'dash', url }];
-      // cache
-      const cacheKey = `res_${url}`;
-      const cached = sessionStorage.getItem(cacheKey);
-      if (cached) {
-        try { return JSON.parse(cached); } catch(e) {}
-      }
+  // ========== Proxy fetch with allorigins unwrap ==========
+  async function fetchWithProxies(url) {
+    const order = [...CONFIG.PROXY_SCORES.keys()].sort((a,b) => CONFIG.PROXY_SCORES[b] - CONFIG.PROXY_SCORES[a]);
+    for (let i of order) {
+      const proxyUrl = CONFIG.PROXY_FACTORIES[i](url);
+      const ac = new AbortController();
+      const tid = setTimeout(() => ac.abort(), 10000);
       try {
-        const extracted = await deepExtractFromPage(url);
-        if (!extracted.length) {
-          // fallback: treat as iframe
-          return [{ type: 'iframe', url, isEmbed: true }];
+        const res = await fetch(proxyUrl, { signal: ac.signal });
+        clearTimeout(tid);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        let text = await res.text();
+        if (proxyUrl.includes('allorigins')) {
+          try { const json = JSON.parse(text); if (json.contents !== undefined) text = json.contents; } catch {}
         }
-        // convert to stream objects
-        const result = extracted.map(c => ({ type: c.type, url: c.url, originalUrl: url }));
-        sessionStorage.setItem(cacheKey, JSON.stringify(result));
-        return result;
+        CONFIG.PROXY_SCORES[i] = Math.min(10, CONFIG.PROXY_SCORES[i] + 1);
+        return text;
       } catch (err) {
-        console.error(`Resolution error for ${url}`, err);
-        return [{ type: 'iframe', url, isEmbed: true, errorFallback: true }];
+        clearTimeout(tid);
+        CONFIG.PROXY_SCORES[i] = Math.max(0, CONFIG.PROXY_SCORES[i] - 1);
       }
     }
+    throw new Error('All proxies failed');
+  }
 
-    // ========== BUILD STREAMS FROM mora + embed ==========
-    async function buildStreamList() {
-      const params = new URLSearchParams(window.location.search);
-      const moraUrls = params.getAll('mora');
-      const embedUrls = params.getAll('embed');
-      const allStreams = [];
-      for (let i=0; i<moraUrls.length; i++) {
-        try {
-          const streamCandidates = await resolveStreamEnhanced(moraUrls[i], true);
-          for (let cand of streamCandidates) {
-            cand.label = generateLabel(cand, allStreams.length, moraUrls.length, false);
-            cand.originalMora = moraUrls[i];
-            allStreams.push(cand);
-          }
-        } catch(e) { console.warn(`mora ${i} failed`, e); trackEvent('Stream','Resolve Failed',moraUrls[i]); }
-      }
-      for (let i=0; i<embedUrls.length; i++) {
-        const embedStream = { type: 'iframe', url: embedUrls[i], isEmbed: true, originalUrl: embedUrls[i] };
-        embedStream.label = generateLabel(embedStream, allStreams.length, embedUrls.length, true);
-        allStreams.push(embedStream);
-      }
-      // Sort: iOS prefers HLS > iframe > dash, Android: HLS > dash > iframe
-      const ios = isIOS();
-      allStreams.sort((a,b) => {
-        const weight = (s) => {
-          if (s.type === 'hls') return 1;
-          if (ios && s.type === 'iframe') return 2;
-          if (!ios && s.type === 'dash') return 2;
-          if (!ios && s.type === 'iframe') return 3;
-          if (ios && s.type === 'dash') return 10;
-          return 5;
-        };
-        return weight(a) - weight(b);
-      });
-      // re-label after sorting
-      allStreams.forEach((s, idx) => { s.label = generateLabel(s, idx, allStreams.length, s.type === 'iframe' && !s.originalMora); });
-      return allStreams;
+  // ========== ENHANCED MANIFEST EXTRACTION (with DRM keys) ==========
+  function extractClearKeys(html) {
+    const blockRe = /clear[Kk]eys\s*[:{][\s\S]{0,2000}?\{([\s\S]{0,1000}?)\}/;
+    const blockMatch = html.match(blockRe);
+    if (blockMatch) {
+      const pairMatch = blockMatch[1].match(/"([0-9a-fA-F]{32})"\s*:\s*"([0-9a-fA-F]{32})"/);
+      if (pairMatch) return { keyId: pairMatch[1], key: pairMatch[2] };
     }
+    const globalRe = /"([0-9a-fA-F]{32})"\s*:\s*"([0-9a-fA-F]{32})"/g;
+    let m;
+    while ((m = globalRe.exec(html)) !== null) {
+      const [, kid, k] = m;
+      if (kid !== '0'.repeat(32) && k !== '0'.repeat(32)) return { keyId: kid, key: k };
+    }
+    return null;
+  }
 
-    function generateLabel(stream, idx, total, isPureEmbed) {
-      if (stream.customLabel) return stream.customLabel;
-      if (stream.type === 'hls') {
-        let cnt = 1;
-        for (let i=0; i<idx; i++) if (streams[i]?.type === 'hls') cnt++;
-        return cnt === 1 ? '📱 HLS (iOS/Android)' : `📱 HLS #${cnt}`;
-      } else if (stream.type === 'dash') {
-        let cnt = 1;
-        for (let i=0; i<idx; i++) if (streams[i]?.type === 'dash') cnt++;
-        return cnt === 1 ? '💻 DASH (Desktop)' : `💻 DASH #${cnt}`;
+  function extractManifestFromHtml(html, baseUrl) {
+    let streamUrl = null, drmKeys = null;
+    const VAR_NAMES = [
+      'manifestUri','manifest_uri','youtube_theme_manifestUri','manifesturl','manifestURL',
+      'streamUrl','streamURL','stream_url','hlsUrl','hlsURL','hls_url','dashUrl','dashURL',
+      'dash_url','videoUrl','videoURL','video_url','sourceUrl','sourceURL','source_url',
+      'liveUrl','liveURL','live_url','channelUrl','channel_url','streamSrc','stream_src',
+      'videoSrc','video_src','mediaSrc','media_src','playbackUrl','playback_url',
+      'linkStream','link_stream','urlStream','url_stream','srcStream',
+    ];
+    const varPattern = new RegExp('(?:const|var|let)\\s+(?:' + VAR_NAMES.join('|') + ')\\s*=\\s*[\'"]([^\'"]+)[\'"]', 'i');
+    let match = html.match(varPattern);
+    if (match && match[1]) streamUrl = match[1];
+    if (!streamUrl) {
+      match = html.match(new RegExp('(?:' + VAR_NAMES.join('|') + ')\\s*=\\s*[\'"]([^\'"]+)[\'"]', 'i'));
+      if (match && match[1]) streamUrl = match[1];
+    }
+    if (!streamUrl) { match = html.match(/\.(?:load|loadSource|loadManifest)\s*\(\s*[`'"]([^`'"]+)[`'"]/i); if (match && match[1]) streamUrl = match[1]; }
+    if (!streamUrl) { match = html.match(/(?:setup|jwplayer)[^{]*\{[^}]*?file\s*:\s*['"]([^'"]+)['"]/i); if (match && match[1]) streamUrl = match[1]; }
+    if (!streamUrl) { match = html.match(/<(?:video|source)[^>]+(?:data-)?src=["']([^"']+\.(?:m3u8|mpd)[^"']*)['"]/i); if (match && match[1]) streamUrl = match[1]; }
+    if (!streamUrl) { match = html.match(/file\s*:\s*["'`](https?:\/\/[^"'`\s]+\.(?:m3u8|mpd)[^"'`\s]*)/i); if (match && match[1]) streamUrl = match[1]; }
+    if (!streamUrl) { match = html.match(/(?:src|source)\s*[=:]\s*["'`](https?:\/\/[^"'`\s]+\.(?:m3u8|mpd)[^"'`\s]*)/i); if (match && match[1]) streamUrl = match[1]; }
+    if (!streamUrl) { match = html.match(/"(?:file|src|source|url)"\s*:\s*"(https?:\/\/[^"]+\.(?:m3u8|mpd)[^"]*)"/i); if (match && match[1]) streamUrl = match[1]; }
+    if (!streamUrl) {
+      const b64re = /atob\s*\(\s*["']([A-Za-z0-9+/=]{30,})["']\s*\)/g;
+      let bm;
+      while ((bm = b64re.exec(html)) !== null) {
+        try { const decoded = atob(bm[1]); if (/^https?:\/\//i.test(decoded) && isSafeUrl(decoded)) { streamUrl = decoded; break; } } catch {}
+      }
+    }
+    if (!streamUrl) {
+      const iframeRe = /<iframe[^>]+src=["']([^"']+)['"]/gi;
+      let m, embedUrls=[];
+      while ((m = iframeRe.exec(html)) !== null) {
+        let cand = m[1].replace(/&amp;/g,'&').trim();
+        if (isSafeUrl(cand) && !cand.includes('blogger.com') && !cand.includes('google.com')) embedUrls.push(cand);
+      }
+      if (embedUrls.length) return { streamUrl: embedUrls[0], drmKeys: null, isEmbed: true, embedUrls };
+    }
+    if (!streamUrl) { match = html.match(/https?:\/\/[^\s"'`<>\\]+\.m3u8[^\s"'`<>\\]*/); if (match) streamUrl = match[0]; }
+    if (!streamUrl) { match = html.match(/https?:\/\/[^\s"'`<>\\]+\.mpd[^\s"'`<>\\]*/); if (match) streamUrl = match[0]; }
+    drmKeys = extractClearKeys(html);
+    if (streamUrl && streamUrl.includes('!!')) {
+      const [mpdUrl, keyPart] = streamUrl.split('!!');
+      streamUrl = mpdUrl;
+      if (keyPart && keyPart.includes(':') && !drmKeys) {
+        const [keyId, key] = keyPart.split(':');
+        drmKeys = { keyId, key };
+      }
+    }
+    return streamUrl ? { streamUrl, drmKeys } : null;
+  }
+
+  function isSafeUrl(url) {
+    if (!url || typeof url !== 'string') return false;
+    try { const u = new URL(url); return CONFIG.ALLOWED_PROTOCOLS.has(u.protocol); } catch { return false; }
+  }
+
+  // ========== Stream Resolution with caching ==========
+  const cache = new Map();
+  async function resolveStream(url, isMora=true) {
+    if (!isMora) return { type: 'iframe', url };
+    const lower = url.toLowerCase();
+    if (lower.includes('.m3u8')) return { type: 'hls', url };
+    if (lower.includes('.mpd')) return { type: 'dash', url };
+    const cached = cache.get(url);
+    if (cached && (Date.now() - cached.ts) < CONFIG.CACHE_TTL_MS) return cached.data;
+    try {
+      const html = await fetchWithProxies(url);
+      const extracted = extractManifestFromHtml(html, url);
+      if (!extracted) throw new Error('No stream found');
+      let result;
+      if (extracted.isEmbed) {
+        result = { type: 'iframe', url: extracted.streamUrl, embedUrls: extracted.embedUrls };
       } else {
-        let cnt = 1;
-        for (let i=0; i<idx; i++) if (streams[i]?.type === 'iframe') cnt++;
-        return cnt === 1 ? '🌐 Embedded Web' : `🌐 Embed #${cnt}`;
+        const streamUrl = extracted.streamUrl;
+        const type = /\.m3u8/i.test(streamUrl) ? 'hls' : 'dash';
+        result = { type, url: streamUrl, drmKeys: extracted.drmKeys };
       }
-    }
+      cache.set(url, { ts: Date.now(), data: result });
+      return result;
+    } catch (err) { throw err; }
+  }
 
-    // ========== PLAYBACK ENGINE with referer header (Android fix) ==========
-    function setupHlsWithReferer(streamUrl, refererUrl) {
-      if (!window.Hls) throw new Error('HLS.js missing');
-      const hls = new Hls({ enableWorker: true, lowLatencyMode: true, startLevel: -1, xhrSetup: (xhr, url) => {
-        xhr.setRequestHeader('Referer', refererUrl);
-        xhr.setRequestHeader('Origin', new URL(refererUrl).origin);
-        xhr.setRequestHeader('User-Agent', 'Mozilla/5.0 (Linux; Android 13) AppleWebKit/537.36');
-      } });
-      hls.loadSource(streamUrl);
-      hls.attachMedia(videoElement);
-      return hls;
-    }
-
-    async function playHLS(streamObj) {
-      return new Promise((resolve, reject) => {
-        if (!window.Hls) reject('HLS.js not loaded');
-        destroyCurrent();
-        videoContainer.classList.add('active');
-        iframeContainer.classList.remove('active');
-        const video = videoElement;
-        video.muted = false;
-        const referer = streamObj.originalMora || streamObj.originalUrl || window.location.href;
-        const hls = setupHlsWithReferer(streamObj.url, referer);
-        hlsPlayer = hls;
-        let resolved = false;
-        hls.on(Hls.Events.MANIFEST_PARSED, () => {
-          if (resolved) return;
-          resolved = true;
-          const levels = hls.levels;
-          if (levels?.length) {
-            qualitySelect.innerHTML = '<option value="auto">Auto</option>';
-            levels.forEach((l,i) => qualitySelect.appendChild(new Option(l.height?`${l.height}p`:`${Math.round(l.bitrate/1000)}kbps`, i)));
-            qualityPanel.classList.add('visible');
-            qualitySelect.onchange = () => { const v = qualitySelect.value; if (v === 'auto') hls.currentLevel = -1; else hls.currentLevel = parseInt(v,10); };
-          }
-          video.play().then(resolve).catch(reject);
-        });
-        hls.on(Hls.Events.ERROR, (_, data) => { if (data.fatal && !resolved) reject(new Error(`HLS error`)); });
-        video.addEventListener('error', () => reject(new Error('Video element error')), { once: true });
-        setTimeout(() => { if (!resolved) reject(new Error('HLS timeout')); }, 15000);
-      });
-    }
-
-    async function playDASH(streamObj) {
-      return new Promise((resolve, reject) => {
-        if (!window.dashjs) reject('dash.js missing');
-        destroyCurrent();
-        videoContainer.classList.add('active');
-        iframeContainer.classList.remove('active');
-        const video = videoElement;
-        video.muted = false;
-        const player = dashjs.MediaPlayer().create();
-        dashPlayer = player;
-        player.initialize(video, streamObj.url, false);
-        let resolved = false;
-        player.on(dashjs.MediaPlayer.events.STREAM_INITIALIZED, () => {
-          if (resolved) return;
-          resolved = true;
-          const bitrates = player.getBitrateInfoListFor('video');
-          if (bitrates?.length) {
-            qualitySelect.innerHTML = '<option value="auto">Auto</option>';
-            bitrates.forEach((b,i) => qualitySelect.appendChild(new Option(b.height?`${b.height}p`:`${Math.round(b.bitrate/1000)}kbps`, i)));
-            qualityPanel.classList.add('visible');
-            qualitySelect.onchange = () => {
-              const v = qualitySelect.value;
-              if (v === 'auto') player.setAutoSwitchQualityFor('video', true);
-              else { player.setAutoSwitchQualityFor('video', false); player.setQualityFor('video', parseInt(v,10)); }
-            };
-          }
-          video.play().then(resolve).catch(reject);
-        });
-        player.on(dashjs.MediaPlayer.events.ERROR, (e) => { if (!resolved) reject(new Error(`Dash error`)); });
-        setTimeout(() => { if (!resolved) reject(new Error('DASH timeout')); }, 15000);
-      });
-    }
-
-    async function playIframe(streamObj) {
-      return new Promise((resolve, reject) => {
-        destroyCurrent();
-        iframeContainer.classList.add('active');
-        videoContainer.classList.remove('active');
-        iframeElement.src = streamObj.url;
-        const timeout = setTimeout(() => reject(new Error('Iframe timeout')), 12000);
-        iframeElement.onload = () => { clearTimeout(timeout); resolve(); };
-        iframeElement.onerror = () => { clearTimeout(timeout); reject(new Error('Iframe load failed')); };
-        bigPlayBtn.classList.remove('visible');
-      });
-    }
-
-    function destroyCurrent() {
-      if (hlsPlayer) { try { hlsPlayer.destroy(); } catch {} hlsPlayer = null; }
-      if (dashPlayer) { try { dashPlayer.reset(); } catch {} dashPlayer = null; }
-      videoElement.pause(); videoElement.src = ''; videoElement.load();
-      iframeElement.src = 'about:blank';
-      videoContainer.classList.remove('active');
-      iframeContainer.classList.remove('active');
-      qualityPanel.classList.remove('visible');
-      currentPlayerType = null;
-    }
-
-    async function playStreamByIndex(index, isRetry=false) {
-      if (index<0 || index>=streams.length) { showErrorOverlay('No Streams','No valid streams'); return false; }
-      const stream = streams[index];
-      if (isIOS() && stream.type === 'dash') {
-        showToast(`📱 iOS doesn't support DASH, skipping`, 1500);
-        const next = index+1;
-        if (next < streams.length) return playStreamByIndex(next, false);
-        else { showErrorOverlay('Unsupported','No HLS/embed stream for iOS'); return false; }
-      }
-      currentStreamIndex = index;
-      showLoading(true, `Starting ${stream.label}...`);
-      hideErrorOverlay();
-      destroyCurrent();
+  // ========== Build streams from URL params ==========
+  async function buildStreams() {
+    const params = new URLSearchParams(location.search);
+    const moraUrls = params.getAll('mora').filter(isSafeUrl);
+    const embedUrls = params.getAll('embed').filter(isSafeUrl);
+    const streamList = [];
+    for (let i=0; i<moraUrls.length; i++) {
       try {
-        if (stream.type === 'hls') { await playHLS(stream); currentPlayerType='hls'; }
-        else if (stream.type === 'dash') { await playDASH(stream); currentPlayerType='dash'; }
-        else { await playIframe(stream); currentPlayerType='iframe'; }
-        showLoading(false);
-        updateButtonsActive(index);
-        retryCounter = 0;
-        if (currentPlayerType !== 'iframe') {
-          videoElement.addEventListener('play',()=>bigPlayBtn.classList.remove('visible'),{once:true});
-          videoElement.addEventListener('pause',()=>{ if(videoElement.paused) bigPlayBtn.classList.add('visible'); });
-          if (videoElement.paused) bigPlayBtn.classList.add('visible');
-        } else bigPlayBtn.classList.remove('visible');
-        showToast(`✅ ${stream.label} • LIVE`);
-        trackEvent('Stream','Started',stream.label,index+1);
-        return true;
-      } catch(err) {
-        showLoading(false);
-        trackEvent('Stream','Error',stream.label,index+1);
-        if (!isRetry && retryCounter < MAX_RETRIES) {
-          retryCounter++;
-          showToast(`⚠️ ${stream.label} failed, retry ${retryCounter}/${MAX_RETRIES}...`);
-          await new Promise(r=>setTimeout(r,800));
-          return playStreamByIndex(index, true);
+        const resolved = await resolveStream(moraUrls[i], true);
+        resolved.originalUrl = moraUrls[i];
+        streamList.push(resolved);
+      } catch(e) { console.warn(`Failed mora ${i}`, e); }
+    }
+    for (let i=0; i<embedUrls.length; i++) {
+      streamList.push({ type: 'iframe', url: embedUrls[i], originalUrl: embedUrls[i] });
+    }
+    // Sort: iOS prefers HLS > iframe > dash; others HLS > dash > iframe
+    streamList.sort((a,b) => {
+      const weight = (s) => {
+        if (s.type === 'hls') return 1;
+        if (isIOS() && s.type === 'iframe') return 2;
+        if (!isIOS() && s.type === 'dash') return 2;
+        if (!isIOS() && s.type === 'iframe') return 3;
+        return 10;
+      };
+      return weight(a) - weight(b);
+    });
+    // Assign nice labels
+    return streamList.map((s, idx) => {
+      let label = '';
+      if (s.type === 'hls') {
+        let cnt = streamList.filter((x,i) => i<=idx && x.type === 'hls').length;
+        label = cnt === 1 ? '📱 HLS (iOS/Android)' : `📱 HLS #${cnt}`;
+      } else if (s.type === 'dash') {
+        let cnt = streamList.filter((x,i) => i<=idx && x.type === 'dash').length;
+        label = cnt === 1 ? '💻 DASH (Desktop)' : `💻 DASH #${cnt}`;
+      } else {
+        let cnt = streamList.filter((x,i) => i<=idx && x.type === 'iframe').length;
+        label = cnt === 1 ? '🌐 Embedded Web' : `🌐 Embed #${cnt}`;
+      }
+      return { ...s, label };
+    });
+  }
+
+  // ========== Player Adapters ==========
+  async function playHLS(stream) {
+    if (!window.Hls) throw new Error('HLS.js missing');
+    destroyCurrent();
+    const video = document.createElement('video');
+    video.setAttribute('playsinline', '');
+    video.style.cssText = 'width:100%;height:100%;background:#000;';
+    DOM.playerHost.innerHTML = '';
+    DOM.playerHost.appendChild(video);
+    DOM.playerHost.style.display = 'block';
+    DOM.embedHost.classList.remove('active');
+    const hls = new Hls({ enableWorker: true, lowLatencyMode: true, startLevel: -1, xhrSetup: (xhr, url) => {
+      if (stream.originalUrl) xhr.setRequestHeader('Referer', stream.originalUrl);
+    } });
+    hlsPlayer = hls;
+    hls.loadSource(stream.url);
+    hls.attachMedia(video);
+    return new Promise((resolve, reject) => {
+      let resolved = false;
+      hls.on(Hls.Events.MANIFEST_PARSED, () => {
+        if (resolved) return;
+        resolved = true;
+        const levels = hls.levels;
+        if (levels?.length) {
+          const select = DOM.qualitySelect;
+          select.innerHTML = '<option value="auto">Auto</option>';
+          levels.forEach((l,i) => select.appendChild(new Option(l.height?`${l.height}p`:`${Math.round(l.bitrate/1000)}kbps`, i)));
+          select.onchange = () => { const v = select.value; if (v === 'auto') hls.currentLevel = -1; else hls.currentLevel = parseInt(v,10); };
+        }
+        video.play().then(resolve).catch(reject);
+      });
+      hls.on(Hls.Events.ERROR, (_, data) => { if (data.fatal && !resolved) reject(new Error(`HLS error`)); });
+      video.addEventListener('error', () => reject(new Error('Video error')), { once: true });
+      setTimeout(() => { if (!resolved) reject(new Error('HLS timeout')); }, CONFIG.PLAYER_TIMEOUT);
+    });
+  }
+
+  async function playDASH(stream) {
+    if (!window.dashjs) throw new Error('dash.js missing');
+    destroyCurrent();
+    const video = document.createElement('video');
+    video.setAttribute('playsinline', '');
+    video.style.cssText = 'width:100%;height:100%;background:#000;';
+    DOM.playerHost.innerHTML = '';
+    DOM.playerHost.appendChild(video);
+    DOM.playerHost.style.display = 'block';
+    DOM.embedHost.classList.remove('active');
+    const player = dashjs.MediaPlayer().create();
+    dashPlayer = player;
+    player.initialize(video, stream.url, false);
+    if (stream.drmKeys) player.setProtectionData({ 'org.w3.clearkey': { clearkeys: { [stream.drmKeys.keyId]: stream.drmKeys.key } } });
+    return new Promise((resolve, reject) => {
+      let resolved = false;
+      player.on(dashjs.MediaPlayer.events.STREAM_INITIALIZED, () => {
+        if (resolved) return;
+        resolved = true;
+        const bitrates = player.getBitrateInfoListFor('video');
+        if (bitrates?.length) {
+          const select = DOM.qualitySelect;
+          select.innerHTML = '<option value="auto">Auto</option>';
+          bitrates.forEach((b,i) => select.appendChild(new Option(b.height?`${b.height}p`:`${Math.round(b.bitrate/1000)}kbps`, i)));
+          select.onchange = () => {
+            const v = select.value;
+            if (v === 'auto') player.setAutoSwitchQualityFor('video', true);
+            else { player.setAutoSwitchQualityFor('video', false); player.setQualityFor('video', parseInt(v,10)); }
+          };
+        }
+        video.play().then(resolve).catch(reject);
+      });
+      player.on(dashjs.MediaPlayer.events.ERROR, (e) => { if (!resolved) reject(new Error(`Dash error`)); });
+      setTimeout(() => { if (!resolved) reject(new Error('DASH timeout')); }, CONFIG.PLAYER_TIMEOUT);
+    });
+  }
+
+  async function playIframe(stream) {
+    destroyCurrent();
+    DOM.embedHost.classList.add('active');
+    DOM.playerHost.style.display = 'none';
+    DOM.embedFrame.src = stream.url;
+    return new Promise((resolve, reject) => {
+      const timeout = setTimeout(() => reject(new Error('Iframe timeout')), CONFIG.PLAYER_TIMEOUT);
+      DOM.embedFrame.onload = () => { clearTimeout(timeout); resolve(); };
+      DOM.embedFrame.onerror = () => { clearTimeout(timeout); reject(new Error('Iframe load failed')); };
+    });
+  }
+
+  function destroyCurrent() {
+    if (hlsPlayer) { try { hlsPlayer.destroy(); } catch {} hlsPlayer = null; }
+    if (dashPlayer) { try { dashPlayer.reset(); } catch {} dashPlayer = null; }
+    DOM.playerHost.innerHTML = '';
+    DOM.embedFrame.src = 'about:blank';
+    DOM.embedHost.classList.remove('active');
+    DOM.playerHost.style.display = 'none';
+    DOM.centerPlay.classList.remove('visible');
+  }
+
+  // ========== Main playback ==========
+  async function playStreamByIndex(index, isRetry=false) {
+    if (index<0 || index>=streams.length) { showError('No Streams','No valid streams'); return false; }
+    const stream = streams[index];
+    if (isIOS() && stream.type === 'dash') {
+      showToast(`📱 iOS doesn't support DASH, skipping`, 1500);
+      const next = index+1;
+      if (next < streams.length) return playStreamByIndex(next, false);
+      else { showError('Unsupported','No HLS/embed stream for iOS'); return false; }
+    }
+    currentStream = stream;
+    currentIndex = index;
+    showLoading(true, `Starting ${stream.label}...`);
+    hideError();
+    destroyCurrent();
+    try {
+      if (stream.type === 'hls') { await playHLS(stream); currentAdapter = 'hls'; }
+      else if (stream.type === 'dash') { await playDASH(stream); currentAdapter = 'dash'; }
+      else { await playIframe(stream); currentAdapter = 'iframe'; }
+      showLoading(false);
+      updateButtonsActive(index);
+      retryCount = 0;
+      if (currentAdapter !== 'iframe') {
+        const video = DOM.playerHost.querySelector('video');
+        if (video) {
+          video.addEventListener('play', () => DOM.centerPlay.classList.remove('visible'), {once:true});
+          video.addEventListener('pause', () => { if(video.paused) DOM.centerPlay.classList.add('visible'); });
+          if (video.paused) DOM.centerPlay.classList.add('visible');
+        }
+      }
+      updateBadge(stream.label);
+      showToast(`✅ ${stream.label} • LIVE`);
+      trackEvent('Stream','Started',stream.label,index+1);
+      return true;
+    } catch(err) {
+      console.error(err);
+      showLoading(false);
+      trackEvent('Stream','Error',stream.label,index+1);
+      if (!isRetry && retryCount < CONFIG.MAX_RETRIES) {
+        retryCount++;
+        showToast(`⚠️ ${stream.label} failed, retry ${retryCount}/${CONFIG.MAX_RETRIES}...`);
+        await new Promise(r=>setTimeout(r,800));
+        return playStreamByIndex(index, true);
+      } else {
+        const next = index+1;
+        if (next < streams.length) {
+          showToast(`🔄 Switching to backup: ${streams[next].label}`,2000);
+          retryCount=0;
+          return playStreamByIndex(next, false);
         } else {
-          const next = index+1;
-          if (next < streams.length) {
-            showToast(`🔄 Switching to backup: ${streams[next].label}`,2000);
-            retryCounter=0;
-            return playStreamByIndex(next, false);
-          } else {
-            showErrorOverlay('All Streams Failed','No working stream found.');
-            return false;
-          }
+          showError('All Streams Failed','No working stream found.');
+          return false;
         }
       }
     }
+  }
 
-    function switchToStream(index) {
-      if (index === currentStreamIndex) { showToast(`Already on ${streams[index].label}`); return; }
-      retryCounter=0;
-      trackEvent('User','Switch Stream',streams[index].label,index+1);
-      playStreamByIndex(index,false);
-    }
+  function switchToStream(index) {
+    if (index === currentIndex) { showToast(`Already on ${streams[index].label}`); return; }
+    retryCount = 0;
+    trackEvent('User','Switch Stream',streams[index].label,index+1);
+    playStreamByIndex(index, false);
+  }
 
-    function renderButtons() {
-      sourceBar.innerHTML = '';
-      const autoBtn = document.createElement('button');
-      autoBtn.className = 'source-btn auto';
-      autoBtn.textContent = '⚡ AUTO';
-      autoBtn.onclick = () => { if(streams.length) switchToStream(0); };
-      sourceBar.appendChild(autoBtn);
-      streams.forEach((s,i) => {
-        const btn = document.createElement('button');
-        btn.className = 'source-btn';
-        btn.textContent = s.label;
-        btn.onclick = () => switchToStream(i);
-        sourceBar.appendChild(btn);
-      });
-      updateButtonsActive(currentStreamIndex);
-    }
-    function updateButtonsActive(idx) {
-      const btns = document.querySelectorAll('.source-btn');
-      btns.forEach((btn,i) => { if ((i===0 && idx===0) || (i-1 === idx)) btn.classList.add('active'); else btn.classList.remove('active'); });
-      if (idx===0 && btns[0]) btns[0].classList.add('active');
-    }
-
-    // ========== MOBILE CONTROLS LOGIC ==========
-    function updateControlsUI() {
-      if (!videoElement || currentPlayerType === 'iframe') return;
-      const duration = videoElement.duration || 0;
-      const current = videoElement.currentTime || 0;
-      seekSlider.value = duration ? (current/duration)*100 : 0;
-      const fmt = (t) => { let m = Math.floor(t/60); let s = Math.floor(t%60); return `${m}:${s<10?'0'+s:s}`; };
-      timeDisplay.innerText = `${fmt(current)} / ${fmt(duration)}`;
-      playPauseCtrl.innerText = videoElement.paused ? '▶️' : '⏸️';
-    }
-
-    function attachVideoListeners() {
-      videoElement.addEventListener('timeupdate', updateControlsUI);
-      videoElement.addEventListener('loadedmetadata', updateControlsUI);
-      videoElement.addEventListener('volumechange', () => { volumeSlider.value = videoElement.volume; });
-      volumeSlider.addEventListener('input', (e) => { videoElement.volume = parseFloat(e.target.value); if(videoElement.muted) videoElement.muted=false; });
-      seekSlider.addEventListener('input', (e) => { if(videoElement.duration) videoElement.currentTime = (e.target.value/100) * videoElement.duration; });
-      playPauseCtrl.addEventListener('click', () => { if(videoElement.paused) videoElement.play(); else videoElement.pause(); });
-      fullscreenCtrl.addEventListener('click', () => { const stage = document.getElementById('playerStage'); if (stage.requestFullscreen) stage.requestFullscreen(); });
-      // Show/hide controls on tap
-      const videoArea = document.querySelector('.video-area');
-      let controlsTimer;
-      function showControlsTemporarily() {
-        mobileControls.classList.add('visible');
-        if (controlsTimer) clearTimeout(controlsTimer);
-        controlsTimer = setTimeout(() => { mobileControls.classList.remove('visible'); }, 3000);
-      }
-      videoArea.addEventListener('click', (e) => { if(e.target !== bigPlayBtn && currentPlayerType !== 'iframe') showControlsTemporarily(); });
-      videoArea.addEventListener('touchstart', () => { if(currentPlayerType !== 'iframe') showControlsTemporarily(); });
-      // initial volume
-      volumeSlider.value = videoElement.volume;
-    }
-
-    // Fullscreen first tap
-    function setupFirstFullscreen() {
-      const stage = document.getElementById('playerStage');
-      const handler = () => {
-        if (document.documentElement.requestFullscreen) stage.requestFullscreen().catch(()=>{});
-        showToast('🎬 Fullscreen enabled',1000);
-        if (fullscreenHint) fullscreenHint.style.opacity='0';
-        stage.removeEventListener('click',handler);
-        stage.removeEventListener('touchstart',handler);
-      };
-      stage.addEventListener('click',handler);
-      stage.addEventListener('touchstart',handler);
-      setTimeout(()=>{ if(fullscreenHint) fullscreenHint.style.opacity='0.6'; },1000);
-    }
-
-    bigPlayBtn.addEventListener('click',(e)=>{
-      e.stopPropagation();
-      if (videoElement && currentPlayerType !== 'iframe') {
-        if (videoElement.paused) videoElement.play().catch(()=>showToast('Playback blocked'));
-        else videoElement.pause();
-      }
+  // ========== UI: source bar with auto button ==========
+  function renderSourceBar() {
+    DOM.sourceBar.innerHTML = '';
+    const autoBtn = document.createElement('button');
+    autoBtn.className = 'source-btn auto';
+    autoBtn.textContent = '⚡ AUTO';
+    autoBtn.onclick = () => { if(streams.length) switchToStream(0); };
+    DOM.sourceBar.appendChild(autoBtn);
+    streams.forEach((s,i) => {
+      const btn = document.createElement('button');
+      btn.className = 'source-btn';
+      btn.textContent = s.label;
+      btn.onclick = () => switchToStream(i);
+      DOM.sourceBar.appendChild(btn);
     });
-    document.getElementById('errorRetryBtn').addEventListener('click',()=>{
-      hideErrorOverlay();
-      if (currentStreamIndex>=0 && streams[currentStreamIndex]) playStreamByIndex(currentStreamIndex,false);
-      else if (streams.length) playStreamByIndex(0,false);
+    updateButtonsActive(currentIndex);
+    DOM.stage.classList.add('tabs-visible');
+  }
+  function updateButtonsActive(idx) {
+    const btns = document.querySelectorAll('.source-btn');
+    btns.forEach((btn,i) => {
+      if ((i===0 && idx===0) || (i-1 === idx)) btn.classList.add('active');
+      else btn.classList.remove('active');
     });
+  }
 
-    async function init() {
-      showLoading(true, 'Resolving streams...');
-      try {
-        streams = await buildStreamList();
-        if (!streams.length) throw new Error('No streams');
-        renderButtons();
-        await Promise.all([
-          new Promise(r=>{ if(window.Hls) r(); else { const s=document.createElement('script'); s.src='https://cdn.jsdelivr.net/npm/hls.js@1.5.7/dist/hls.min.js'; s.onload=r; document.head.appendChild(s); } }),
-          new Promise(r=>{ if(window.dashjs) r(); else { const s=document.createElement('script'); s.src='https://cdn.dashjs.org/latest/dash.all.min.js'; s.onload=r; document.head.appendChild(s); } })
-        ]);
-        showLoading(false);
-        attachVideoListeners();
-        playStreamByIndex(0, false);
-        setupFirstFullscreen();
-        trackEvent('App','Player Loaded',`${streams.length} streams`);
-      } catch(err) {
-        showLoading(false);
-        console.error(err);
-        showErrorOverlay('Initialization Failed', err.message);
-      }
+  // ========== Mobile controls & gestures ==========
+  function showGestureHint(msg) {
+    clearTimeout(gestureTimer);
+    DOM.gestureHint.textContent = msg;
+    DOM.gestureHint.classList.add('show');
+    gestureTimer = setTimeout(() => DOM.gestureHint.classList.remove('show'), 1800);
+  }
+
+  let touchStart = null;
+  function onTouchStart(e) {
+    const t = e.touches[0];
+    touchStart = { x: t.clientX, y: t.clientY, t: Date.now() };
+  }
+  function onTouchEnd(e) {
+    if (!touchStart) return;
+    const t = e.changedTouches[0];
+    const dx = t.clientX - touchStart.x;
+    const dy = t.clientY - touchStart.y;
+    const dt = Date.now() - touchStart.t;
+    touchStart = null;
+    if (dt > 600 || (Math.abs(dx) < CONFIG.GESTURE_THRESHOLD && Math.abs(dy) < CONFIG.GESTURE_THRESHOLD)) return;
+    if (Math.abs(dx) > Math.abs(dy)) {
+      if (dx < -CONFIG.GESTURE_THRESHOLD) { switchToStream((currentIndex+1)%streams.length); showGestureHint('→ Next Stream'); }
+      else if (dx > CONFIG.GESTURE_THRESHOLD) { playStreamByIndex(currentIndex, false); showGestureHint('↺ Refreshed'); }
+    } else {
+      const video = DOM.playerHost.querySelector('video');
+      if (!video) return;
+      const vol = Math.min(1, Math.max(0, video.volume + (dy < 0 ? 0.05 : -0.05)));
+      video.volume = vol;
+      DOM.volumeSlider.value = vol * 100;
+      showGestureHint(dy < 0 ? `🔊 Vol ${Math.round(vol*100)}%` : `🔉 Vol ${Math.round(vol*100)}%`);
     }
-    init();
+  }
+
+  function showControlsTemporarily() {
+    if (currentAdapter === 'iframe') return;
+    DOM.stage.classList.add('overlay-active');
+    clearTimeout(controlsTimer);
+    controlsTimer = setTimeout(() => DOM.stage.classList.remove('overlay-active'), 3000);
+  }
+
+  // ========== Bandwidth monitor ==========
+  async function measureBandwidth() {
+    const start = Date.now();
+    const probe = 'https://cdn.jsdelivr.net/npm/hls.js@1.5.7/dist/hls.min.js?_='+start;
+    try {
+      const res = await fetch(probe, { cache: 'no-store' });
+      const blob = await res.blob();
+      const kbps = Math.round((blob.size * 8) / ((Date.now()-start)/1000) / 1000);
+      DOM.bwLabel.textContent = kbps > 1000 ? (kbps/1000).toFixed(1)+' Mbps' : kbps+' Kbps';
+      const level = kbps > 5000 ? 4 : kbps > 2000 ? 3 : kbps > 500 ? 2 : 1;
+      DOM.bwBars.forEach((bar,i) => bar.classList.toggle('active', i < level));
+      DOM.bwIndicator.classList.add('visible');
+    } catch {}
+  }
+  setInterval(measureBandwidth, 30000);
+  measureBandwidth();
+
+  // ========== Volume, speed, PiP, fullscreen ==========
+  DOM.volumeSlider.addEventListener('input', e => {
+    const video = DOM.playerHost.querySelector('video');
+    if (video) video.volume = e.target.value / 100;
+  });
+  DOM.speedSelect.addEventListener('change', e => {
+    const video = DOM.playerHost.querySelector('video');
+    if (video) video.playbackRate = parseFloat(e.target.value);
+    showToast(`Speed: ${e.target.value}x`);
+  });
+  DOM.btnPip.addEventListener('click', () => {
+    const video = DOM.playerHost.querySelector('video');
+    if (video && document.pictureInPictureEnabled) {
+      if (document.pictureInPictureElement) document.exitPictureInPicture();
+      else video.requestPictureInPicture().catch(()=>showToast('PiP not supported'));
+    } else showToast('No video element');
+  });
+  DOM.btnFullscreen.addEventListener('click', () => {
+    if (!document.fullscreenElement) DOM.stage.requestFullscreen();
+    else document.exitFullscreen();
+  });
+  DOM.centerPlay.addEventListener('click', () => {
+    const video = DOM.playerHost.querySelector('video');
+    if (video) video.paused ? video.play() : video.pause();
+  });
+  DOM.errorRetry.addEventListener('click', () => {
+    hideError();
+    if (currentStream) playStreamByIndex(currentIndex, false);
+    else if (streams.length) playStreamByIndex(0, false);
+  });
+
+  // ========== Global keyboard & tap controls ==========
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight') { switchToStream((currentIndex+1)%streams.length); e.preventDefault(); }
+    if (e.key === 'r') { playStreamByIndex(currentIndex, false); e.preventDefault(); }
+    if (e.key === 'f') { DOM.btnFullscreen.click(); e.preventDefault(); }
+    if (e.key === 'v') { const video = DOM.playerHost.querySelector('video'); if(video) video.muted = !video.muted; e.preventDefault(); }
+  });
+  DOM.stage.addEventListener('click', showControlsTemporarily);
+  DOM.stage.addEventListener('touchstart', onTouchStart);
+  DOM.stage.addEventListener('touchend', onTouchEnd);
+
+  // ========== Initialization ==========
+  (async () => {
+    showLoading(true, 'Resolving streams...');
+    try {
+      streams = await buildStreams();
+      if (!streams.length) throw new Error('No streams');
+      renderSourceBar();
+      await Promise.all([
+        new Promise(r=>{ if(window.Hls) r(); else { const s=document.createElement('script'); s.src='https://cdn.jsdelivr.net/npm/hls.js@1.5.7/dist/hls.min.js'; s.onload=r; document.head.appendChild(s); } }),
+        new Promise(r=>{ if(window.dashjs) r(); else { const s=document.createElement('script'); s.src='https://cdn.dashjs.org/latest/dash.all.min.js'; s.onload=r; document.head.appendChild(s); } })
+      ]);
+      showLoading(false);
+      await playStreamByIndex(0, false);
+      trackEvent('App','Player Loaded',`${streams.length} streams`);
+    } catch(err) {
+      showLoading(false);
+      showError('Init Failed', err.message);
+    }
   })();
+
+  window.StreamPlayer = { togglePlayPause: () => { const v = DOM.playerHost.querySelector('video'); if(v) v.paused ? v.play() : v.pause(); } };
+})();
 </script>
 </body>
 </html>
