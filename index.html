@@ -803,7 +803,6 @@ let CFG={
   deepseekKey:'',deepseekModel:'claude-sonnet-4-20250514',deepseekTone:'',deepseekLength:'medium',
   ytApiKey:''
 };
-let ddkanquHomeMap = {};   // for DDKanqu homepage cache
 let LOGO_OVERRIDES={},LOGO_CACHE={};
 let allEvents=[],channels=[],postLog={};
 let accessToken=null,editingCH=null;
@@ -1772,7 +1771,7 @@ function parseDDKanquDOM(html, baseUrl){
     // ── HLS/stream extraction via comment node traversal ──
     const hlsUrls = [];
     // Use TreeWalker with SHOW_COMMENT to traverse all comment nodes inside the <a>
-const walker = doc.createTreeWalker(link, NodeFilter.SHOW_COMMENT);
+    const walker = document.createTreeWalker(link, NodeFilter.SHOW_COMMENT);
     let node;
     while((node = walker.nextNode())){
       const text = node.nodeValue || '';
@@ -2062,30 +2061,6 @@ async function scrapeFullRacesHome(){
     if(spinner) spinner.style.display = 'none';
     return;
   }
-  async function quickPostRace(id){
-  if(!accessToken){ toast('Sign in with Google first','e'); return; }
-  if(!CFG.blogId){ toast('Add your Blog ID in Settings','e'); return; }
-  const race = findRace(id); if(!race) return;
-  toast('Posting race to Blogger…','i');
-  const postTitle = race.title + ' – Full Race Replay | Sports 803';
-  const thumbBlock = race.previewImg
-    ? `<div><img src="${race.previewImg}" alt="${race.title}" style="max-width:100%;height:auto;border-radius:10px;margin-bottom:18px"></div>\n`
-    : '';
-  const playerIframe = race.sources.length
-    ? `<div style="margin:18px 0;position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:10px"><iframe loading="lazy" src="${race.playerUrl}" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;border-radius:10px" allowfullscreen allow="autoplay; encrypted-media"></iframe></div>`
-    : '';
-  const body = await buildArticleWithClaude(race.title, null, false);
-  const html = thumbBlock + body.replace(/\n/g,'<br>') + (playerIframe ? '\n\n'+playerIframe : '');
-  const labels = ['sports 803','full race replay', race.sportSlug, 'motorsport'].filter(Boolean);
-  const post = await postRaw(postTitle, html, CFG.schedStatus||'DRAFT', labels);
-  if(post){
-    addRecentPost(postTitle, post.url, CFG.schedStatus||'DRAFT');
-    toast('Race posted ✓','s');
-    const card = document.getElementById('rcard-'+id);
-    if(card) card.style.borderColor = 'var(--green)';
-  }
-}
-
   frLog('✓ Homepage fetched ('+html.length+' bytes). Parsing links…');
   const parser = new DOMParser();
   const doc = parser.parseFromString(html, 'text/html');
@@ -2130,7 +2105,7 @@ async function scrapeFullRacesHome(){
  * @param {boolean} silent - Suppress individual toasts when batch scraping
  * @returns {Object|null} race data object
  */
-  async function scrapeFullRacesURL(url, silent=false){
+async function scrapeFullRacesURL(url, silent=false){
   if(!url || !url.startsWith('http')){
     if(!silent) toast('Enter a valid URL','w');
     return null;
@@ -2145,15 +2120,12 @@ async function scrapeFullRacesHome(){
   }
   const parser = new DOMParser();
   const doc = parser.parseFromString(html, 'text/html');
-
   // ── Title ──
   const ogTitle = doc.querySelector('meta[property="og:title"]');
   const title = (ogTitle ? ogTitle.getAttribute('content') : '') || doc.title || url.split('/').pop().replace(/-/g,' ');
-
-  // ── Preview Image (from .full_img inside fullstory only) ──
+  // ── Preview Image ──
   let previewImg = '';
-  const story = doc.querySelector('div.fullstory.block_elem') || doc.querySelector('.fullstory') || doc.body;
-  const fullImgEl = story ? story.querySelector('.full_img img') : null;
+  const fullImgEl = doc.querySelector('.full_img img, .fullstory .full_img img');
   if(fullImgEl){
     const rawSrc = fullImgEl.getAttribute('src') || '';
     try{ previewImg = new URL(rawSrc, url).href; }catch(e){ previewImg = rawSrc; }
@@ -2162,55 +2134,58 @@ async function scrapeFullRacesHome(){
     const og = doc.querySelector('meta[property="og:image"]');
     if(og) previewImg = og.getAttribute('content') || '';
   }
-
-  // ── Video Sources — ONLY inside div.fullstory.block_elem, in DOM order ──
+  // ── Story container ──
+  const story = doc.querySelector('div.fullstory.block_elem') ||
+                doc.querySelector('.fullstory') ||
+                doc.querySelector('.entry-content') ||
+                doc.body;
+  // ── Video Sources (ORDERED as they appear on page) ──
   const sources = [];
-  if(story){
-    const allNodes = story.querySelectorAll('a.su-button, iframe');
-    for(const node of allNodes){
-      if(node.tagName === 'A'){
-        const href = node.getAttribute('href') || '';
-        if(href && href.startsWith('http')){
-          const label = node.textContent.trim() || 'Part '+(sources.length+1);
-          sources.push({url: href, label});
-          frLog('  [su-button] '+label+': '+href);
-        }
-      } else if(node.tagName === 'IFRAME'){
-        const src = node.getAttribute('src') || node.getAttribute('data-src') || '';
-        if(src && src.startsWith('http')){
-          const label = 'Embed '+(sources.length+1);
-          sources.push({url: src, label});
-          frLog('  [iframe] '+label+': '+src);
-        }
+  // Collect all su-button links AND iframes together, sorted by DOM order
+  const allNodes = story ? story.querySelectorAll('a.su-button, iframe') : [];
+  for(const node of allNodes){
+    if(node.tagName === 'A'){
+      // Dailymotion / direct part links
+      const href = node.getAttribute('href') || '';
+      if(href && href.startsWith('http')){
+        const label = node.textContent.trim() || 'Part '+(sources.length+1);
+        sources.push({url: href, label});
+        frLog('  [su-button] '+label+': '+href);
+      }
+    } else if(node.tagName === 'IFRAME'){
+      // Embedded players (ok.ru, voe.sx, etc.)
+      const src = node.getAttribute('src') || node.getAttribute('data-src') || '';
+      if(src && src.startsWith('http')){
+        const label = 'Embed '+(sources.length+1);
+        sources.push({url: src, label});
+        frLog('  [iframe] '+label+': '+src);
       }
     }
   }
-
-  // ── Build player URL — all sources as &embed= params ──
+  // ── Build player URL ──
+  // URL-encode each source and join as ?embed=…&embed=…
   const playerBase = (CFG.mediaPlayerBase || 'https://alvinalexa.github.io/media-player/').replace(/\/$/,'');
   const playerUrl = sources.length
     ? playerBase + '?' + sources.map(s => 'embed='+encodeURIComponent(s.url)).join('&')
     : playerBase;
-
-  frLog('  Player URL: '+playerUrl);
-
+  // ── Extract date from title or URL ──
   const dateMatch = (title+' '+url).match(/(?:january|february|march|april|may|june|july|august|september|october|november|december)\s+\d{1,2}[,\s]+\d{4}/i);
   const dateStr = dateMatch ? dateMatch[0] : '';
+  // ── Extract sport/series from URL/title ──
   const sportMatch = url.match(/fullraces\.com\/([^/]+)/);
   const sportSlug = sportMatch ? sportMatch[1].split('-')[0] : '';
-
   const race = {
     id: 'fr_'+btoa(url).replace(/[^a-z0-9]/gi,'').substring(0,12),
     url, title, previewImg, sources, playerUrl, dateStr, sportSlug,
-    savedHL: null,
+    savedHL: null, // for Task 4 highlights
   };
+  // Merge with existing saved HL
   const existing = fullRacesData.find(r => r.url === url);
   if(existing?.savedHL) race.savedHL = existing.savedHL;
-
   if(!silent){
     frLog('\n✓ Scraped: "'+title+'" — '+sources.length+' source(s)');
-    frLog('Player: '+playerUrl);
     toast('"'+title.substring(0,40)+'" scraped ✓','s');
+    // Add/update in fullRacesData
     const idx = fullRacesData.findIndex(r => r.url === url);
     if(idx > -1) fullRacesData[idx] = race;
     else fullRacesData.unshift(race);
@@ -2219,9 +2194,6 @@ async function scrapeFullRacesHome(){
   }
   return race;
 }
-
-
-  
 
 /**
  * Render the Full Races grid with race cards.
@@ -2251,8 +2223,7 @@ function renderFullRaces(races){
           ${hasHL ? '🎬 Watch Highlights' : '▶ Watch Full Race'}
         </button>
         <div style="display:flex;gap:5px;margin-top:7px">
-         <button class="btn-ghost btn-xs" style="flex:1" onclick="genRacePost('${race.id}')">✍️ Gen Post</button>
-          <button class="btn-red btn-xs" onclick="quickPostRace('${race.id}')">📤 Post</button>
+          <button class="btn-ghost btn-xs" style="flex:1" onclick="genRacePost('${race.id}')">✍️ Gen Post</button>
           <button class="btn-gold btn-xs" onclick="toggleRaceHL('${race.id}',this)" title="Add Highlights Link">+🎬</button>
           <button class="btn-ghost btn-xs" onclick="copyRacePlayerUrl('${race.id}')">📋 URL</button>
         </div>
@@ -2310,57 +2281,30 @@ function copyRacePlayerUrl(id){
   toast('Player URL copied ✓','s');
 }
 
-
 async function genRacePost(id){
   const race = findRace(id); if(!race) return;
   clearEditMode();
-
-  // Title
-  const postTitle = race.title + ' – Full Race Replay | Sports 803';
-  set('post-title', postTitle);
-
-  // Build iframe block from all sources
-  const playerIframe = race.sources.length
-    ? `<div style="margin:18px 0;position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:10px"><iframe loading="lazy" src="${race.playerUrl}" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;border-radius:10px" allowfullscreen allow="autoplay; encrypted-media"></iframe></div>`
-    : '';
-
-  // Thumbnail img block from scraped banner
-  const thumbBlock = race.previewImg
-    ? `<div><img src="${race.previewImg}" alt="${race.title}" style="max-width:100%;height:auto;border-radius:10px;margin-bottom:18px"></div>\n`
-    : '';
-
-  // AI body
-  toast('Generating article…','i');
+  set('post-title', race.title+' – Full Race Replay | Sports 803');
   const body = await buildArticleWithClaude(race.title, null, false);
-
-  // Compose body = thumbnail + article + iframe player
-  document.getElementById('post-body').value = thumbBlock + body + (playerIframe ? '\n\n' + playerIframe : '');
-
-  // Pre-fill compose thumb URL so it publishes with the scraped image
-  set('compose-thumb-url', race.previewImg || '');
-
-  // Pre-draw thumbnail on compose canvas using the race banner image
-  if(race.previewImg){
-    const cv = document.getElementById('compose-canvas');
-    setCanvasSize(cv, '1920', '16:9');
-    await drawRaceThumbnail(cv, {
-      name: race.title,
-      league: race.sportSlug ? race.sportSlug.toUpperCase() : 'Full Race',
-      datetime: race.dateStr || '',
-      venue: '',
-      bg1: '#0a0e1a',
-      bg2: '#1a0a00',
-      bannerUrl: race.previewImg
-    });
-  }
-
-  document.getElementById('post-labels').value = ['sports 803','full race replay', race.sportSlug, 'motorsport'].filter(Boolean).join(', ');
+  // Append the multi-part player iframe
+  const playerIframe = race.playerUrl
+    ? `\n\n<div style="margin:18px 0;position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:10px"><iframe loading="lazy" src="${race.playerUrl}" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;border-radius:10px" allowfullscreen allow="autoplay; encrypted-media"></iframe></div>`
+    : '';
+  document.getElementById('post-body').value = body + playerIframe;
+  document.getElementById('post-labels').value = ['sports 803','full race replay',race.sportSlug,'motorsport'].filter(Boolean).join(', ');
   currentComposeEv = null;
-  updateSEO();
   showPage('compose');
-  toast('Race post ready — click Publish to post to Blogger ✓','s');
+  updateSEO();
+  toast('Race post ready in Compose ✓','s');
 }
 
+function clearFullRaces(){
+  if(!confirm('Clear all saved races?')) return;
+  fullRacesData = [];
+  saveAll();
+  renderFullRaces([]);
+  document.getElementById('fr-scrape-log').textContent = 'Cleared.';
+}
 
 // ═══ YT SEARCH ═══
 async function ytSearchAndFill(evOrNull){
