@@ -1512,7 +1512,6 @@ RESPONSIVE BREAKPOINTS
 </div><!-- Toast Container --><div id="toasts"></div><!-- ══════════════════════════════════════════════════
      JAVASCRIPT
 ══════════════════════════════════════════════════ --><script>
-'use strict';
 // ═══════════════════════════════════════════════════
 // SECTION 1 — CONSTANTS & CONFIG
 // ═══════════════════════════════════════════════════
@@ -1760,10 +1759,10 @@ function selectThumbTpl(el){
 // Toasts
 let toastCount=0;
 function toast(msg,type='i',dur=3500){
-  const icons={s:'✓',e:'✕',i:'ℹ',w:'⚠'};
+  const icons={s:'✓',e:'✕',i:'\u2139',w:'⚠'};
   const t=document.createElement('div');
   t.className=`toast ${type}`;t.id='toast-'+(++toastCount);
-  t.innerHTML=`<span>${icons\[type\]||'ℹ'}</span><span style="flex:1">${escHtml(msg)}</span><span class="toast-close" onclick="this.parentElement.remove()">✕</span>`;
+  t.innerHTML=`<span>${icons[type]||'\u2139'}</span><span style="flex:1">${escHtml(msg)}</span><span class="toast-close" onclick="this.parentElement.remove()">✕</span>`;
   el('toasts').appendChild(t);
   setTimeout(()=>t.remove(),dur);
 }
@@ -2423,7 +2422,7 @@ function updateEventsBadges(){
 function renderPagination(containerId,total,current,perPage,callback){
   const cont=el(containerId);if(!cont)return;
   const pages=Math.ceil(total/perPage);if(pages<=1){cont.innerHTML='';return;}
-  let html=`<span class="page-info">${((current-1)\*perPage)+1}–${Math.min(current*perPage,total)} of ${total}</span>`;
+  let html=`<span class="page-info">${((current-1)*perPage)+1}–${Math.min(current*perPage,total)} of ${total}</span>`;
   if(current>1)html+=`<button class="page-btn" onclick="(${callback.toString().replace(/(\r\n|\n|\r)/gm,'')})(${current-1})">←</button>`;
   for(let i=Math.max(1,current-2);i<=Math.min(pages,current+2);i++)html+=`<button class="page-btn${i===current?' active':''}" onclick="(${callback.toString().replace(/(\r\n|\n|\r)/gm,'')})(${i})">${i}</button>`;
   if(current<pages)html+=`<button class="page-btn" onclick="(${callback.toString().replace(/(\r\n|\n|\r)/gm,'')})(${current+1})">→</button>`;
@@ -2494,7 +2493,7 @@ async function drawThumbHighlights(cv,opts){
   ctx.fillStyle='rgba(244,162,97,0.06)';ctx.fillRect(0,H*0.7,W,H*0.3);
   ctx.save();ctx.font=`900 ${H*0.32}px 'Barlow Condensed',sans-serif`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='rgba(255,255,255,0.04)';ctx.fillText('HIGHLIGHTS',W/2,H/2);ctx.restore();
   if(score){ctx.save();ctx.font=`900 ${H*0.25}px 'Barlow Condensed',sans-serif`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='#ffd60a';ctx.shadowColor='rgba(255,214,10,0.4)';ctx.shadowBlur=30;ctx.fillText(score,W/2,H/2);ctx.restore();}
-  if(home&&away){ctx.save();ctx.font=`800 ${H\*0.09}px 'Barlow Condensed',sans-serif`;ctx.textAlign='center';ctx.fillStyle='#ffffff';ctx.fillText(`${home.toUpperCase()} vs ${away.toUpperCase()}`,W/2,H*0.82);ctx.restore();}
+  if(home&&away){ctx.save();ctx.font=`800 ${H*0.09}px 'Barlow Condensed',sans-serif`;ctx.textAlign='center';ctx.fillStyle='#ffffff';ctx.fillText(`${home.toUpperCase()} vs ${away.toUpperCase()}`,W/2,H*0.82);ctx.restore();}
   if(league){ctx.save();ctx.font=`700 ${H*0.055}px 'Barlow Condensed',sans-serif`;ctx.textAlign='center';ctx.fillStyle='rgba(255,255,255,0.4)';ctx.fillText(league.toUpperCase(),W/2,H*0.12);ctx.restore();}
   const brand=CFG.brandName||'Sports 803';ctx.save();ctx.font=`700 ${H*0.038}px 'Barlow Condensed',sans-serif`;ctx.textAlign='right';ctx.fillStyle='rgba(255,255,255,0.25)';ctx.fillText(brand.toUpperCase(),W*0.97,H*0.95);ctx.restore();
 }
@@ -2677,7 +2676,7 @@ const DEFAULT_CHANNELS=[
   {id:'ch4',name:'NBC Sports',sport:'nfl,nba',url:'',region:'US',health:'unknown'},
   {id:'ch5',name:'SuperSport',sport:'epl,ucl',url:'',region:'Africa',health:'unknown'},
 ];
-let editingChannelId=null;
+editingChannelId=null;
 function openAddChannel(){editingChannelId=null;el('channel-modal-title').textContent='Add Channel';['ch-name','ch-region','ch-sport','ch-url'].forEach(id=>set(id,''));el('modal-channel').classList.add('open');}
 function saveChannel(){
   const name=v('ch-name');if(!name){toast('Channel name required','w');return;}
