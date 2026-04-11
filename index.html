@@ -2109,17 +2109,17 @@ function insertThumbIntoPost(){const url=_composeThumbUrl;const title=v(‘compo
 function downloadComposeThumb(){const cv=document.getElementById(‘compose-canvas’);const a=document.createElement(‘a’);a.download=‘sports803-thumb.jpg’;a.href=cv.toDataURL(‘image/jpeg’,.9);a.click();}
 
 // ═══ STANDALONE THUMB BUILDER ═══
-function onTBParseInput(){const s=v(‘tb-parse’);const p=parseTitle(s);const row=document.getElementById(‘tb-parsed-row’);if(p){set(‘tb-home’,p.home);set(‘tb-away’,p.away);document.getElementById(‘tbp-home’).textContent=p.home;document.getElementById(‘tbp-away’).textContent=p.away;row.style.display=‘flex’;schedTBThumb();}else row.style.display=‘none’;}
-function schedTBThumb(){clearTimeout(tbDebounce);tbDebounce=setTimeout(buildStandalonethumb,700);}
+// onTBParseInput() defined in V9 section
+// schedTBThumb() defined in V9 section
 async function buildStandalonethumb(){
 const cv=document.getElementById(‘tb-canvas’);const quality=v(‘tb-quality’)||‘800’;const aspect=v(‘tb-aspect’)||‘16:9’;const mode=v(‘tb-mode’)||‘preview’;setCanvasSize(cv,quality,aspect);
 const home=v(‘tb-home’),away=v(‘tb-away’);
 if(mode===‘race’||!away){await renderThumb(cv,{type:‘race’,name:home||‘Race Event’,league:v(‘tb-league’),datetime:v(‘tb-dt’),venue:’’,bg1:document.getElementById(‘tb-bg1’)?.value||’#0a0e1a’,bg2:document.getElementById(‘tb-bg2’)?.value||’#1a0010’,bannerUrl:v(‘tb-banner’)},‘tb-progress’,‘tb-status’);}
 else{await renderThumb(cv,{type:‘match’,home,away,hLogo:v(‘tb-home-logo’),aLogo:v(‘tb-away-logo’),league:v(‘tb-league’),datetime:v(‘tb-dt’),bg1:document.getElementById(‘tb-bg1’)?.value||’#0d1b2a’,bg2:document.getElementById(‘tb-bg2’)?.value||’#1a0020’,mode,score:v(‘tb-score’)},‘tb-progress’,‘tb-status’);logoChipImg(LOGO_CACHE[home.toLowerCase()]||v(‘tb-home-logo’),home,‘tb-home-chip’);logoChipImg(LOGO_CACHE[away.toLowerCase()]||v(‘tb-away-logo’),away,‘tb-away-chip’);}
 }
-async function uploadStandaloneThumb(){const url=await uploadCanvas(document.getElementById(‘tb-canvas’));if(url){set(‘tb-url’,url);toast(‘Uploaded ✓’,‘s’);}}
-function downloadStandaloneThumb(){const a=document.createElement(‘a’);a.download=‘sports803-thumb.jpg’;a.href=document.getElementById(‘tb-canvas’).toDataURL(‘image/jpeg’,.92);a.click();}
-function copyThumbHTML(){const url=v(‘tb-url’);const cv=document.getElementById(‘tb-canvas’);const src=url||cv.toDataURL(‘image/jpeg’,.88);navigator.clipboard.writeText(’<img src="'+src+'" style="max-width:100%;height:auto;border-radius:8px" alt="Sports 803 Thumbnail">’);toast(‘HTML copied ✓’,‘s’);}
+// uploadStandaloneThumb() defined in V9 section
+// downloadStandaloneThumb() defined in V9 section
+// copyThumbHTML() defined in V9 section
 function sendTBToCompose(){const title=(v(‘tb-home’)||’’)+(v(‘tb-away’)?’ vs ‘+v(‘tb-away’):’’);if(title){if(el(‘compose-title’))el(‘compose-title’).value=title;onTitleChange();}nav(‘compose’,document.querySelector(’[data-page=compose]’));const cv=el(‘tb-canvas’);const src=v(‘tb-url’)||(cv?cv.toDataURL(‘image/jpeg’,.88):’’);const body=el(‘compose-article’);if(body)body.value=’<div><img src="'+src+'" alt="'+title+'" style="max-width:100%;height:auto;border-radius:10px;margin-bottom:18px"></div>\n’+(body.value||’’);toast(‘Sent to Compose ✓’,‘s’);}
 
 // ═══ IMGBB UPLOAD ═══
@@ -3058,11 +3058,7 @@ navigator.clipboard.writeText(race.playerUrl||race.url);
 toast(‘Player URL copied ✓’,‘s’);
 }
 
-function deleteRace(id){
-if(!confirm(‘Remove this race?’))return;
-fullRacesData=fullRacesData.filter(r=>r.id!==id);
-saveAll();renderFullRaces(fullRacesData);
-}
+// deleteRace defined in V9 missing functions section
 
 function clearFullRaces(){
 if(!confirm(‘Clear all saved races?’))return;
@@ -3234,6 +3230,186 @@ return ‘<h2>’+race.title+’</h2>\n<p>Watch the full race replay of <strong>
 // ═══════════════════════════════════════════════════════
 // END FULL RACES
 // ═══════════════════════════════════════════════════════
+
+// ── MISSING FUNCTIONS (V9 UI requires) ──────────────────────
+let bulkMode=false, selectedEvents=new Set();
+
+async function batchGenerateThumbs(){
+if(!eventsData.length){toast(‘Fetch events first’,‘w’);return;}
+toast(`Generating ${Math.min(eventsData.length,10)} thumbnails…`,‘i’);
+let count=0;
+for(const ev of eventsData.slice(0,10)){
+const comp=ev.competitions?.[0];
+const home=comp?.competitors?.find(c=>c.homeAway===‘home’);
+const away=comp?.competitors?.find(c=>c.homeAway===‘away’);
+const cv=document.createElement(‘canvas’);setCanvasSize(cv,‘800’,‘16:9’);
+const [c1,c2]=getThumbColors(ev._league);
+await drawThumb(cv,{home:home?.team?.displayName,away:away?.team?.displayName,league:ev._leagueName,dt:fmtDate(ev.date),bg1:c1,bg2:c2},‘classic’);
+count++;
+}
+CFG.thumbsGenerated=(CFG.thumbsGenerated||0)+count;saveAll();
+if(el(‘kpi-thumbs’))el(‘kpi-thumbs’).textContent=CFG.thumbsGenerated;
+toast(`${count} thumbnails generated`,‘s’);
+}
+
+async function buildStandaloneThumb(){await schedTBThumb();}
+
+function filterByLeague(id,pill){
+currentLeagueFilter=id;
+document.querySelectorAll(’.lpill’).forEach(p=>p.classList.remove(‘active’));
+pill?.classList.add(‘active’);
+filteredEvents=id===‘all’?eventsData:eventsData.filter(e=>e._league===id);
+currentEventsPage=1;renderEventsGrid();
+}
+
+function sortEvents(){
+const s=el(‘events-sort’)?.value||‘time’;
+if(s===‘league’)filteredEvents.sort((a,b)=>(a._leagueName||’’).localeCompare(b._leagueName||’’));
+else if(s===‘status’)filteredEvents.sort((a,b)=>{const ord={STATUS_IN_PROGRESS:0,STATUS_FINAL:1,STATUS_SCHEDULED:2};return(ord[a.status?.type?.name]||2)-(ord[b.status?.type?.name]||2);});
+else filteredEvents.sort((a,b)=>new Date(a.date||0)-new Date(b.date||0));
+renderEventsGrid();
+}
+
+function renderEventsGrid(){
+const wrap=el(‘events-grid-wrap’);if(!wrap)return;
+const start=(currentEventsPage-1)*EVENTS_PER_PAGE,end=start+EVENTS_PER_PAGE;
+const page=filteredEvents.slice(start,end);
+if(!page.length){wrap.innerHTML=`<div class="empty-state"><div class="empty-icon">🔍</div><div class="empty-title">No events found</div><div class="empty-desc">Try fetching or changing the filter</div></div>`;el(‘events-pagination’).innerHTML=’’;return;}
+wrap.innerHTML=`<div class="events-grid">${page.map(renderEventCard).join('')}</div>`;
+renderPagination(‘events-pagination’,filteredEvents.length,currentEventsPage,EVENTS_PER_PAGE,(p)=>{currentEventsPage=p;renderEventsGrid();});
+if(el(‘events-count-label’))el(‘events-count-label’).textContent=`${filteredEvents.length} events (page ${currentEventsPage} of ${Math.ceil(filteredEvents.length/EVENTS_PER_PAGE)})`;
+}
+
+function openAddRaceModal(){
+editingRaceId=null;el(‘race-modal-title’).textContent=‘Add Full Race’;
+[‘race-title’,‘race-sport’,‘race-date’,‘race-img’,‘race-sources’].forEach(id=>set(id,’’));
+el(‘modal-race’).classList.add(‘open’);
+}
+
+async function postAllSelected(){
+if(!selectedEvents.size){toast(‘No events selected’,‘w’);return;}
+toast(`Posting ${selectedEvents.size} events…`,‘i’);
+for(const ev of selectedEvents)await quickPost(ev);
+selectedEvents.clear();toggleBulkSelect();
+}
+
+function toggleBulkSelect(){
+bulkMode=!bulkMode;
+const btn=el(‘bulk-toggle-btn’);if(btn)btn.textContent=bulkMode?‘Cancel Select’:‘Bulk Select’;
+const pbtn=el(‘bulk-post-btn’);if(pbtn)pbtn.disabled=!bulkMode;
+if(!bulkMode){selectedEvents.clear();renderEventsGrid();}
+}
+
+function saveRace(){
+const title=v(‘race-title’);if(!title){toast(‘Race title required’,‘w’);return;}
+const sources=v(‘race-sources’).split(’\n’).map(l=>{const [label,…rest]=l.split(’|’);return{label:label?.trim(),url:rest.join(’|’).trim()};}).filter(s=>s.url);
+const race={id:editingRaceId||‘race’+Date.now(),title,sport:v(‘race-sport’),date:v(‘race-date’),img:v(‘race-img’),sources,ts:Date.now()};
+if(editingRaceId){const i=fullRacesData.findIndex(r=>r.id===editingRaceId);if(i>=0)fullRacesData[i]=race;else fullRacesData.push(race);}
+else fullRacesData.push(race);
+saveAll();renderRaces();closeModal(‘modal-race’);toast(‘Race saved’,‘s’);
+}
+
+function editRace(id){
+const r=fullRacesData.find(x=>x.id===id);if(!r)return;
+editingRaceId=id;el(‘race-modal-title’).textContent=‘Edit Race’;
+set(‘race-title’,r.title);set(‘race-sport’,r.sport);set(‘race-date’,r.date);set(‘race-img’,r.img);
+set(‘race-sources’,(r.sources||[]).map(s=>`${s.label} | ${s.url}`).join(’\n’));
+el(‘modal-race’).classList.add(‘open’);
+}
+
+function deleteRace(id){if(confirm(‘Delete this race?’)){fullRacesData=fullRacesData.filter(r=>r.id!==id);saveAll();renderRaces();}}
+
+async function postRace(id){
+const r=fullRacesData.find(x=>x.id===id);if(!r)return;
+if(!accessToken){toast(‘Connect Google first’,‘w’);return;}
+toast(‘Generating race post…’,‘i’);
+const player=(CFG.mediaPlayerBase||CFG.playerBase||’’).replace(//$/,’’);
+const params={title:r.title,home:r.title,league:r.sport,datetime:r.date,type:‘race’,playerUrl:player};
+try{
+const {html}=await generateArticleWithFallback(params);
+const srcHtml=(r.sources||[]).map((s,i)=>`<div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:8px;margin-bottom:12px"><iframe src="${escHtml(s.url)}" style="position:absolute;top:0;left:0;width:100%;height:100%" frameborder="0" allowfullscreen loading="lazy"></iframe></div>`).join(’’);
+const schema=buildSchemaTag({title:r.title,datetime:r.date});
+const fullHtml=`${schema}\n${html}\n<div style="margin-top:20px">\n${srcHtml}\n</div>`;
+const post=await postRaw(r.title,fullHtml,CFG.schedStatus||‘DRAFT’,[r.sport?.toLowerCase()||‘racing’,CFG.brandName?.toLowerCase()||‘sports 803’]);
+addRecentPost(r.title,post.url,CFG.schedStatus||‘DRAFT’,r.sport,(html.match(/\S+/g)||[]).length,false);
+toast(‘Race posted ✓’,‘s’);
+}catch(e){toast(’Post failed: ’+e.message,‘e’);}
+}
+
+function renderRaces(){
+const grid=el(‘races-grid’);if(!grid)return;
+if(!fullRacesData.length){grid.innerHTML=`<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">🏎️</div><div class="empty-title">No races added</div><button class="btn-primary" onclick="openAddRaceModal()">Add Race</button></div>`;return;}
+grid.innerHTML=fullRacesData.map(r=>`<div class="race-card">
+<img class="race-card-img" src="${escHtml(r.img||'')}" alt="${escHtml(r.title)}" onerror="this.style.display='none'" loading="lazy">
+<div class="race-card-body">
+<div class="race-card-title">${escHtml(r.title)}</div>
+<div class="race-card-meta">${escHtml(r.sport?.toUpperCase()||’’)} · ${escHtml(r.date||’’)} · ${(r.sources||[]).length} sources</div>
+<div style="display:flex;gap:5px;flex-wrap:wrap">
+<button class="btn-primary btn-xs" onclick="postRace('${r.id}')">Post</button>
+<button class="btn-ghost btn-xs" onclick="editRace('${r.id}')">Edit</button>
+<button class="btn-danger btn-xs" onclick="deleteRace('${r.id}')">Del</button>
+</div>
+</div>
+
+  </div>`).join('');
+}
+
+function selectThumbTpl(tplBtn){
+document.querySelectorAll(’.thumb-tpl’).forEach(t=>t.classList.remove(‘active’));
+tplBtn.classList.add(‘active’);
+selectedThumbTpl=tplBtn.dataset.tpl||tplBtn.getAttribute(‘data-tpl’);
+debounce(schedTBThumb,100)();
+}
+
+function sendThumbToCompose(){
+const home=v(‘tb-home’),away=v(‘tb-away’);
+if(home)set(‘compose-home’,home);if(away)set(‘compose-away’,away);
+nav(‘compose’,document.querySelector(’[data-page=compose]’));toast(‘Teams sent to Compose’,‘s’);
+}
+
+function showChangelog(){el(‘modal-changelog’).classList.add(‘open’);}
+
+async function schedTBThumb(){
+const cv=el(‘tb-canvas’);if(!cv)return;
+const qual=el(‘tb-quality’)?.value||‘1280’;
+const aspect=el(‘tb-aspect’)?.value||‘16:9’;
+setCanvasSize(cv,qual,aspect);
+const opts=getThumbOpts(‘tb’);
+// Auto-fetch logos if URLs blank
+if(!opts.homeLogo&&opts.home){const url=await resolveLogoUrl(opts.home);if(url){opts.homeLogo=url;set(‘tb-home-logo’,url);}}
+if(!opts.awayLogo&&opts.away){const url=await resolveLogoUrl(opts.away);if(url){opts.awayLogo=url;set(‘tb-away-logo’,url);}}
+setThumbStatus(‘tb-status’,‘Rendering…’,‘loading’);
+const prog=el(‘tb-progress’);if(prog)prog.style.width=‘40%’;
+await drawThumb(cv,opts,selectedThumbTpl);
+if(prog)prog.style.width=‘100%’;
+setTimeout(()=>{if(prog)prog.style.width=‘0%’;},600);
+setThumbStatus(‘tb-status’,‘Ready’,‘done’);
+CFG.thumbsGenerated=(CFG.thumbsGenerated||0)+1;if(el(‘kpi-thumbs’))el(‘kpi-thumbs’).textContent=CFG.thumbsGenerated;
+}
+
+function onTBParseInput(){
+const raw=v(‘tb-parse’);
+const match=raw.match(/^(.+?)\s+(?:vs?.?|x|–|-)\s+(.+)$/i);
+if(match){
+const [,h,a]=[match[1].trim(),match[2].trim()];
+set(‘tb-home’,h);set(‘tb-away’,a);
+if(el(‘tbp-home’))el(‘tbp-home’).textContent=h;if(el(‘tbp-away’))el(‘tbp-away’).textContent=a;
+el(‘tb-parsed-row’).style.display=‘flex’;
+debounce(schedTBThumb,300)();
+}else{el(‘tb-parsed-row’).style.display=‘none’;}
+}
+
+function downloadStandaloneThumb(){downloadCanvas(el(‘tb-canvas’),‘sports803-thumb-’+Date.now());}
+
+async function uploadStandaloneThumb(){const url=await uploadImgbb(el(‘tb-canvas’),‘tb-status’);if(url){set(‘tb-url’,url);toast(’Uploaded: ’+url,‘s’);}}
+
+function copyThumbHTML(){
+const url=v(‘tb-url’);
+if(!url){toast(‘Upload thumbnail to imgbb first’,‘w’);return;}
+const title=v(‘tb-home’)&&v(‘tb-away’)?`${v('tb-home')} vs ${v('tb-away')}`:v(‘tb-league’)||‘Sports’;
+const html=`<img src="${escHtml(url)}" alt="${escHtml(title)}" style="width:100%;border-radius:8px;display:block" loading="lazy">`;
+navigator.clipboard?.writeText(html).then(()=>toast(‘Thumbnail HTML copied’,‘s’)).catch(()=>toast(‘Copy failed’,‘e’));
+}
 
 // ════════════════════════════════════════════════════════════
 // V9 ADDITIONS — Schema, SEO, AdSense, Compose Wizard, Thumb Templates
