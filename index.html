@@ -6,171 +6,273 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Sports 803 · Match Widget Generator</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet"/>
 <style>
 :root{
-  --red:#e53935;--red-dim:rgba(229,57,53,.15);--red-border:rgba(229,57,53,.3);
-  --bg:#050505;--surface:#0e0e0e;--surface2:#161616;--surface3:#1e1e1e;
-  --border:#222;--border2:#2a2a2a;
-  --txt:#f0f0f0;--txt2:#999;--txt3:#555;
-  --green:#4caf50;--green-dim:rgba(76,175,80,.12);--green-border:rgba(76,175,80,.3);
-  --font-head:'Barlow Condensed',sans-serif;--font-body:'Barlow',sans-serif;
+  --red:#e53935;--red-dim:rgba(229,57,53,.14);--red-border:rgba(229,57,53,.3);
+  --bg:#050507;--surface:#0d0d10;--surface2:#141418;--surface3:#1b1b20;
+  --border:#1e1e24;--border2:#272730;
+  --txt:#f0f0f2;--txt2:#8a8a9a;--txt3:#44444e;
+  --green:#4caf50;--green-dim:rgba(76,175,80,.11);--green-border:rgba(76,175,80,.28);
+  --amber:#ffb300;
+  --font-head:'Barlow Condensed',sans-serif;
+  --font-body:'Barlow',sans-serif;
+  --radius:10px;
+  --sidebar-w:290px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--txt);font-family:var(--font-body);min-height:100vh}
+body{background:var(--bg);color:var(--txt);font-family:var(--font-body);min-height:100vh;overflow-x:hidden}
 
-/* ── LAYOUT ── */
-.app{display:grid;grid-template-columns:300px 1fr;min-height:100vh}
-
-/* ── SIDEBAR ── */
-.sidebar{background:var(–surface);border-right:1px solid var(–border);padding:20px 16px;display:flex;flex-direction:column;gap:16px;position:sticky;top:0;height:100vh;overflow-y:auto}
-.logo{display:flex;align-items:center;gap:10px;padding-bottom:16px;border-bottom:1px solid var(–border)}
-.logo-icon{width:36px;height:36px;background:var(–red);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:var(–font-head);font-weight:800;font-size:14px;color:#fff;letter-spacing:-1px}
-.logo-text{font-family:var(–font-head);font-weight:800;font-size:18px;letter-spacing:1px}
-.logo-text span{color:var(–red)}
-
-.section-label{font-family:var(–font-head);font-size:11px;font-weight:700;letter-spacing:2px;color:var(–txt3);text-transform:uppercase;margin-bottom:4px}
-
-/* Date tabs */
-.date-tabs{display:flex;gap:4px}
-.date-tab{flex:1;padding:8px 6px;background:var(–surface2);border:1px solid var(–border);border-radius:8px;font-family:var(–font-head);font-size:13px;font-weight:600;color:var(–txt2);cursor:pointer;text-align:center;transition:all .15s}
-.date-tab:hover{border-color:var(–red);color:var(–txt)}
-.date-tab.active{background:var(–red-dim);border-color:var(–red);color:var(–red)}
-
-/* Custom date */
-.input-row{display:flex;flex-direction:column;gap:6px}
-input[type=date],input[type=text],select,textarea{width:100%;background:var(–surface2);border:1px solid var(–border2);border-radius:8px;color:var(–txt);font-family:var(–font-body);font-size:13px;padding:9px 12px;outline:none;transition:border-color .15s}
-input[type=date]:focus,input[type=text]:focus,select:focus,textarea:focus{border-color:var(–red)}
-input[type=date]::-webkit-calendar-picker-indicator{filter:invert(.5)}
-select option{background:#1a1a1a}
-textarea{resize:vertical;min-height:60px;font-size:12px}
-
-/* League filter */
-.league-grid{display:flex;flex-wrap:wrap;gap:5px}
-.league-chip{font-size:11px;font-family:var(–font-head);font-weight:600;padding:4px 9px;border-radius:20px;background:var(–surface2);border:1px solid var(–border2);color:var(–txt2);cursor:pointer;transition:all .15s;white-space:nowrap}
-.league-chip:hover{border-color:var(–red);color:var(–txt)}
-.league-chip.active{background:var(–red-dim);border-color:var(–red);color:var(–red)}
-
-/* Buttons */
-.btn{width:100%;padding:11px;border-radius:10px;font-family:var(–font-head);font-weight:700;font-size:15px;letter-spacing:1px;cursor:pointer;border:none;transition:all .15s;text-transform:uppercase}
-.btn-primary{background:var(–red);color:#fff}
-.btn-primary:hover{background:#c62828}
-.btn-primary:active{transform:scale(.97)}
-.btn-secondary{background:var(–surface2);border:1px solid var(–border2);color:var(–txt2)}
-.btn-secondary:hover{border-color:var(–red);color:var(–txt)}
-.btn-sm{padding:7px 12px;font-size:12px;letter-spacing:.5px;border-radius:7px;width:auto}
-
-/* Status */
-.status-bar{background:var(–surface2);border:1px solid var(–border2);border-radius:8px;padding:8px 12px;font-size:11px;color:var(–txt2);min-height:34px;display:flex;align-items:center;gap:6px}
-.status-bar.loading{color:#ffb300}
-.status-bar.ok{color:var(–green);border-color:var(–green-border)}
-.status-bar.err{color:var(–red);border-color:var(–red-border)}
-.dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0}
-.dot.pulse{animation:pulse2 1.2s infinite}
-@keyframes pulse2{0%,100%{opacity:1}50%{opacity:.3}}
-
-/* ── MAIN ── */
-.main{padding:20px;display:flex;flex-direction:column;gap:16px;overflow:hidden}
-.main-header{display:flex;align-items:center;justify-content:space-between;gap:12px}
-.main-header h2{font-family:var(–font-head);font-weight:800;font-size:22px;letter-spacing:1px}
-.count-badge{background:var(–red-dim);border:1px solid var(–red-border);color:var(–red);font-family:var(–font-head);font-size:13px;font-weight:700;padding:4px 10px;border-radius:20px}
-
-/* Events list */
-.events-area{background:var(–surface);border:1px solid var(–border);border-radius:12px;overflow:hidden}
-.events-empty{padding:40px;text-align:center;color:var(–txt3);font-size:14px}
-.events-empty span{display:block;font-size:32px;margin-bottom:8px}
-
-.event-item{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(–border);cursor:pointer;transition:background .12s;position:relative}
-.event-item:last-child{border-bottom:none}
-.event-item:hover{background:var(–surface2)}
-.event-item.selected{background:rgba(229,57,53,.07);border-left:3px solid var(–red)}
-
-.ev-check{width:18px;height:18px;border-radius:5px;border:1.5px solid var(–border2);background:var(–surface2);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .12s}
-.event-item.selected .ev-check{background:var(–red);border-color:var(–red)}
-.ev-check svg{width:10px;height:10px;fill:#fff;display:none}
-.event-item.selected .ev-check svg{display:block}
-
-.ev-logos{display:flex;align-items:center;gap:6px;flex-shrink:0}
-.ev-logo{width:28px;height:28px;border-radius:50%;background:var(–surface3);object-fit:contain;padding:2px}
-.ev-vs{font-size:10px;color:var(–txt3);font-weight:700}
-
-.ev-info{flex:1;min-width:0}
-.ev-teams{font-size:13px;font-weight:600;color:var(–txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.ev-meta{font-size:11px;color:var(–txt2);display:flex;gap:8px;margin-top:2px}
-.ev-league{color:var(–red);font-weight:600}
-
-.ev-time{text-align:right;flex-shrink:0}
-.ev-hour{font-family:var(–font-head);font-size:14px;font-weight:700;color:var(–txt)}
-.ev-status{font-size:10px;padding:2px 7px;border-radius:10px;font-weight:700;display:inline-block;margin-top:2px}
-.ev-status.live{background:var(–red);color:#fff;animation:pulse2 1.5s infinite}
-.ev-status.end{background:var(–surface3);color:var(–txt3)}
-.ev-status.upcoming{background:var(–green-dim);color:var(–green);border:1px solid var(–green-border)}
-
-/* Stream link input */
-.stream-editor{background:var(–surface);border:1px solid var(–border);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:12px}
-.stream-editor h3{font-family:var(–font-head);font-size:14px;font-weight:700;letter-spacing:1px;color:var(–txt2)}
-.stream-row{display:flex;gap-8:px;align-items:center;gap:8px}
-.stream-row input{flex:1}
-.stream-tag{font-size:12px;font-family:var(–font-head);font-weight:600;padding:4px 10px;background:var(–surface2);border:1px solid var(–border2);border-radius:6px;color:var(–txt2);cursor:pointer;flex-shrink:0;transition:all .12s}
-.stream-tag:hover{border-color:var(–red);color:var(–red)}
-
-/* Output area */
-.output-area{background:var(–surface);border:1px solid var(–border);border-radius:12px;overflow:hidden}
-.output-tabs{display:flex;border-bottom:1px solid var(–border)}
-.out-tab{padding:11px 16px;font-family:var(–font-head);font-size:13px;font-weight:600;letter-spacing:.5px;color:var(–txt2);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s}
-.out-tab.active{color:var(–red);border-bottom-color:var(–red)}
-.out-tab:hover:not(.active){color:var(–txt)}
-.out-panel{display:none;padding:16px}
-.out-panel.active{display:block}
-
-/* Preview panel */
-.preview-wrap{background:#000;border-radius:10px;padding:12px;overflow:auto}
-
-/* Code panel */
-.code-block{background:#0a0a0a;border:1px solid var(–border);border-radius:8px;padding:14px;font-family:‘Courier New’,monospace;font-size:11px;line-height:1.6;color:#a8d8a8;overflow:auto;max-height:400px;white-space:pre-wrap;word-break:break-all}
-
-/* Blogger CSS panel */
-.blogger-guide{display:flex;flex-direction:column;gap:12px}
-.guide-step{background:var(–surface2);border:1px solid var(–border2);border-radius:8px;padding:14px}
-.guide-step h4{font-family:var(–font-head);font-size:13px;font-weight:700;color:var(–red);margin-bottom:8px;letter-spacing:.5px}
-.guide-step p{font-size:12px;color:var(–txt2);line-height:1.6}
-.guide-step code{font-size:11px;color:#ffd700;background:var(–surface3);padding:2px 6px;border-radius:4px}
-
-.copy-bar{display:flex;gap:8px;margin-top:10px}
-.copy-btn{flex:1;padding:9px;background:var(–surface2);border:1px solid var(–border2);border-radius:8px;color:var(–txt2);font-family:var(–font-head);font-size:13px;font-weight:600;cursor:pointer;letter-spacing:.5px;transition:all .12s;display:flex;align-items:center;justify-content:center;gap:6px}
-.copy-btn:hover{border-color:var(–red);color:var(–txt)}
-.copy-btn.copied{background:var(–green-dim);border-color:var(–green-border);color:var(–green)}
-
-/* ── THE WIDGET STYLES (mirror of user’s CSS) ── */
-.s803-matches{width:100%;box-sizing:border-box;background:#000;padding:0 0 12px 0;display:flex;flex-direction:column;gap:8px}
-.containerMatch{width:100%;box-sizing:border-box;background:#111;border-radius:12px;overflow:hidden;border:1px solid #222;transition:border-color .2s}
-.containerMatch:hover{border-color:#e53935}
-.containerMatch a{text-decoration:none;color:#fff;display:block}
-.containerMatch .Match{display:flex;align-items:center;justify-content:space-between;padding:14px 16px}
-.containerMatch .fareq{display:flex;flex-direction:column;align-items:center;width:90px;text-align:center;gap:6px}
-.containerMatch .Imagee img{width:54px;height:54px;object-fit:contain;border-radius:50%;background:#1a1a1a;padding:4px}
-.containerMatch .asm{font-size:11px;color:#ccc;line-height:1.3;max-width:90px}
-.containerMatch .Nateja{flex:1;text-align:center;padding:0 8px}
-.containerMatch .matchHour{font-size:11px;color:#666;margin-bottom:4px}
-.containerMatch .natej{font-size:22px;font-weight:800;color:#fff;letter-spacing:2px}
-.containerMatch .matchDate{font-size:10px;font-weight:600;padding:3px 10px;border-radius:20px;display:inline-block;margin-top:6px;letter-spacing:.5px}
-.containerMatch .matchDate.live{background:#e53935;color:#fff;animation:pulse 1.5s infinite}
-.containerMatch .matchDate.end{background:#1e1e1e;color:#666;border:1px solid #333}
-.containerMatch .matchDate.upcoming{background:#1a2a1a;color:#4caf50;border:1px solid #2e5c2e}
-.containerMatch ul{list-style:none;margin:0;padding:8px 14px;border-top:1px solid #1c1c1c;display:flex;gap:6px;flex-wrap:wrap;align-items:center}
-.containerMatch ul li{font-size:10px;color:#777;background:#1a1a1a;padding:3px 8px;border-radius:6px}
-.containerMatch ul li:first-child{color:#e53935;background:rgba(229,57,53,.1);border:1px solid rgba(229,57,53,.2)}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
-
-/* scrollbars */
+/* ── SCROLLBARS ── */
 ::-webkit-scrollbar{width:4px;height:4px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(–border2);border-radius:2px}
 
+/* ── LAYOUT ── */
+.app{display:grid;grid-template-columns:var(–sidebar-w) 1fr;min-height:100vh}
+
+/* ── SIDEBAR ── */
+.sidebar{
+background:var(–surface);
+border-right:1px solid var(–border);
+padding:18px 14px 24px;
+display:flex;flex-direction:column;gap:14px;
+position:sticky;top:0;height:100vh;overflow-y:auto;
+}
+
+/* Logo */
+.logo{display:flex;align-items:center;gap:10px;padding-bottom:14px;border-bottom:1px solid var(–border)}
+.logo-icon{
+width:34px;height:34px;background:var(–red);border-radius:8px;
+display:flex;align-items:center;justify-content:center;
+font-family:var(–font-head);font-weight:900;font-size:13px;color:#fff;letter-spacing:-1px;
+box-shadow:0 2px 12px rgba(229,57,53,.4);
+}
+.logo-text{font-family:var(–font-head);font-weight:900;font-size:17px;letter-spacing:2px;text-transform:uppercase}
+.logo-text span{color:var(–red)}
+.logo-badge{margin-left:auto;font-size:9px;font-family:var(–font-head);font-weight:700;
+background:var(–surface3);border:1px solid var(–border2);color:var(–txt3);
+padding:2px 7px;border-radius:20px;letter-spacing:1px}
+
+/* Section label */
+.sec{font-family:var(–font-head);font-size:10px;font-weight:700;letter-spacing:2px;
+color:var(–txt3);text-transform:uppercase;margin-bottom:5px}
+
+/* Date tabs */
+.date-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:4px}
+.date-tab{
+padding:7px 4px;background:var(–surface2);border:1px solid var(–border);
+border-radius:8px;font-family:var(–font-head);font-size:12px;font-weight:700;
+color:var(–txt2);cursor:pointer;text-align:center;transition:all .15s;
+letter-spacing:.5px;text-transform:uppercase;
+}
+.date-tab:hover{border-color:var(–red);color:var(–txt)}
+.date-tab.active{background:var(–red-dim);border-color:var(–red);color:var(–red)}
+
+/* Inputs */
+.inp-wrap{display:flex;flex-direction:column;gap:5px}
+input[type=date],input[type=text],select,textarea{
+width:100%;background:var(–surface2);border:1px solid var(–border2);
+border-radius:8px;color:var(–txt);font-family:var(–font-body);font-size:12px;
+padding:8px 11px;outline:none;transition:border-color .15s;
+}
+input[type=date]:focus,input[type=text]:focus,select:focus,textarea:focus{border-color:var(–red)}
+input[type=date]::-webkit-calendar-picker-indicator{filter:invert(.4)}
+select option{background:#1a1a20}
+textarea{resize:vertical;min-height:60px;font-size:11px}
+input::placeholder{color:var(–txt3)}
+
+/* League chips */
+.league-grid{display:flex;flex-wrap:wrap;gap:4px}
+.chip{
+font-size:10px;font-family:var(–font-head);font-weight:700;
+padding:3px 8px;border-radius:20px;background:var(–surface2);
+border:1px solid var(–border2);color:var(–txt2);cursor:pointer;
+transition:all .13s;white-space:nowrap;letter-spacing:.3px;
+}
+.chip:hover{border-color:var(–red);color:var(–txt)}
+.chip.active{background:var(–red-dim);border-color:var(–red);color:var(–red)}
+
+/* Buttons */
+.btn{
+width:100%;padding:10px;border-radius:9px;
+font-family:var(–font-head);font-weight:800;font-size:14px;
+letter-spacing:1px;cursor:pointer;border:none;transition:all .15s;text-transform:uppercase;
+}
+.btn-primary{background:var(–red);color:#fff;box-shadow:0 4px 16px rgba(229,57,53,.3)}
+.btn-primary:hover{background:#cc2f2c;box-shadow:0 4px 20px rgba(229,57,53,.45)}
+.btn-primary:active{transform:scale(.97)}
+.btn-secondary{background:var(–surface2);border:1px solid var(–border2);color:var(–txt2)}
+.btn-secondary:hover{border-color:var(–red);color:var(–txt)}
+.btn-sm{padding:6px 11px;font-size:11px;letter-spacing:.5px;border-radius:7px;width:auto}
+
+/* Status */
+.status{
+background:var(–surface2);border:1px solid var(–border2);
+border-radius:8px;padding:7px 11px;font-size:11px;color:var(–txt2);
+min-height:32px;display:flex;align-items:center;gap:6px;
+}
+.status.loading{color:var(–amber);border-color:rgba(255,179,0,.25)}
+.status.ok{color:var(–green);border-color:var(–green-border)}
+.status.err{color:var(–red);border-color:var(–red-border)}
+.dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0}
+.dot.pulse{animation:blink 1.1s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+
+/* ── MAIN ── */
+.main{padding:18px 20px;display:flex;flex-direction:column;gap:14px;overflow:hidden;min-width:0}
+.main-hdr{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.main-hdr h2{font-family:var(–font-head);font-weight:900;font-size:20px;letter-spacing:2px;text-transform:uppercase}
+.hdr-right{display:flex;gap:7px;align-items:center;flex-wrap:wrap}
+.count{
+background:var(–red-dim);border:1px solid var(–red-border);color:var(–red);
+font-family:var(–font-head);font-size:12px;font-weight:700;
+padding:3px 10px;border-radius:20px;
+}
+
+/* Events panel */
+.events-area{
+background:var(–surface);border:1px solid var(–border);
+border-radius:12px;overflow:hidden;max-height:480px;overflow-y:auto;
+}
+.events-empty{padding:40px;text-align:center;color:var(–txt3);font-size:13px}
+.events-empty .icon{font-size:28px;margin-bottom:8px}
+
+/* League group header */
+.league-group-hdr{
+padding:8px 14px;background:var(–surface2);border-bottom:1px solid var(–border);
+display:flex;align-items:center;gap:8px;position:sticky;top:0;z-index:2;
+}
+.lg-flag{width:16px;height:16px;border-radius:50%;object-fit:cover;background:var(–surface3)}
+.lg-name{font-family:var(–font-head);font-size:11px;font-weight:700;color:var(–red);letter-spacing:1px;text-transform:uppercase}
+.lg-count{font-size:10px;color:var(–txt3);background:var(–surface3);padding:1px 6px;border-radius:10px}
+
+/* Event row */
+.ev{
+display:flex;align-items:center;gap:10px;padding:11px 14px;
+border-bottom:1px solid var(–border);cursor:pointer;transition:background .1s;
+position:relative;
+}
+.ev:last-child{border-bottom:none}
+.ev:hover{background:var(–surface2)}
+.ev.sel{background:rgba(229,57,53,.06);border-left:2px solid var(–red);padding-left:12px}
+
+/* Checkbox */
+.ev-cb{
+width:17px;height:17px;border-radius:4px;border:1.5px solid var(–border2);
+background:var(–surface2);flex-shrink:0;
+display:flex;align-items:center;justify-content:center;transition:all .12s;
+}
+.ev.sel .ev-cb{background:var(–red);border-color:var(–red)}
+.ev-cb svg{width:9px;height:9px;fill:none;stroke:#fff;stroke-width:2;
+stroke-linecap:round;stroke-linejoin:round;display:none}
+.ev.sel .ev-cb svg{display:block}
+
+/* Team logos */
+.ev-logos{display:flex;align-items:center;gap:5px;flex-shrink:0}
+.ev-logo{width:26px;height:26px;border-radius:50%;background:var(–surface3);object-fit:contain;padding:2px}
+.ev-vs{font-size:9px;color:var(–txt3);font-weight:700;font-family:var(–font-head)}
+
+/* Event info */
+.ev-info{flex:1;min-width:0}
+.ev-teams{font-size:12px;font-weight:600;color:var(–txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ev-meta{font-size:10px;color:var(–txt2);display:flex;gap:6px;margin-top:1px;flex-wrap:wrap}
+.ev-league{color:var(–red);font-weight:600}
+
+/* Time/status */
+.ev-time{text-align:right;flex-shrink:0}
+.ev-hour{font-family:var(–font-head);font-size:13px;font-weight:700;color:var(–txt)}
+.ev-badge{
+font-size:9px;padding:2px 6px;border-radius:10px;
+font-weight:700;display:inline-block;margin-top:2px;letter-spacing:.3px;
+}
+.ev-badge.live{background:var(–red);color:#fff;animation:blink 1.5s infinite}
+.ev-badge.end{background:var(–surface3);color:var(–txt3)}
+.ev-badge.upcoming{background:var(–green-dim);color:var(–green);border:1px solid var(–green-border)}
+
+/* Stream editor */
+.stream-ed{
+background:var(–surface);border:1px solid var(–border);
+border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:10px;
+}
+.stream-ed h3{font-family:var(–font-head);font-size:13px;font-weight:700;
+letter-spacing:1px;color:var(–txt2);text-transform:uppercase}
+.stream-row{display:flex;align-items:center;gap:7px;margin-bottom:6px}
+.stream-row:last-child{margin-bottom:0}
+.stream-label{font-size:10px;color:var(–txt2);min-width:140px;max-width:160px;
+overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex-shrink:0}
+.stream-row input{flex:1}
+
+/* Output area */
+.output-area{background:var(–surface);border:1px solid var(–border);border-radius:12px;overflow:hidden}
+.out-tabs{display:flex;border-bottom:1px solid var(–border);background:var(–surface2)}
+.out-tab{
+padding:10px 14px;font-family:var(–font-head);font-size:12px;font-weight:700;
+letter-spacing:.5px;color:var(–txt2);cursor:pointer;
+border-bottom:2px solid transparent;transition:all .13s;text-transform:uppercase;
+}
+.out-tab.active{color:var(–red);border-bottom-color:var(–red);background:var(–surface)}
+.out-tab:hover:not(.active){color:var(–txt)}
+.out-panel{display:none;padding:14px}
+.out-panel.active{display:block}
+
+/* Preview */
+.preview-wrap{background:#080808;border-radius:10px;padding:10px;overflow:auto}
+
+/* Code */
+.code-block{
+background:#080808;border:1px solid var(–border);border-radius:8px;
+padding:12px;font-family:‘Courier New’,monospace;font-size:10.5px;line-height:1.65;
+color:#8ecf8e;overflow:auto;max-height:380px;white-space:pre-wrap;word-break:break-all;
+}
+
+/* Copy bar */
+.copy-bar{display:flex;gap:7px;margin-bottom:10px;flex-wrap:wrap}
+.copy-btn{
+flex:1;padding:8px;background:var(–surface2);border:1px solid var(–border2);
+border-radius:8px;color:var(–txt2);font-family:var(–font-head);font-size:12px;
+font-weight:700;cursor:pointer;letter-spacing:.5px;transition:all .12s;
+display:flex;align-items:center;justify-content:center;gap:5px;
+min-width:120px;text-transform:uppercase;
+}
+.copy-btn:hover{border-color:var(–red);color:var(–txt)}
+.copy-btn.copied{background:var(–green-dim);border-color:var(–green-border);color:var(–green)}
+
+/* Blogger guide */
+.guide{display:flex;flex-direction:column;gap:10px}
+.guide-step{background:var(–surface2);border:1px solid var(–border2);border-radius:8px;padding:13px}
+.guide-step h4{font-family:var(–font-head);font-size:12px;font-weight:800;
+color:var(–red);margin-bottom:7px;letter-spacing:.5px;text-transform:uppercase}
+.guide-step p{font-size:11px;color:var(–txt2);line-height:1.65}
+.guide-step code{font-size:10.5px;color:#ffd700;background:var(–surface3);
+padding:1px 5px;border-radius:3px}
+
+/* ─── WIDGET PREVIEW STYLES ─── */
+.s803-matches{width:100%;background:#000;padding:0 0 10px 0;display:flex;flex-direction:column;gap:8px}
+.cM{width:100%;background:#111;border-radius:12px;overflow:hidden;border:1px solid #222;transition:border-color .2s}
+.cM:hover{border-color:#e53935}
+.cM a{text-decoration:none;color:#fff;display:block}
+.cM .Match{display:flex;align-items:center;justify-content:space-between;padding:14px 16px}
+.cM .fareq{display:flex;flex-direction:column;align-items:center;width:90px;text-align:center;gap:5px}
+.cM .Imagee img{width:52px;height:52px;object-fit:contain;border-radius:50%;background:#1a1a1a;padding:4px}
+.cM .asm{font-size:11px;color:#ccc;line-height:1.3;max-width:90px}
+.cM .Nateja{flex:1;text-align:center;padding:0 8px}
+.cM .matchHour{font-size:10px;color:#555;margin-bottom:3px}
+.cM .natej{font-size:22px;font-weight:800;color:#fff;letter-spacing:2px}
+.cM .matchDate{font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;display:inline-block;margin-top:5px;letter-spacing:.5px}
+.cM .matchDate.live{background:#e53935;color:#fff;animation:s803p 1.5s infinite}
+.cM .matchDate.end{background:#1e1e1e;color:#666;border:1px solid #333}
+.cM .matchDate.upcoming{background:#1a2a1a;color:#4caf50;border:1px solid #2e5c2e}
+.cM ul{list-style:none;margin:0;padding:7px 14px;border-top:1px solid #1c1c1c;display:flex;gap:5px;flex-wrap:wrap;align-items:center}
+.cM ul li{font-size:10px;color:#666;background:#1a1a1a;padding:3px 8px;border-radius:6px}
+.cM ul li:first-child{color:#e53935;background:rgba(229,57,53,.1);border:1px solid rgba(229,57,53,.2)}
+@keyframes s803p{0%,100%{opacity:1}50%{opacity:.55}}
+
 /* responsive */
-@media(max-width:700px){
+@media(max-width:720px){
 .app{grid-template-columns:1fr;grid-template-rows:auto 1fr}
 .sidebar{position:static;height:auto}
+.hdr-right .btn{display:none}
 }
 </style>
 
@@ -181,60 +283,65 @@ textarea{resize:vertical;min-height:60px;font-size:12px}
 <!-- ══ SIDEBAR ══ -->
 
 <aside class="sidebar">
+
   <div class="logo">
     <div class="logo-icon">803</div>
     <div class="logo-text">SPORTS <span>803</span></div>
+    <div class="logo-badge">v2.0</div>
   </div>
 
   <div>
-    <div class="section-label">Date</div>
+    <div class="sec">Date</div>
     <div class="date-tabs">
-      <div class="date-tab active" data-offset="0">Today</div>
-      <div class="date-tab" data-offset="1">Tomorrow</div>
-      <div class="date-tab" data-offset="-1">Yesterday</div>
+      <div class="date-tab active" data-offset="-1">Yest</div>
+      <div class="date-tab" data-offset="0">Today</div>
+      <div class="date-tab" data-offset="1">Tmrw</div>
     </div>
   </div>
 
-  <div class="input-row">
-    <div class="section-label">Custom Date</div>
+  <div class="inp-wrap">
+    <div class="sec">Custom Date</div>
     <input type="date" id="customDate"/>
   </div>
 
   <div>
-    <div class="section-label" style="margin-bottom:8px">Filter by League</div>
+    <div class="sec" style="margin-bottom:7px">Filter League</div>
     <div class="league-grid" id="leagueFilter">
-      <div class="league-chip active" data-id="all">All</div>
-      <div class="league-chip" data-id="39">EPL</div>
-      <div class="league-chip" data-id="140">La Liga</div>
-      <div class="league-chip" data-id="135">Serie A</div>
-      <div class="league-chip" data-id="78">Bundesliga</div>
-      <div class="league-chip" data-id="61">Ligue 1</div>
-      <div class="league-chip" data-id="2">UCL</div>
-      <div class="league-chip" data-id="3">UEL</div>
-      <div class="league-chip" data-id="848">UECL</div>
-      <div class="league-chip" data-id="253">MLS</div>
+      <div class="chip active" data-id="all">All</div>
+      <div class="chip" data-id="39">EPL</div>
+      <div class="chip" data-id="140">La Liga</div>
+      <div class="chip" data-id="135">Serie A</div>
+      <div class="chip" data-id="78">Bundesliga</div>
+      <div class="chip" data-id="61">Ligue 1</div>
+      <div class="chip" data-id="2">UCL</div>
+      <div class="chip" data-id="3">UEL</div>
+      <div class="chip" data-id="848">UECL</div>
+      <div class="chip" data-id="253">MLS</div>
+      <div class="chip" data-id="71">Brasileirao</div>
     </div>
   </div>
 
-  <div class="input-row">
-    <div class="section-label">API-Football Key (RapidAPI)</div>
-    <input type="text" id="apiKey" placeholder="Enter your RapidAPI key…"/>
-    <div style="font-size:11px;color:var(--txt3);line-height:1.5">
-      Free tier: 100 req/day · <a href="https://rapidapi.com/api-sports/api/api-football" target="_blank" style="color:var(--red)">Get key →</a>
+  <div class="inp-wrap">
+    <div class="sec">RapidAPI Key (API-Football)</div>
+    <input type="text" id="apiKey" placeholder="Paste your RapidAPI key…" autocomplete="off"/>
+    <div style="font-size:10px;color:var(--txt3);line-height:1.5;margin-top:2px">
+      Free: 100 req/day ·
+      <a href="https://rapidapi.com/api-sports/api/api-football" target="_blank"
+         style="color:var(--red);text-decoration:none">Get key →</a>
     </div>
   </div>
 
 <button class="btn btn-primary" onclick="fetchMatches()">⚡ Fetch Matches</button>
 
-  <div class="status-bar" id="statusBar">
+  <div class="status" id="statusBar">
     <div class="dot"></div>
-    Ready — configure & fetch
+    Ready — configure &amp; fetch
   </div>
 
-  <div>
-    <div class="section-label" style="margin-bottom:8px">Default Stream URL</div>
-    <input type="text" id="defaultStream" placeholder="https://sports803.online/…"/>
-    <div style="font-size:11px;color:var(--txt3);margin-top:4px">Used for selected matches with no custom link</div>
+  <div class="inp-wrap">
+    <div class="sec">Default Stream URL</div>
+    <input type="text" id="defaultStream" placeholder="https://sports803.online/watch/…"/>
+    <div style="font-size:10px;color:var(--txt3);margin-top:2px">Fallback for matches without a custom link</div>
   </div>
 
 <button class="btn btn-secondary" onclick="generateWidget()">🔧 Generate Widget</button>
@@ -245,37 +352,38 @@ textarea{resize:vertical;min-height:60px;font-size:12px}
 
 <main class="main">
 
-  <div class="main-header">
-    <h2>MATCH EVENTS</h2>
-    <div style="display:flex;gap:8px;align-items:center">
-      <span class="count-badge" id="selCount">0 selected</span>
+  <div class="main-hdr">
+    <h2>Match Events</h2>
+    <div class="hdr-right">
+      <span class="count" id="selCount">0 selected</span>
       <button class="btn btn-secondary btn-sm" onclick="toggleAll()">Select All</button>
+      <button class="btn btn-secondary btn-sm" onclick="clearAll()">Clear</button>
     </div>
   </div>
 
-  <!-- Events -->
+  <!-- Events list -->
 
   <div class="events-area" id="eventsArea">
     <div class="events-empty">
-      <span>📅</span>
-      Fetch matches to see today's schedule
+      <div class="icon">📅</div>
+      Enter your API key &amp; click Fetch Matches
     </div>
   </div>
 
-  <!-- Stream editor for selected matches -->
+  <!-- Stream link editor -->
 
-  <div class="stream-editor" id="streamEditor" style="display:none">
-    <h3>🔗 STREAM LINKS — Selected Matches</h3>
+  <div class="stream-ed" id="streamEd" style="display:none">
+    <h3>🔗 Stream Links — Selected Matches</h3>
     <div id="streamInputs"></div>
   </div>
 
   <!-- Output -->
 
   <div class="output-area" id="outputArea" style="display:none">
-    <div class="output-tabs">
-      <div class="out-tab active" data-tab="preview">Preview</div>
-      <div class="out-tab" data-tab="code">HTML Code</div>
-      <div class="out-tab" data-tab="blogger">Blogger CSS Guide</div>
+    <div class="out-tabs">
+      <div class="out-tab active" data-tab="preview">👁 Preview</div>
+      <div class="out-tab" data-tab="code">📋 HTML Code</div>
+      <div class="out-tab" data-tab="blogger">📘 Blogger Guide</div>
     </div>
 
 ```
@@ -285,33 +393,37 @@ textarea{resize:vertical;min-height:60px;font-size:12px}
 
 <div class="out-panel" id="tab-code">
   <div class="copy-bar">
-    <button class="copy-btn" onclick="copyCode('widgetCode')">📋 Copy Widget HTML</button>
-    <button class="copy-btn" onclick="copyCode('cssCode')">🎨 Copy CSS</button>
+    <button class="copy-btn" id="btnCopyWidget" onclick="copyCode('widgetCode','btnCopyWidget','📋 Copy Widget HTML')">📋 Copy Widget HTML</button>
+    <button class="copy-btn" id="btnCopyCSS" onclick="copyCode('cssCode','btnCopyCSS','🎨 Copy CSS')">🎨 Copy CSS</button>
   </div>
-  <div style="font-size:11px;color:var(--txt2);margin:8px 0 6px">Widget HTML (paste into Blogger post body):</div>
+  <div style="font-size:10px;color:var(--txt2);margin:4px 0 5px">Widget HTML — paste into Blogger post (HTML mode):</div>
   <div class="code-block" id="widgetCode"></div>
-  <div style="font-size:11px;color:var(--txt2);margin:14px 0 6px">CSS (add once to Blogger theme — see Blogger CSS Guide tab):</div>
+  <div style="font-size:10px;color:var(--txt2);margin:12px 0 5px">CSS — add once to your Blogger theme:</div>
   <div class="code-block" id="cssCode"></div>
 </div>
 
 <div class="out-panel" id="tab-blogger">
-  <div class="blogger-guide">
+  <div class="guide">
     <div class="guide-step">
-      <h4>STEP 1 — Add CSS once to your Blogger Theme</h4>
-      <p>This is the <strong>one-time setup</strong> so you never need to paste CSS into posts again. Go to:<br><br>
-      <code>Blogger Dashboard → Theme → Edit HTML</code><br><br>
-      Find <code>]]&gt;&lt;/b:skin&gt;</code> near the bottom of the CSS block and paste the CSS <strong>just above</strong> that line. Save theme. Done — every post using the widget class will pick up the styles automatically.</p>
+      <h4>Step 1 — Add CSS once to your Blogger Theme</h4>
+      <p>One-time setup so you never re-paste CSS.<br><br>
+      <code>Blogger → Theme → Edit HTML</code><br><br>
+      Find <code>]]&gt;&lt;/b:skin&gt;</code> near the end of the CSS block. Paste the CSS block
+      <strong>just above</strong> that line. Save theme. All posts automatically pick up the styles.</p>
     </div>
     <div class="guide-step">
-      <h4>STEP 2 — Paste widget HTML into posts (no CSS needed)</h4>
-      <p>After the one-time theme setup, just copy the Widget HTML from the <strong>HTML Code</strong> tab and paste it into your Blogger post in <strong>HTML mode</strong> (not Compose mode). The CSS lives in your theme so each post is lightweight.</p>
+      <h4>Step 2 — Paste Widget HTML into posts</h4>
+      <p>After the one-time theme setup, copy the Widget HTML from the <strong>HTML Code</strong> tab and
+      paste into your Blogger post in <strong>HTML mode</strong> (not Compose mode). CSS is already in your theme,
+      so each post stays lightweight.</p>
     </div>
     <div class="guide-step">
-      <h4>STEP 3 — Update stream links any time</h4>
-      <p>You can edit stream links directly in the HTML after pasting. Look for the <code>href="…"</code> on each <code>&lt;a&gt;</code> tag and replace with your stream URL. Or use this generator every time with your links pre-filled.</p>
+      <h4>Step 3 — Update stream links any time</h4>
+      <p>Edit stream links directly in the HTML after pasting — find the <code>href="…"</code> on each
+      <code>&lt;a&gt;</code> tag. Or regenerate here with updated links.</p>
     </div>
-    <div class="copy-bar">
-      <button class="copy-btn" onclick="copyBloggerCSS()">📋 Copy Blogger Theme CSS</button>
+    <div class="copy-bar" style="margin-top:4px">
+      <button class="copy-btn" id="btnCopyBlogger" onclick="copyBloggerCSS()">📋 Copy Blogger Theme CSS</button>
     </div>
     <div class="code-block" id="bloggerCssBlock" style="max-height:200px"></div>
   </div>
@@ -324,154 +436,195 @@ textarea{resize:vertical;min-height:60px;font-size:12px}
 </div>
 
 <script>
-// ── STATE ──
+// ─── STATE ───────────────────────────────────────────────────────────────────
 let allMatches = [];
 let selectedIds = new Set();
 let streamLinks = {};
 let activeLeague = 'all';
 let activeOffset = 0;
 
-// ── UTILS ──
-function getDate(offsetDays = 0){
+// ─── LOGO RESOLUTION ─────────────────────────────────────────────────────────
+// Same multi-tier chain as Autoblogposter / Auto-Thumbnail Engine
+// Tier 1: API-Football logo (direct from fixture data)
+// Tier 2: ESPN CDN (team id not always available, so skip if unknown)
+// Tier 3: TheSportsDB by team name
+// Tier 4: UI-Avatars fallback (always works)
+
+const LOGO_CACHE = {};
+
+function espnTeamSlug(name){
+  return name.toLowerCase()
+    .replace(/\s+/g,'-')
+    .replace(/[^a-z0-9\-]/g,'')
+    .replace(/-+/g,'-');
+}
+
+// Returns the best logo URL; tries API-Football logo first (already in fixture data)
+function resolveLogo(team){
+  if(LOGO_CACHE[team.id]) return LOGO_CACHE[team.id];
+  // Tier 1: API-Football CDN (direct)
+  if(team.logo && team.logo.startsWith('http')){
+    LOGO_CACHE[team.id] = team.logo;
+    return team.logo;
+  }
+  // Tier 4 fallback (sync)
+  return avatarFallback(team.name);
+}
+
+function avatarFallback(name){
+  return `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&size=64&background=1a1a1a&color=e53935&bold=true&rounded=true&format=png`;
+}
+
+// Async logo resolution: TheSportsDB → ESPN CDN → ui-avatars
+// Used for <img onerror> chain rendered into the widget
+function multiTierLogoChain(team){
+  const slug = espnTeamSlug(team.name);
+  const tsdb = `https://www.thesportsdb.com/images/media/team/badge/${slug}.png`;
+  const espn = `https://a.espncdn.com/i/teamlogos/soccer/500/${slug}.png`;
+  const fb   = avatarFallback(team.name);
+  // We build an onerror chain in the HTML img tag
+  return {
+    primary: team.logo && team.logo.startsWith('http') ? team.logo : tsdb,
+    chain: `this.onerror=function(){this.onerror=null;this.src='${fb}'};this.src='${espn}'`
+  };
+}
+
+// ─── UTILS ───────────────────────────────────────────────────────────────────
+function getDate(offset=0){
   const d = new Date();
-  d.setDate(d.getDate() + offsetDays);
+  d.setDate(d.getDate()+offset);
   return d.toISOString().split('T')[0];
 }
 
-function formatTime(utcStr){
-  if(!utcStr) return '--:--';
-  const d = new Date(utcStr);
-  return d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+function fmtTime(utc){
+  if(!utc) return '--:--';
+  return new Date(utc).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
 }
 
-function getStatus(fixture){
-  const s = fixture.fixture.status.short;
+function matchStatus(f){
+  const s = f.fixture.status.short;
   if(['1H','2H','HT','ET','BT','P','LIVE'].includes(s)) return 'live';
   if(['FT','AET','PEN'].includes(s)) return 'end';
   return 'upcoming';
 }
 
-function getStatusLabel(fixture){
-  const s = fixture.fixture.status.short;
-  const e = fixture.fixture.status.elapsed;
+function matchLabel(f){
+  const s = f.fixture.status.short, e = f.fixture.status.elapsed;
   if(s==='1H'||s==='2H') return e ? e+"'" : 'LIVE';
   if(s==='HT') return 'HT';
-  if(s==='FT') return 'Game Over';
+  if(s==='FT') return 'FT';
   if(s==='AET') return 'AET';
   if(s==='PEN') return 'Pens';
   if(s==='ET') return 'ET';
   return 'Upcoming';
 }
 
-function getScore(fixture){
-  const h = fixture.goals.home;
-  const a = fixture.goals.away;
-  if(h===null || a===null) return 'VS';
-  return `${h} - ${a}`;
+function matchScore(f){
+  const h=f.goals.home, a=f.goals.away;
+  return (h===null||a===null) ? 'VS' : `${h} - ${a}`;
 }
 
-// Logo resolver — multi-layer fallback chain
-function resolveLogo(team){
-  // Layer 1: API-Football provided logo
-  if(team.logo && team.logo.startsWith('http')) return team.logo;
-  // Layer 2: Wikipedia/Wikimedia (via team name)
-  const name = encodeURIComponent(team.name);
-  return `https://ui-avatars.com/api/?name=${name}&size=64&background=1a1a1a&color=e53935&bold=true&rounded=true`;
-}
-
-// ── STATUS ──
+// ─── STATUS BAR ──────────────────────────────────────────────────────────────
 function setStatus(msg, type=''){
   const el = document.getElementById('statusBar');
-  el.className = 'status-bar' + (type ? ' '+type : '');
+  el.className = 'status'+(type?' '+type:'');
   el.innerHTML = `<div class="dot${type==='loading'?' pulse':''}"></div>${msg}`;
 }
 
-// ── FETCH ──
+// ─── FETCH ───────────────────────────────────────────────────────────────────
 async function fetchMatches(){
   const key = document.getElementById('apiKey').value.trim();
-  if(!key){ setStatus('API key required', 'err'); return; }
-
+  if(!key){ setStatus('API key required','err'); return; }
   const customDate = document.getElementById('customDate').value;
   const date = customDate || getDate(activeOffset);
-
   setStatus(`Fetching matches for ${date}…`, 'loading');
-  document.getElementById('eventsArea').innerHTML = '<div class="events-empty"><span>⏳</span>Loading…</div>';
+  document.getElementById('eventsArea').innerHTML =
+    '<div class="events-empty"><div class="icon">⏳</div>Loading matches…</div>';
 
-  const url = `https://api-football-v1.p.rapidapi.com/v3/fixtures?date=${date}`;
-  try {
-    const res = await fetch(url, {
-      headers:{
-        'X-RapidAPI-Key': key,
-        'X-RapidAPI-Host': 'api-football-v1.p.rapidapi.com'
-      }
-    });
+  try{
+    const res = await fetch(
+      `https://api-football-v1.p.rapidapi.com/v3/fixtures?date=${date}`,
+      { headers:{ 'X-RapidAPI-Key':key, 'X-RapidAPI-Host':'api-football-v1.p.rapidapi.com' }}
+    );
     const data = await res.json();
-    if(!data.response || data.response.length === 0){
-      setStatus('No matches found for this date', 'err');
-      document.getElementById('eventsArea').innerHTML = '<div class="events-empty"><span>🔍</span>No matches found</div>';
+    if(!data.response?.length){
+      setStatus('No matches found for this date','err');
+      document.getElementById('eventsArea').innerHTML =
+        '<div class="events-empty"><div class="icon">🔍</div>No matches found for this date</div>';
       return;
     }
     allMatches = data.response;
     renderEvents();
-    setStatus(`${allMatches.length} matches loaded`, 'ok');
-  } catch(e){
+    setStatus(`${allMatches.length} matches loaded · ${date}`, 'ok');
+  }catch(e){
     setStatus('Fetch failed: '+e.message, 'err');
-    document.getElementById('eventsArea').innerHTML = '<div class="events-empty"><span>⚠️</span>Error fetching matches</div>';
+    document.getElementById('eventsArea').innerHTML =
+      '<div class="events-empty"><div class="icon">⚠️</div>Error fetching. Check your API key.</div>';
   }
 }
 
-// ── RENDER EVENTS ──
+// ─── RENDER ──────────────────────────────────────────────────────────────────
 function renderEvents(){
   const area = document.getElementById('eventsArea');
-  let matches = allMatches;
+  let matches = activeLeague==='all'
+    ? allMatches
+    : allMatches.filter(m=>String(m.league.id)===String(activeLeague));
 
-  if(activeLeague !== 'all'){
-    matches = matches.filter(m => String(m.league.id) === String(activeLeague));
-  }
-
-  if(matches.length === 0){
-    area.innerHTML = '<div class="events-empty"><span>🔍</span>No matches for this filter</div>';
+  if(!matches.length){
+    area.innerHTML='<div class="events-empty"><div class="icon">🔍</div>No matches for this filter</div>';
     return;
   }
 
   // Group by league
   const groups = {};
-  matches.forEach(m => {
+  matches.forEach(m=>{
     const lid = m.league.id;
-    if(!groups[lid]) groups[lid] = {name:m.league.name, country:m.league.country, matches:[]};
+    if(!groups[lid]) groups[lid]={...m.league, matches:[]};
     groups[lid].matches.push(m);
   });
 
   let html = '';
-  Object.values(groups).forEach(g => {
-    g.matches.forEach(m => {
+  Object.values(groups).forEach(g=>{
+    const flagUrl = g.flag || '';
+    html += `<div class="league-group-hdr">
+      ${flagUrl ? `<img class="lg-flag" src="${flagUrl}" onerror="this.style.display='none'" alt=""/>` : ''}
+      <span class="lg-name">${g.name}</span>
+      <span class="lg-count">${g.matches.length}</span>
+    </div>`;
+    g.matches.forEach(m=>{
       const id = m.fixture.id;
       const sel = selectedIds.has(id);
-      const status = getStatus(m);
-      const label = getStatusLabel(m);
-      const score = getScore(m);
-      const time = formatTime(m.fixture.date);
-      const hLogo = resolveLogo(m.teams.home);
-      const aLogo = resolveLogo(m.teams.away);
+      const st  = matchStatus(m);
+      const lbl = matchLabel(m);
+      const sc  = matchScore(m);
+      const tm  = fmtTime(m.fixture.date);
+      const h   = m.teams.home, a = m.teams.away;
+      const hLogo = multiTierLogoChain(h);
+      const aLogo = multiTierLogoChain(a);
+      const hFb   = avatarFallback(h.name);
+      const aFb   = avatarFallback(a.name);
 
-      html += `
-      <div class="event-item${sel?' selected':''}" data-id="${id}" onclick="toggleSelect(${id}, event)">
-        <div class="ev-check"><svg viewBox="0 0 10 8"><path d="M1 4l3 3 5-5" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      html += `<div class="ev${sel?' sel':''}" data-id="${id}" onclick="toggleSelect(${id})">
+        <div class="ev-cb"><svg viewBox="0 0 10 8"><polyline points="1,4 4,7 9,1"/></svg></div>
         <div class="ev-logos">
-          <img class="ev-logo" src="${hLogo}" alt="${m.teams.home.name}" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(m.teams.home.name)}&size=56&background=1a1a1a&color=e53935&bold=true&rounded=true'"/>
+          <img class="ev-logo" src="${hLogo.primary}" alt="${h.name}"
+            onerror="${hLogo.chain}; this.onerror=null; this.src='${hFb}'"
+            loading="lazy"/>
           <span class="ev-vs">VS</span>
-          <img class="ev-logo" src="${aLogo}" alt="${m.teams.away.name}" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(m.teams.away.name)}&size=56&background=1a1a1a&color=e53935&bold=true&rounded=true'"/>
+          <img class="ev-logo" src="${aLogo.primary}" alt="${a.name}"
+            onerror="${aLogo.chain}; this.onerror=null; this.src='${aFb}'"
+            loading="lazy"/>
         </div>
         <div class="ev-info">
-          <div class="ev-teams">${m.teams.home.name} vs ${m.teams.away.name}</div>
+          <div class="ev-teams">${h.name} vs ${a.name}</div>
           <div class="ev-meta">
             <span class="ev-league">${g.name}</span>
             <span>${g.country}</span>
           </div>
         </div>
         <div class="ev-time">
-          <div class="ev-hour">${time}</div>
-          <div class="ev-status ${status}">${label}</div>
+          <div class="ev-hour">${tm}</div>
+          <div class="ev-badge ${st}">${lbl}</div>
         </div>
       </div>`;
     });
@@ -481,111 +634,124 @@ function renderEvents(){
   updateSelCount();
 }
 
-// ── SELECT ──
-function toggleSelect(id, e){
+// ─── SELECTION ───────────────────────────────────────────────────────────────
+function toggleSelect(id){
   if(selectedIds.has(id)) selectedIds.delete(id);
   else selectedIds.add(id);
-  const item = document.querySelector(`[data-id="${id}"]`);
-  if(item) item.classList.toggle('selected', selectedIds.has(id));
+  const el = document.querySelector(`[data-id="${id}"]`);
+  if(el) el.classList.toggle('sel', selectedIds.has(id));
   updateSelCount();
-  updateStreamEditor();
+  updateStreamEd();
 }
 
 function toggleAll(){
-  const visible = document.querySelectorAll('.event-item');
-  const allSel = [...visible].every(el => el.classList.contains('selected'));
-  visible.forEach(el => {
-    const id = parseInt(el.dataset.id);
-    if(allSel) selectedIds.delete(id);
-    else selectedIds.add(id);
-    el.classList.toggle('selected', !allSel);
+  const rows = document.querySelectorAll('.ev');
+  const allSel = [...rows].every(r=>r.classList.contains('sel'));
+  rows.forEach(r=>{
+    const id = parseInt(r.dataset.id);
+    if(allSel) selectedIds.delete(id); else selectedIds.add(id);
+    r.classList.toggle('sel',!allSel);
   });
   updateSelCount();
-  updateStreamEditor();
+  updateStreamEd();
+}
+
+function clearAll(){
+  selectedIds.clear();
+  document.querySelectorAll('.ev').forEach(r=>r.classList.remove('sel'));
+  updateSelCount();
+  updateStreamEd();
 }
 
 function updateSelCount(){
-  document.getElementById('selCount').textContent = selectedIds.size + ' selected';
+  document.getElementById('selCount').textContent = selectedIds.size+' selected';
 }
 
-// ── STREAM EDITOR ──
-function updateStreamEditor(){
-  const editor = document.getElementById('streamEditor');
-  const inputs = document.getElementById('streamInputs');
-  if(selectedIds.size === 0){ editor.style.display='none'; return; }
-  editor.style.display='block';
-
-  let html = '';
-  selectedIds.forEach(id => {
-    const m = allMatches.find(x => x.fixture.id === id);
+// ─── STREAM EDITOR ───────────────────────────────────────────────────────────
+function updateStreamEd(){
+  const ed = document.getElementById('streamEd');
+  const inp = document.getElementById('streamInputs');
+  if(!selectedIds.size){ ed.style.display='none'; return; }
+  ed.style.display='block';
+  const def = document.getElementById('defaultStream').value||'';
+  let html='';
+  selectedIds.forEach(id=>{
+    const m = allMatches.find(x=>x.fixture.id===id);
     if(!m) return;
-    const label = `${m.teams.home.name} vs ${m.teams.away.name}`;
-    const val = streamLinks[id] || document.getElementById('defaultStream').value || '';
-    html += `
-    <div class="stream-row" style="margin-bottom:8px">
-      <div style="font-size:11px;color:var(--txt2);min-width:150px;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${label}</div>
-      <input type="text" value="${val}" placeholder="https://sports803.online/…"
-        oninput="streamLinks[${id}]=this.value" style="flex:1"/>
+    const lbl = `${m.teams.home.name} vs ${m.teams.away.name}`;
+    const val = streamLinks[id]||def;
+    html+=`<div class="stream-row">
+      <div class="stream-label" title="${lbl}">${lbl}</div>
+      <input type="text" value="${val.replace(/"/g,'&quot;')}"
+        placeholder="https://sports803.online/watch/…"
+        oninput="streamLinks[${id}]=this.value"/>
     </div>`;
   });
-  inputs.innerHTML = html;
+  inp.innerHTML=html;
 }
 
-// ── GENERATE ──
+// ─── GENERATE ────────────────────────────────────────────────────────────────
 function generateWidget(){
-  if(selectedIds.size === 0){ setStatus('Select at least one match first', 'err'); return; }
+  if(!selectedIds.size){ setStatus('Select at least one match first','err'); return; }
+  const def = document.getElementById('defaultStream').value||'#';
+  let body='';
 
-  const defaultStream = document.getElementById('defaultStream').value || '#';
-  let widgetHTML = '';
-
-  selectedIds.forEach(id => {
-    const m = allMatches.find(x => x.fixture.id === id);
+  selectedIds.forEach(id=>{
+    const m = allMatches.find(x=>x.fixture.id===id);
     if(!m) return;
+    const st  = matchStatus(m);
+    const lbl = matchLabel(m);
+    const sc  = matchScore(m);
+    const tm  = fmtTime(m.fixture.date);
+    const h   = m.teams.home, a = m.teams.away;
+    const hLogo = multiTierLogoChain(h);
+    const aLogo = multiTierLogoChain(a);
+    const hFb   = avatarFallback(h.name);
+    const aFb   = avatarFallback(a.name);
+    const url   = streamLinks[id]||def;
+    const venue = m.fixture.venue?.name||'TBC';
 
-    const status = getStatus(m);
-    const label = getStatusLabel(m);
-    const score = getScore(m);
-    const time = formatTime(m.fixture.date);
-    const hLogo = resolveLogo(m.teams.home);
-    const aLogo = resolveLogo(m.teams.away);
-    const streamUrl = streamLinks[id] || defaultStream;
+    // onerror chain: API-Football → ESPN CDN → TheSportsDB → ui-avatars
+    const hErr = `onerror="this.onerror=function(){this.onerror=null;this.src='${hFb}'};this.src='https://a.espncdn.com/i/teamlogos/soccer/500/${espnTeamSlug(h.name)}.png'"`;
+    const aErr = `onerror="this.onerror=function(){this.onerror=null;this.src='${aFb}'};this.src='https://a.espncdn.com/i/teamlogos/soccer/500/${espnTeamSlug(a.name)}.png'"`;
 
-    widgetHTML += `
+    body += `
   <div class="containerMatch">
-    <a href="${streamUrl}">
+    <a href="${url}">
       <div class="Match">
         <div class="fareq">
-          <div class="Imagee"><img src="${hLogo}" alt="${m.teams.home.name}" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(m.teams.home.name)}&amp;size=64&amp;background=1a1a1a&amp;color=e53935&amp;bold=true&amp;rounded=true'"/></div>
-          <div class="asm">${m.teams.home.name}</div>
+          <div class="Imagee"><img src="${hLogo.primary}" alt="${h.name}" ${hErr}/></div>
+          <div class="asm">${h.name}</div>
         </div>
         <div class="Nateja">
-          <div class="matchHour">${time}</div>
-          <div class="natej">${score}</div>
-          <div class="matchDate ${status}">${label}</div>
+          <div class="matchHour">${tm}</div>
+          <div class="natej">${sc}</div>
+          <div class="matchDate ${st}">${lbl}</div>
         </div>
         <div class="fareq">
-          <div class="Imagee"><img src="${aLogo}" alt="${m.teams.away.name}" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(m.teams.away.name)}&amp;size=64&amp;background=1a1a1a&amp;color=e53935&amp;bold=true&amp;rounded=true'"/></div>
-          <div class="asm">${m.teams.away.name}</div>
+          <div class="Imagee"><img src="${aLogo.primary}" alt="${a.name}" ${aErr}/></div>
+          <div class="asm">${a.name}</div>
         </div>
       </div>
-      <ul><li>${m.league.name}</li><li>${m.league.country}</li><li>${m.fixture.venue?.name || 'TBC'}</li></ul>
+      <ul>
+        <li>${m.league.name}</li>
+        <li>${m.league.country}</li>
+        <li>${venue}</li>
+      </ul>
     </a>
   </div>`;
   });
 
-  const fullWidget = `<div class="s803-matches">\n${widgetHTML}\n</div>`;
-
-  // Show output
-  document.getElementById('outputArea').style.display = 'block';
-  document.getElementById('widgetPreview').innerHTML = fullWidget;
-  document.getElementById('widgetCode').textContent = fullWidget;
+  const full = `<div class="s803-matches">\n${body}\n</div>`;
+  document.getElementById('outputArea').style.display='block';
+  document.getElementById('widgetPreview').innerHTML = full;
+  document.getElementById('widgetCode').textContent = full;
   document.getElementById('cssCode').textContent = getCSS();
   document.getElementById('bloggerCssBlock').textContent = getCSS();
-
-  // Scroll to output
-  document.getElementById('outputArea').scrollIntoView({behavior:'smooth', block:'start'});
+  document.getElementById('outputArea').scrollIntoView({behavior:'smooth',block:'start'});
 }
 
+// ─── CSS OUTPUT ──────────────────────────────────────────────────────────────
 function getCSS(){
   return `.s803-matches{width:100%;box-sizing:border-box;background:#000;padding:0 0 12px 0;display:flex;flex-direction:column;gap:8px}
 .containerMatch{width:100%;box-sizing:border-box;background:#111;border-radius:12px;overflow:hidden;border:1px solid #222;transition:border-color .2s}
@@ -608,65 +774,61 @@ function getCSS(){
 @keyframes s803pulse{0%,100%{opacity:1}50%{opacity:.6}}`;
 }
 
-// ── COPY ──
-async function copyCode(id){
-  const el = document.getElementById(id);
-  await navigator.clipboard.writeText(el.textContent);
-  const btn = event.target;
-  btn.classList.add('copied');
-  btn.textContent = '✓ Copied!';
-  setTimeout(()=>{ btn.classList.remove('copied'); btn.textContent = id==='widgetCode'?'📋 Copy Widget HTML':'🎨 Copy CSS'; },2000);
+// ─── COPY ────────────────────────────────────────────────────────────────────
+async function copyCode(elId, btnId, label){
+  await navigator.clipboard.writeText(document.getElementById(elId).textContent);
+  flash(btnId, label);
 }
 async function copyBloggerCSS(){
   await navigator.clipboard.writeText(getCSS());
-  const btn = event.target;
-  btn.classList.add('copied');
-  btn.textContent = '✓ Copied!';
-  setTimeout(()=>{ btn.classList.remove('copied'); btn.textContent = '📋 Copy Blogger Theme CSS'; },2000);
+  flash('btnCopyBlogger','📋 Copy Blogger Theme CSS');
+}
+function flash(btnId, label){
+  const b = document.getElementById(btnId);
+  b.classList.add('copied');
+  b.textContent='✓ Copied!';
+  setTimeout(()=>{ b.classList.remove('copied'); b.textContent=label; }, 2000);
 }
 
-// ── TABS ──
-document.querySelectorAll('.out-tab').forEach(tab => {
-  tab.addEventListener('click', () => {
-    document.querySelectorAll('.out-tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.out-panel').forEach(p => p.classList.remove('active'));
-    tab.classList.add('active');
-    document.getElementById('tab-'+tab.dataset.tab).classList.add('active');
+// ─── TAB SWITCHER ────────────────────────────────────────────────────────────
+document.querySelectorAll('.out-tab').forEach(t=>{
+  t.addEventListener('click',()=>{
+    document.querySelectorAll('.out-tab').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.out-panel').forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+    document.getElementById('tab-'+t.dataset.tab).classList.add('active');
   });
 });
 
-// ── DATE TABS ──
-document.querySelectorAll('.date-tab').forEach(tab => {
-  tab.addEventListener('click', () => {
-    document.querySelectorAll('.date-tab').forEach(t => t.classList.remove('active'));
-    tab.classList.add('active');
-    activeOffset = parseInt(tab.dataset.offset);
-    document.getElementById('customDate').value = '';
+// ─── DATE TABS ───────────────────────────────────────────────────────────────
+document.querySelectorAll('.date-tab').forEach(t=>{
+  t.addEventListener('click',()=>{
+    document.querySelectorAll('.date-tab').forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+    activeOffset = parseInt(t.dataset.offset);
+    document.getElementById('customDate').value='';
   });
 });
 
-// ── LEAGUE FILTER ──
-document.querySelectorAll('.league-chip').forEach(chip => {
-  chip.addEventListener('click', () => {
-    document.querySelectorAll('.league-chip').forEach(c => c.classList.remove('active'));
-    chip.classList.add('active');
-    activeLeague = chip.dataset.id;
-    renderEvents();
+// ─── LEAGUE FILTER ───────────────────────────────────────────────────────────
+document.querySelectorAll('.chip').forEach(c=>{
+  c.addEventListener('click',()=>{
+    document.querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));
+    c.classList.add('active');
+    activeLeague = c.dataset.id;
+    if(allMatches.length) renderEvents();
   });
 });
 
-// ── PERSIST API KEY ──
-const savedKey = localStorage.getItem('s803_apikey');
-if(savedKey) document.getElementById('apiKey').value = savedKey;
-document.getElementById('apiKey').addEventListener('input', e => {
-  localStorage.setItem('s803_apikey', e.target.value);
-});
-
+// ─── PERSIST ─────────────────────────────────────────────────────────────────
+const $key = document.getElementById('apiKey');
+const $stream = document.getElementById('defaultStream');
+const savedKey = localStorage.getItem('s803_key');
 const savedStream = localStorage.getItem('s803_stream');
-if(savedStream) document.getElementById('defaultStream').value = savedStream;
-document.getElementById('defaultStream').addEventListener('input', e => {
-  localStorage.setItem('s803_stream', e.target.value);
-});
+if(savedKey) $key.value = savedKey;
+if(savedStream) $stream.value = savedStream;
+$key.addEventListener('input', e=>localStorage.setItem('s803_key', e.target.value));
+$stream.addEventListener('input', e=>localStorage.setItem('s803_stream', e.target.value));
 </script>
 
 </body>
