@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
@@ -14,6 +13,9 @@
   --border:#222;--border2:#2a2a2a;
   --txt:#f0f0f0;--txt2:#999;--txt3:#555;
   --green:#4caf50;--green-dim:rgba(76,175,80,.12);--green-border:rgba(76,175,80,.3);
+  --blue:#2196f3;--blue-dim:rgba(33,150,243,.12);--blue-border:rgba(33,150,243,.3);
+  --orange:#ff9800;--orange-dim:rgba(255,152,0,.12);--orange-border:rgba(255,152,0,.3);
+  --purple:#9c27b0;--purple-dim:rgba(156,39,176,.12);--purple-border:rgba(156,39,176,.3);
   --font-head:'Barlow Condensed',sans-serif;--font-body:'Barlow',sans-serif;
   --radius:10px;
 }
@@ -22,196 +24,211 @@ html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--txt);font-family:var(--font-body);min-height:100vh}
 
 /* ── LAYOUT ── */
-.app{display:grid;grid-template-columns:290px 1fr;min-height:100vh}
+.app{display:grid;grid-template-columns:300px 1fr;min-height:100vh}
 
 /* ── SIDEBAR ── */
 .sidebar{
-background:var(–surface);
-border-right:1px solid var(–border);
-padding:20px 16px;
-display:flex;flex-direction:column;gap:14px;
-position:sticky;top:0;height:100vh;overflow-y:auto
+  background:var(--surface);
+  border-right:1px solid var(--border);
+  padding:20px 16px;
+  display:flex;flex-direction:column;gap:14px;
+  position:sticky;top:0;height:100vh;overflow-y:auto
 }
-.logo{display:flex;align-items:center;gap:10px;padding-bottom:14px;border-bottom:1px solid var(–border)}
+.logo{display:flex;align-items:center;gap:10px;padding-bottom:14px;border-bottom:1px solid var(--border)}
 .logo-icon{
-width:36px;height:36px;background:var(–red);border-radius:8px;
-display:flex;align-items:center;justify-content:center;
-font-family:var(–font-head);font-weight:800;font-size:14px;color:#fff;letter-spacing:-1px;
-flex-shrink:0
+  width:36px;height:36px;background:var(--red);border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-head);font-weight:800;font-size:14px;color:#fff;letter-spacing:-1px;
+  flex-shrink:0
 }
-.logo-text{font-family:var(–font-head);font-weight:800;font-size:18px;letter-spacing:1px}
-.logo-text span{color:var(–red)}
-.logo-sub{font-size:10px;color:var(–txt3);letter-spacing:1.5px;text-transform:uppercase;margin-top:1px}
+.logo-text{font-family:var(--font-head);font-weight:800;font-size:18px;letter-spacing:1px}
+.logo-text span{color:var(--red)}
+.logo-sub{font-size:10px;color:var(--txt3);letter-spacing:1.5px;text-transform:uppercase;margin-top:1px}
 
 .section-label{
-font-family:var(–font-head);font-size:10px;font-weight:700;
-letter-spacing:2px;color:var(–txt3);text-transform:uppercase;margin-bottom:6px
+  font-family:var(--font-head);font-size:10px;font-weight:700;
+  letter-spacing:2px;color:var(--txt3);text-transform:uppercase;margin-bottom:6px
 }
 
 /* Date tabs */
 .date-tabs{display:flex;gap:4px}
 .date-tab{
-flex:1;padding:8px 4px;background:var(–surface2);border:1px solid var(–border);
-border-radius:8px;font-family:var(–font-head);font-size:12px;font-weight:700;
-color:var(–txt2);cursor:pointer;text-align:center;transition:all .15s;letter-spacing:.5px
+  flex:1;padding:8px 4px;background:var(--surface2);border:1px solid var(--border);
+  border-radius:8px;font-family:var(--font-head);font-size:12px;font-weight:700;
+  color:var(--txt2);cursor:pointer;text-align:center;transition:all .15s;letter-spacing:.5px
 }
-.date-tab:hover{border-color:var(–red);color:var(–txt)}
-.date-tab.active{background:var(–red-dim);border-color:var(–red);color:var(–red)}
+.date-tab:hover{border-color:var(--red);color:var(--txt)}
+.date-tab.active{background:var(--red-dim);border-color:var(--red);color:var(--red)}
 
 /* Inputs */
 .input-row{display:flex;flex-direction:column;gap:6px}
 input[type=date],input[type=text],select,textarea{
-width:100%;background:var(–surface2);border:1px solid var(–border2);
-border-radius:8px;color:var(–txt);font-family:var(–font-body);font-size:13px;
-padding:9px 12px;outline:none;transition:border-color .15s
+  width:100%;background:var(--surface2);border:1px solid var(--border2);
+  border-radius:8px;color:var(--txt);font-family:var(--font-body);font-size:13px;
+  padding:9px 12px;outline:none;transition:border-color .15s
 }
-input[type=date]:focus,input[type=text]:focus,select:focus,textarea:focus{border-color:var(–red)}
+input[type=date]:focus,input[type=text]:focus,select:focus,textarea:focus{border-color:var(--red)}
 input[type=date]::-webkit-calendar-picker-indicator{filter:invert(.5)}
 select option{background:#1a1a1a}
 textarea{resize:vertical;min-height:60px;font-size:12px}
 
-/* League filter */
-.league-grid{display:flex;flex-wrap:wrap;gap:5px}
-.league-chip{
-font-size:11px;font-family:var(–font-head);font-weight:700;padding:5px 10px;
-border-radius:20px;background:var(–surface2);border:1px solid var(–border2);
-color:var(–txt2);cursor:pointer;transition:all .15s;white-space:nowrap;letter-spacing:.3px
+/* Sport category tabs */
+.sport-tabs{display:flex;gap:4px;flex-wrap:wrap}
+.sport-tab{
+  padding:6px 10px;background:var(--surface2);border:1px solid var(--border);
+  border-radius:7px;font-family:var(--font-head);font-size:11px;font-weight:700;
+  color:var(--txt2);cursor:pointer;text-align:center;transition:all .15s;letter-spacing:.5px;
+  white-space:nowrap
 }
-.league-chip:hover{border-color:var(–red);color:var(–txt)}
-.league-chip.active{background:var(–red-dim);border-color:var(–red);color:var(–red)}
+.sport-tab:hover{border-color:var(--red);color:var(--txt)}
+.sport-tab.active{background:var(--red-dim);border-color:var(--red);color:var(--red)}
+
+/* League filter */
+.league-grid{display:flex;flex-wrap:wrap;gap:5px;max-height:160px;overflow-y:auto;padding-right:2px}
+.league-chip{
+  font-size:11px;font-family:var(--font-head);font-weight:700;padding:5px 10px;
+  border-radius:20px;background:var(--surface2);border:1px solid var(--border2);
+  color:var(--txt2);cursor:pointer;transition:all .15s;white-space:nowrap;letter-spacing:.3px
+}
+.league-chip:hover{border-color:var(--red);color:var(--txt)}
+.league-chip.active{background:var(--red-dim);border-color:var(--red);color:var(--red)}
+
+/* Sport category badge colors */
+.league-chip[data-sport="football"]:hover,.league-chip[data-sport="football"].active{border-color:var(--green);color:var(--green);background:var(--green-dim)}
+.league-chip[data-sport="basketball"]:hover,.league-chip[data-sport="basketball"].active{border-color:var(--orange);color:var(--orange);background:var(--orange-dim)}
+.league-chip[data-sport="motorsport"]:hover,.league-chip[data-sport="motorsport"].active{border-color:var(--red);color:var(--red);background:var(--red-dim)}
+.league-chip[data-sport="other"]:hover,.league-chip[data-sport="other"].active{border-color:var(--purple);color:var(--purple);background:var(--purple-dim)}
 
 /* Buttons */
 .btn{
-width:100%;padding:11px;border-radius:10px;font-family:var(–font-head);
-font-weight:700;font-size:15px;letter-spacing:1px;cursor:pointer;border:none;
-transition:all .15s;text-transform:uppercase;display:flex;align-items:center;justify-content:center;gap:6px
+  width:100%;padding:11px;border-radius:10px;font-family:var(--font-head);
+  font-weight:700;font-size:15px;letter-spacing:1px;cursor:pointer;border:none;
+  transition:all .15s;text-transform:uppercase;display:flex;align-items:center;justify-content:center;gap:6px
 }
-.btn-primary{background:var(–red);color:#fff;box-shadow:0 0 20px rgba(229,57,53,.25)}
+.btn-primary{background:var(--red);color:#fff;box-shadow:0 0 20px rgba(229,57,53,.25)}
 .btn-primary:hover{background:#c62828;box-shadow:0 0 25px rgba(229,57,53,.4)}
 .btn-primary:active{transform:scale(.97)}
-.btn-secondary{background:var(–surface2);border:1px solid var(–border2);color:var(–txt2)}
-.btn-secondary:hover{border-color:var(–red);color:var(–txt)}
+.btn-secondary{background:var(--surface2);border:1px solid var(--border2);color:var(--txt2)}
+.btn-secondary:hover{border-color:var(--red);color:var(--txt)}
 .btn-sm{padding:7px 14px;font-size:12px;letter-spacing:.5px;border-radius:7px;width:auto}
 
 /* Status */
 .status-bar{
-background:var(–surface2);border:1px solid var(–border2);border-radius:8px;
-padding:9px 12px;font-size:11px;color:var(–txt2);min-height:36px;
-display:flex;align-items:center;gap:7px;line-height:1.4
+  background:var(--surface2);border:1px solid var(--border2);border-radius:8px;
+  padding:9px 12px;font-size:11px;color:var(--txt2);min-height:36px;
+  display:flex;align-items:center;gap:7px;line-height:1.4
 }
 .status-bar.loading{color:#ffb300;border-color:rgba(255,179,0,.3)}
-.status-bar.ok{color:var(–green);border-color:var(–green-border)}
-.status-bar.err{color:var(–red);border-color:var(–red-border)}
+.status-bar.ok{color:var(--green);border-color:var(--green-border)}
+.status-bar.err{color:var(--red);border-color:var(--red-border)}
 .dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0}
 .dot.pulse{animation:pulse2 1.2s infinite}
 @keyframes pulse2{0%,100%{opacity:1}50%{opacity:.3}}
 
 /* API badge */
 .api-badge{
-display:flex;align-items:center;gap:6px;padding:7px 10px;
-background:rgba(76,175,80,.08);border:1px solid rgba(76,175,80,.2);
-border-radius:8px;font-size:11px;color:var(–green)
+  display:flex;align-items:center;gap:6px;padding:7px 10px;
+  background:rgba(76,175,80,.08);border:1px solid rgba(76,175,80,.2);
+  border-radius:8px;font-size:11px;color:var(--green)
 }
-.api-badge svg{flex-shrink:0}
 
 /* Divider */
-.divider{height:1px;background:var(–border);width:100%}
+.divider{height:1px;background:var(--border);width:100%}
 
 /* ── MAIN ── */
 .main{padding:20px;display:flex;flex-direction:column;gap:14px;overflow:hidden;min-width:0}
 .main-header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
-.main-header h2{font-family:var(–font-head);font-weight:800;font-size:22px;letter-spacing:1px}
+.main-header h2{font-family:var(--font-head);font-weight:800;font-size:22px;letter-spacing:1px}
 .header-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .count-badge{
-background:var(–red-dim);border:1px solid var(–red-border);color:var(–red);
-font-family:var(–font-head);font-size:13px;font-weight:700;
-padding:5px 12px;border-radius:20px
+  background:var(--red-dim);border:1px solid var(--red-border);color:var(--red);
+  font-family:var(--font-head);font-size:13px;font-weight:700;
+  padding:5px 12px;border-radius:20px
 }
 
 /* Loader */
-.loader-wrap{padding:48px;text-align:center;color:var(–txt3)}
+.loader-wrap{padding:48px;text-align:center;color:var(--txt3)}
 .spinner{
-width:32px;height:32px;border:3px solid var(–border2);
-border-top-color:var(–red);border-radius:50%;
-animation:spin .8s linear infinite;margin:0 auto 12px
+  width:32px;height:32px;border:3px solid var(--border2);
+  border-top-color:var(--red);border-radius:50%;
+  animation:spin .8s linear infinite;margin:0 auto 12px
 }
 @keyframes spin{to{transform:rotate(360deg)}}
 
 /* Events list */
-.events-area{background:var(–surface);border:1px solid var(–border);border-radius:12px;overflow:hidden}
-.events-empty{padding:48px;text-align:center;color:var(–txt3);font-size:14px}
+.events-area{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.events-empty{padding:48px;text-align:center;color:var(--txt3);font-size:14px}
 .events-empty span{display:block;font-size:36px;margin-bottom:10px}
-.events-empty small{display:block;font-size:12px;margin-top:6px;color:var(–txt3)}
+.events-empty small{display:block;font-size:12px;margin-top:6px;color:var(--txt3)}
 
 /* League group header */
 .league-header{
-padding:8px 16px;background:var(–surface2);border-bottom:1px solid var(–border);
-display:flex;align-items:center;gap:10px
+  padding:8px 16px;background:var(--surface2);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:10px
 }
-.league-header img{width:20px;height:20px;object-fit:contain;border-radius:2px;background:transparent}
-.league-header-name{font-family:var(–font-head);font-size:12px;font-weight:700;letter-spacing:1px;color:var(–txt2)}
+.sport-icon{font-size:14px}
+.league-header-name{font-family:var(--font-head);font-size:12px;font-weight:700;letter-spacing:1px;color:var(--txt2)}
 .league-header-count{
-font-size:10px;background:var(–red-dim);color:var(–red);border:1px solid var(–red-border);
-padding:2px 7px;border-radius:10px;font-family:var(–font-head);font-weight:700;margin-left:auto
+  font-size:10px;background:var(--red-dim);color:var(--red);border:1px solid var(--red-border);
+  padding:2px 7px;border-radius:10px;font-family:var(--font-head);font-weight:700;margin-left:auto
 }
 
 /* Event row */
 .event-item{
-display:flex;align-items:center;gap:10px;padding:11px 14px;
-border-bottom:1px solid var(–border);cursor:pointer;transition:background .12s;position:relative
+  display:flex;align-items:center;gap:10px;padding:11px 14px;
+  border-bottom:1px solid var(--border);cursor:pointer;transition:background .12s;position:relative
 }
 .event-item:last-child{border-bottom:none}
-.event-item:hover{background:var(–surface2)}
-.event-item.selected{background:rgba(229,57,53,.06);border-left:3px solid var(–red)}
-.event-item.selected + .event-item{border-top:none}
+.event-item:hover{background:var(--surface2)}
+.event-item.selected{background:rgba(229,57,53,.06);border-left:3px solid var(--red)}
 
 .ev-check{
-width:18px;height:18px;border-radius:5px;border:1.5px solid var(–border2);
-background:var(–surface2);flex-shrink:0;display:flex;align-items:center;justify-content:center;
-transition:all .12s
+  width:18px;height:18px;border-radius:5px;border:1.5px solid var(--border2);
+  background:var(--surface2);flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  transition:all .12s
 }
-.event-item.selected .ev-check{background:var(–red);border-color:var(–red)}
+.event-item.selected .ev-check{background:var(--red);border-color:var(--red)}
 .ev-check svg{width:10px;height:10px;display:none}
 .event-item.selected .ev-check svg{display:block}
 
 .ev-logos{display:flex;align-items:center;gap:5px;flex-shrink:0}
 .ev-logo{
-width:30px;height:30px;border-radius:50%;background:var(–surface3);
-object-fit:contain;padding:2px
+  width:30px;height:30px;border-radius:50%;background:var(--surface3);
+  object-fit:contain;padding:2px
 }
-.ev-vs{font-size:9px;color:var(–txt3);font-weight:700;letter-spacing:.5px}
+.ev-vs{font-size:9px;color:var(--txt3);font-weight:700;letter-spacing:.5px}
 
 .ev-info{flex:1;min-width:0}
-.ev-teams{font-size:13px;font-weight:600;color:var(–txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.ev-meta{font-size:11px;color:var(–txt2);display:flex;gap:8px;margin-top:2px;flex-wrap:wrap}
-.ev-league{color:var(–red);font-weight:600}
+.ev-teams{font-size:13px;font-weight:600;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ev-meta{font-size:11px;color:var(--txt2);display:flex;gap:8px;margin-top:2px;flex-wrap:wrap}
+.ev-league{color:var(--red);font-weight:600}
 
 .ev-time{text-align:right;flex-shrink:0}
-.ev-hour{font-family:var(–font-head);font-size:14px;font-weight:700;color:var(–txt)}
-.ev-status{font-size:10px;padding:2px 8px;border-radius:10px;font-weight:700;display:inline-block;margin-top:3px;font-family:var(–font-head);letter-spacing:.3px}
-.ev-status.live{background:var(–red);color:#fff;animation:pulse2 1.5s infinite}
-.ev-status.end{background:var(–surface3);color:var(–txt3);border:1px solid var(–border2)}
-.ev-status.upcoming{background:var(–green-dim);color:var(–green);border:1px solid var(–green-border)}
+.ev-hour{font-family:var(--font-head);font-size:14px;font-weight:700;color:var(--txt)}
+.ev-status{font-size:10px;padding:2px 8px;border-radius:10px;font-weight:700;display:inline-block;margin-top:3px;font-family:var(--font-head);letter-spacing:.3px}
+.ev-status.live{background:var(--red);color:#fff;animation:pulse2 1.5s infinite}
+.ev-status.end{background:var(--surface3);color:var(--txt3);border:1px solid var(--border2)}
+.ev-status.upcoming{background:var(--green-dim);color:var(--green);border:1px solid var(--green-border)}
 
 /* Stream editor */
-.stream-editor{background:var(–surface);border:1px solid var(–border);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:12px}
+.stream-editor{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:12px}
 .stream-editor-header{display:flex;align-items:center;justify-content:space-between}
-.stream-editor h3{font-family:var(–font-head);font-size:13px;font-weight:700;letter-spacing:1px;color:var(–txt2);text-transform:uppercase}
+.stream-editor h3{font-family:var(--font-head);font-size:13px;font-weight:700;letter-spacing:1px;color:var(--txt2);text-transform:uppercase}
 .stream-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
 .stream-row:last-child{margin-bottom:0}
-.stream-label{font-size:11px;color:var(–txt2);min-width:140px;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex-shrink:0}
+.stream-label{font-size:11px;color:var(--txt2);min-width:140px;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex-shrink:0}
 .stream-row input{flex:1}
 
 /* Output area */
-.output-area{background:var(–surface);border:1px solid var(–border);border-radius:12px;overflow:hidden}
-.output-tabs{display:flex;border-bottom:1px solid var(–border);overflow-x:auto}
+.output-area{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.output-tabs{display:flex;border-bottom:1px solid var(--border);overflow-x:auto}
 .out-tab{
-padding:12px 18px;font-family:var(–font-head);font-size:13px;font-weight:700;
-letter-spacing:.5px;color:var(–txt2);cursor:pointer;border-bottom:2px solid transparent;
-transition:all .15s;white-space:nowrap
+  padding:12px 18px;font-family:var(--font-head);font-size:13px;font-weight:700;
+  letter-spacing:.5px;color:var(--txt2);cursor:pointer;border-bottom:2px solid transparent;
+  transition:all .15s;white-space:nowrap
 }
-.out-tab.active{color:var(–red);border-bottom-color:var(–red)}
-.out-tab:hover:not(.active){color:var(–txt)}
+.out-tab.active{color:var(--red);border-bottom-color:var(--red)}
+.out-tab:hover:not(.active){color:var(--txt)}
 .out-panel{display:none;padding:16px}
 .out-panel.active{display:block}
 
@@ -220,29 +237,29 @@ transition:all .15s;white-space:nowrap
 
 /* Code */
 .code-block{
-background:#080808;border:1px solid var(–border);border-radius:8px;
-padding:14px;font-family:‘Courier New’,monospace;font-size:11px;line-height:1.7;
-color:#a8d8a8;overflow:auto;max-height:420px;white-space:pre-wrap;word-break:break-all
+  background:#080808;border:1px solid var(--border);border-radius:8px;
+  padding:14px;font-family:'Courier New',monospace;font-size:11px;line-height:1.7;
+  color:#a8d8a8;overflow:auto;max-height:420px;white-space:pre-wrap;word-break:break-all
 }
-.code-label{font-size:11px;color:var(–txt2);margin:14px 0 6px;display:flex;align-items:center;gap:6px}
+.code-label{font-size:11px;color:var(--txt2);margin:14px 0 6px;display:flex;align-items:center;gap:6px}
 .code-label:first-child{margin-top:0}
 
 /* Copy bar */
 .copy-bar{display:flex;gap:8px;margin-top:10px}
 .copy-btn{
-flex:1;padding:9px 12px;background:var(–surface2);border:1px solid var(–border2);
-border-radius:8px;color:var(–txt2);font-family:var(–font-head);font-size:12px;font-weight:700;
-cursor:pointer;letter-spacing:.5px;transition:all .12s;display:flex;align-items:center;justify-content:center;gap:5px
+  flex:1;padding:9px 12px;background:var(--surface2);border:1px solid var(--border2);
+  border-radius:8px;color:var(--txt2);font-family:var(--font-head);font-size:12px;font-weight:700;
+  cursor:pointer;letter-spacing:.5px;transition:all .12s;display:flex;align-items:center;justify-content:center;gap:5px
 }
-.copy-btn:hover{border-color:var(–red);color:var(–txt)}
-.copy-btn.copied{background:var(–green-dim);border-color:var(–green-border);color:var(–green)}
+.copy-btn:hover{border-color:var(--red);color:var(--txt)}
+.copy-btn.copied{background:var(--green-dim);border-color:var(--green-border);color:var(--green)}
 
 /* Blogger guide */
 .blogger-guide{display:flex;flex-direction:column;gap:10px}
-.guide-step{background:var(–surface2);border:1px solid var(–border2);border-radius:8px;padding:14px}
-.guide-step h4{font-family:var(–font-head);font-size:12px;font-weight:700;color:var(–red);margin-bottom:8px;letter-spacing:.5px;text-transform:uppercase}
-.guide-step p{font-size:12px;color:var(–txt2);line-height:1.7}
-.guide-step code{font-size:11px;color:#ffd700;background:var(–surface3);padding:2px 6px;border-radius:4px}
+.guide-step{background:var(--surface2);border:1px solid var(--border2);border-radius:8px;padding:14px}
+.guide-step h4{font-family:var(--font-head);font-size:12px;font-weight:700;color:var(--red);margin-bottom:8px;letter-spacing:.5px;text-transform:uppercase}
+.guide-step p{font-size:12px;color:var(--txt2);line-height:1.7}
+.guide-step code{font-size:11px;color:#ffd700;background:var(--surface3);padding:2px 6px;border-radius:4px}
 
 /* ── WIDGET PREVIEW STYLES ── */
 .s803-matches{width:100%;box-sizing:border-box;background:#000;padding:0 0 12px 0;display:flex;flex-direction:column;gap:8px}
@@ -268,23 +285,21 @@ cursor:pointer;letter-spacing:.5px;transition:all .12s;display:flex;align-items:
 /* Scrollbars */
 ::-webkit-scrollbar{width:5px;height:5px}
 ::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:var(–border2);border-radius:3px}
-::-webkit-scrollbar-thumb:hover{background:var(–txt3)}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--txt3)}
 
 /* Responsive */
 @media(max-width:720px){
-.app{grid-template-columns:1fr}
-.sidebar{position:static;height:auto}
-.main{padding:14px}
+  .app{grid-template-columns:1fr}
+  .sidebar{position:static;height:auto}
+  .main{padding:14px}
 }
 </style>
-
 </head>
 <body>
 <div class="app">
 
 <!-- ══ SIDEBAR ══ -->
-
 <aside class="sidebar">
   <div class="logo">
     <div class="logo-icon">803</div>
@@ -294,8 +309,6 @@ cursor:pointer;letter-spacing:.5px;transition:all .12s;display:flex;align-items:
     </div>
   </div>
 
-  <!-- ESPN badge -->
-
   <div class="api-badge">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
     <span>Powered by <strong>ESPN API</strong> — No key needed</span>
@@ -304,7 +317,6 @@ cursor:pointer;letter-spacing:.5px;transition:all .12s;display:flex;align-items:
   <div class="divider"></div>
 
   <!-- Date selector -->
-
   <div>
     <div class="section-label">Date</div>
     <div class="date-tabs">
@@ -321,21 +333,23 @@ cursor:pointer;letter-spacing:.5px;transition:all .12s;display:flex;align-items:
 
   <div class="divider"></div>
 
-  <!-- League filter -->
-
+  <!-- Sport Category -->
   <div>
-    <div class="section-label" style="margin-bottom:8px">Filter by League</div>
+    <div class="section-label" style="margin-bottom:8px">Sport Category</div>
+    <div class="sport-tabs" id="sportTabs">
+      <div class="sport-tab active" data-sport="all">🌐 All</div>
+      <div class="sport-tab" data-sport="football">⚽ Football</div>
+      <div class="sport-tab" data-sport="basketball">🏀 Basketball</div>
+      <div class="sport-tab" data-sport="motorsport">🏎️ Motorsport</div>
+      <div class="sport-tab" data-sport="other">🏆 Other</div>
+    </div>
+  </div>
+
+  <!-- League filter -->
+  <div>
+    <div class="section-label" style="margin-bottom:8px">League / Competition</div>
     <div class="league-grid" id="leagueFilter">
-      <div class="league-chip active" data-id="all">All</div>
-      <div class="league-chip" data-id="eng.1">EPL</div>
-      <div class="league-chip" data-id="esp.1">La Liga</div>
-      <div class="league-chip" data-id="ita.1">Serie A</div>
-      <div class="league-chip" data-id="ger.1">Bundesliga</div>
-      <div class="league-chip" data-id="fra.1">Ligue 1</div>
-      <div class="league-chip" data-id="uefa.champions">UCL</div>
-      <div class="league-chip" data-id="uefa.europa">UEL</div>
-      <div class="league-chip" data-id="uefa.europa.conf">UECL</div>
-      <div class="league-chip" data-id="usa.1">MLS</div>
+      <!-- populated by JS -->
     </div>
   </div>
 
@@ -353,8 +367,6 @@ cursor:pointer;letter-spacing:.5px;transition:all .12s;display:flex;align-items:
 
   <div class="divider"></div>
 
-  <!-- Default stream -->
-
   <div class="input-row">
     <div class="section-label">Default Stream URL</div>
     <input type="text" id="defaultStream" placeholder="https://sports803.online/…"/>
@@ -369,7 +381,6 @@ cursor:pointer;letter-spacing:.5px;transition:all .12s;display:flex;align-items:
 </aside>
 
 <!-- ══ MAIN ══ -->
-
 <main class="main">
 
   <div class="main-header">
@@ -380,8 +391,6 @@ cursor:pointer;letter-spacing:.5px;transition:all .12s;display:flex;align-items:
     </div>
   </div>
 
-  <!-- Events -->
-
   <div class="events-area" id="eventsArea">
     <div class="events-empty">
       <span>📅</span>
@@ -389,8 +398,6 @@ cursor:pointer;letter-spacing:.5px;transition:all .12s;display:flex;align-items:
       <small>Uses ESPN's free API — no key required</small>
     </div>
   </div>
-
-  <!-- Stream editor -->
 
   <div class="stream-editor" id="streamEditor" style="display:none">
     <div class="stream-editor-header">
@@ -400,8 +407,6 @@ cursor:pointer;letter-spacing:.5px;transition:all .12s;display:flex;align-items:
     <div id="streamInputs"></div>
   </div>
 
-  <!-- Output -->
-
   <div class="output-area" id="outputArea" style="display:none">
     <div class="output-tabs">
       <div class="out-tab active" data-tab="preview">👁 Preview</div>
@@ -409,66 +414,119 @@ cursor:pointer;letter-spacing:.5px;transition:all .12s;display:flex;align-items:
       <div class="out-tab" data-tab="blogger">📋 Blogger Guide</div>
     </div>
 
-```
-<div class="out-panel active" id="tab-preview">
-  <div class="preview-wrap" id="widgetPreview"></div>
-</div>
+    <div class="out-panel active" id="tab-preview">
+      <div class="preview-wrap" id="widgetPreview"></div>
+    </div>
 
-<div class="out-panel" id="tab-code">
-  <div class="copy-bar">
-    <button class="copy-btn" id="copyHtmlBtn" onclick="copyCode('widgetCode', this, '📋 Copy Widget HTML')">📋 Copy Widget HTML</button>
-    <button class="copy-btn" id="copyCssBtn" onclick="copyCode('cssCode', this, '🎨 Copy CSS')">🎨 Copy CSS</button>
-  </div>
-  <div class="code-label">Widget HTML — paste into Blogger post body (HTML mode):</div>
-  <div class="code-block" id="widgetCode"></div>
-  <div class="code-label" style="margin-top:16px">CSS — add once to Blogger theme (see Blogger Guide tab):</div>
-  <div class="code-block" id="cssCode"></div>
-</div>
+    <div class="out-panel" id="tab-code">
+      <div class="copy-bar">
+        <button class="copy-btn" id="copyHtmlBtn" onclick="copyCode('widgetCode', this, '📋 Copy Widget HTML')">📋 Copy Widget HTML</button>
+        <button class="copy-btn" id="copyCssBtn" onclick="copyCode('cssCode', this, '🎨 Copy CSS')">🎨 Copy CSS</button>
+      </div>
+      <div class="code-label">Widget HTML — paste into Blogger post body (HTML mode):</div>
+      <div class="code-block" id="widgetCode"></div>
+      <div class="code-label" style="margin-top:16px">CSS — add once to Blogger theme (see Blogger Guide tab):</div>
+      <div class="code-block" id="cssCode"></div>
+    </div>
 
-<div class="out-panel" id="tab-blogger">
-  <div class="blogger-guide">
-    <div class="guide-step">
-      <h4>Step 1 — Add CSS once to your Blogger Theme</h4>
-      <p>This is a <strong>one-time setup</strong> so you never paste CSS into posts again.<br><br>
-      Go to: <code>Blogger → Theme → Edit HTML</code><br><br>
-      Find <code>]]&gt;&lt;/b:skin&gt;</code> near the bottom of the CSS section. Paste the CSS from the <strong>HTML Code tab</strong> directly <strong>above</strong> that line. Save the theme. Done — every post using these widget classes will inherit the styles automatically.</p>
+    <div class="out-panel" id="tab-blogger">
+      <div class="blogger-guide">
+        <div class="guide-step">
+          <h4>Step 1 — Add CSS once to your Blogger Theme</h4>
+          <p>This is a <strong>one-time setup</strong> so you never paste CSS into posts again.<br><br>
+          Go to: <code>Blogger → Theme → Edit HTML</code><br><br>
+          Find <code>]]&gt;&lt;/b:skin&gt;</code> near the bottom of the CSS section. Paste the CSS from the <strong>HTML Code tab</strong> directly <strong>above</strong> that line. Save the theme.</p>
+        </div>
+        <div class="guide-step">
+          <h4>Step 2 — Paste widget HTML into posts</h4>
+          <p>Copy just the <strong>Widget HTML</strong> from the HTML Code tab. In your Blogger post editor, switch to <strong>HTML mode</strong> and paste it in.</p>
+        </div>
+        <div class="guide-step">
+          <h4>Step 3 — Updating stream links</h4>
+          <p>Edit stream links directly in the HTML after pasting — look for <code>href="…"</code> on each <code>&lt;a&gt;</code> tag, or re-generate using this tool.</p>
+        </div>
+        <div class="copy-bar">
+          <button class="copy-btn" id="copyBlogBtn" onclick="copyBloggerCSS(this)">📋 Copy Blogger Theme CSS</button>
+        </div>
+        <div class="code-label">Blogger Theme CSS:</div>
+        <div class="code-block" id="bloggerCssBlock" style="max-height:180px"></div>
+      </div>
     </div>
-    <div class="guide-step">
-      <h4>Step 2 — Paste widget HTML into posts</h4>
-      <p>After the one-time theme setup, copy just the <strong>Widget HTML</strong> (not the CSS) from the HTML Code tab. In your Blogger post editor, switch to <strong>HTML mode</strong> (not Compose) and paste it in. The CSS in your theme handles everything automatically.</p>
-    </div>
-    <div class="guide-step">
-      <h4>Step 3 — Updating stream links</h4>
-      <p>You can always edit stream links directly in the generated HTML after pasting — look for the <code>href="…"</code> on each <code>&lt;a&gt;</code> tag. Or re-generate using this tool with your links pre-filled in the Stream Links panel.</p>
-    </div>
-    <div class="copy-bar">
-      <button class="copy-btn" id="copyBlogBtn" onclick="copyBloggerCSS(this)">📋 Copy Blogger Theme CSS</button>
-    </div>
-    <div class="code-label">Blogger Theme CSS:</div>
-    <div class="code-block" id="bloggerCssBlock" style="max-height:180px"></div>
-  </div>
-</div>
-```
-
   </div>
 
 </main>
 </div>
 
 <script>
-// ══════════════════════════════════════════════
-// ESPN League Config — free, no key needed
-// ══════════════════════════════════════════════
-const ESPN_LEAGUES = [
-  { id:'eng.1',          name:'Premier League',      short:'EPL',        country:'England' },
-  { id:'esp.1',          name:'La Liga',              short:'La Liga',     country:'Spain' },
-  { id:'ita.1',          name:'Serie A',              short:'Serie A',     country:'Italy' },
-  { id:'ger.1',          name:'Bundesliga',           short:'Bundesliga',  country:'Germany' },
-  { id:'fra.1',          name:'Ligue 1',              short:'Ligue 1',     country:'France' },
-  { id:'uefa.champions', name:'Champions League',     short:'UCL',         country:'Europe' },
-  { id:'uefa.europa',    name:'Europa League',        short:'UEL',         country:'Europe' },
-  { id:'uefa.europa.conf',name:'Conference League',  short:'UECL',        country:'Europe' },
-  { id:'usa.1',          name:'MLS',                  short:'MLS',         country:'USA' },
+// ══════════════════════════════════════════════════════════════
+// SPORTS CONFIG — ESPN API endpoints
+// ESPN API pattern:
+//   Soccer:     /soccer/{leagueId}/scoreboard
+//   Basketball: /basketball/nba/scoreboard  (or wnba, mens-college-basketball)
+//   F1:         /racing/f1/scoreboard
+//   MotoGP:     /racing/motogp/scoreboard
+//   NASCAR:     /racing/nascar-cup/scoreboard
+//   MLB:        /baseball/mlb/scoreboard
+//   NHL:        /hockey/nhl/scoreboard
+// ══════════════════════════════════════════════════════════════
+
+const ALL_LEAGUES = [
+  // ── FOOTBALL ──────────────────────────────────────
+  { id:'eng.1',           name:'Premier League',        short:'EPL',          country:'England',       sport:'football', emoji:'⚽', espnPath:'soccer/eng.1' },
+  { id:'eng.2',           name:'Championship',          short:'Championship', country:'England',       sport:'football', emoji:'⚽', espnPath:'soccer/eng.2' },
+  { id:'eng.3',           name:'League One',            short:'League One',   country:'England',       sport:'football', emoji:'⚽', espnPath:'soccer/eng.3' },
+  { id:'esp.1',           name:'La Liga',               short:'La Liga',      country:'Spain',         sport:'football', emoji:'⚽', espnPath:'soccer/esp.1' },
+  { id:'ita.1',           name:'Serie A',               short:'Serie A',      country:'Italy',         sport:'football', emoji:'⚽', espnPath:'soccer/ita.1' },
+  { id:'ger.1',           name:'Bundesliga',            short:'Bundesliga',   country:'Germany',       sport:'football', emoji:'⚽', espnPath:'soccer/ger.1' },
+  { id:'ger.2',           name:'2. Bundesliga',         short:'2.Bundesliga', country:'Germany',       sport:'football', emoji:'⚽', espnPath:'soccer/ger.2' },
+  { id:'fra.1',           name:'Ligue 1',               short:'Ligue 1',      country:'France',        sport:'football', emoji:'⚽', espnPath:'soccer/fra.1' },
+  { id:'por.1',           name:'Primeira Liga',         short:'Liga Portugal',country:'Portugal',      sport:'football', emoji:'⚽', espnPath:'soccer/por.1' },
+  { id:'ned.1',           name:'Eredivisie',            short:'Eredivisie',   country:'Netherlands',   sport:'football', emoji:'⚽', espnPath:'soccer/ned.1' },
+  { id:'sau.1',           name:'Saudi Pro League',      short:'Saudi Pro',    country:'Saudi Arabia',  sport:'football', emoji:'⚽', espnPath:'soccer/sau.1' },
+  { id:'tur.1',           name:'Süper Lig',             short:'Süper Lig',    country:'Turkey',        sport:'football', emoji:'⚽', espnPath:'soccer/tur.1' },
+  { id:'sco.1',           name:'Scottish Premiership',  short:'SPFL',         country:'Scotland',      sport:'football', emoji:'⚽', espnPath:'soccer/sco.1' },
+  { id:'usa.1',           name:'MLS',                   short:'MLS',          country:'USA',           sport:'football', emoji:'⚽', espnPath:'soccer/usa.1' },
+  { id:'usa.2',           name:'USL Championship',      short:'USL',          country:'USA',           sport:'football', emoji:'⚽', espnPath:'soccer/usa.2' },
+  { id:'bra.1',           name:'Brasileirão',           short:'Brasileirão',  country:'Brazil',        sport:'football', emoji:'⚽', espnPath:'soccer/bra.1' },
+  { id:'arg.1',           name:'Primera División',      short:'Argentina',    country:'Argentina',     sport:'football', emoji:'⚽', espnPath:'soccer/arg.1' },
+  { id:'mex.1',           name:'Liga MX',               short:'Liga MX',      country:'Mexico',        sport:'football', emoji:'⚽', espnPath:'soccer/mex.1' },
+  { id:'uefa.champions',  name:'Champions League',      short:'UCL',          country:'Europe',        sport:'football', emoji:'⚽', espnPath:'soccer/uefa.champions' },
+  { id:'uefa.europa',     name:'Europa League',         short:'UEL',          country:'Europe',        sport:'football', emoji:'⚽', espnPath:'soccer/uefa.europa' },
+  { id:'uefa.europa.conf',name:'Conference League',     short:'UECL',         country:'Europe',        sport:'football', emoji:'⚽', espnPath:'soccer/uefa.europa.conf' },
+  { id:'fifa.worldq.afc', name:'World Cup Qualifiers',  short:'WCQ',          country:'World',         sport:'football', emoji:'⚽', espnPath:'soccer/fifa.worldq.afc' },
+  { id:'fifa.world',      name:'FIFA World Cup',        short:'World Cup',    country:'World',         sport:'football', emoji:'⚽', espnPath:'soccer/fifa.world' },
+  { id:'conmebol.america',name:'Copa América',          short:'Copa América', country:'Americas',      sport:'football', emoji:'⚽', espnPath:'soccer/conmebol.america' },
+  { id:'uefa.euro',       name:'UEFA Euro',             short:'Euro',         country:'Europe',        sport:'football', emoji:'⚽', espnPath:'soccer/uefa.euro' },
+  { id:'afcon',           name:'Africa Cup of Nations', short:'AFCON',        country:'Africa',        sport:'football', emoji:'⚽', espnPath:'soccer/caf.nations' },
+  // Women's Football
+  { id:'fifa.wwc',        name:'Women\'s World Cup',    short:'WWC',          country:'World',         sport:'football', emoji:'👩', espnPath:'soccer/fifa.wwc' },
+  { id:'eng.w.1',         name:'WSL',                   short:'WSL',          country:'England',       sport:'football', emoji:'👩', espnPath:'soccer/eng.w.1' },
+  { id:'usa.nwsl',        name:'NWSL',                  short:'NWSL',         country:'USA',           sport:'football', emoji:'👩', espnPath:'soccer/usa.nwsl' },
+
+  // ── BASKETBALL ────────────────────────────────────
+  { id:'nba',             name:'NBA',                   short:'NBA',          country:'USA',           sport:'basketball', emoji:'🏀', espnPath:'basketball/nba', espnType:'basketball' },
+  { id:'wnba',            name:'WNBA',                  short:'WNBA',         country:'USA',           sport:'basketball', emoji:'🏀', espnPath:'basketball/wnba', espnType:'basketball' },
+  { id:'mens-college-basketball', name:'NCAA Basketball', short:'NCAA',       country:'USA',           sport:'basketball', emoji:'🏀', espnPath:'basketball/mens-college-basketball', espnType:'basketball' },
+  { id:'nbl',             name:'NBL Australia',         short:'NBL',          country:'Australia',     sport:'basketball', emoji:'🏀', espnPath:'basketball/nbl', espnType:'basketball' },
+
+  // ── MOTORSPORT ────────────────────────────────────
+  { id:'f1',              name:'Formula 1',             short:'F1',           country:'World',         sport:'motorsport', emoji:'🏎️', espnPath:'racing/f1', espnType:'racing' },
+  { id:'motogp',          name:'MotoGP',                short:'MotoGP',       country:'World',         sport:'motorsport', emoji:'🏍️', espnPath:'racing/motogp', espnType:'racing' },
+  { id:'nascar-cup',      name:'NASCAR Cup Series',     short:'NASCAR',       country:'USA',           sport:'motorsport', emoji:'🏎️', espnPath:'racing/nascar-cup', espnType:'racing' },
+  { id:'nascar-xfinity',  name:'NASCAR Xfinity',        short:'Xfinity',      country:'USA',           sport:'motorsport', emoji:'🏎️', espnPath:'racing/nascar-xfinity', espnType:'racing' },
+  { id:'indycar',         name:'IndyCar Series',        short:'IndyCar',      country:'USA',           sport:'motorsport', emoji:'🏎️', espnPath:'racing/indycar', espnType:'racing' },
+  { id:'fia-wec',         name:'WEC / Le Mans',         short:'WEC',          country:'World',         sport:'motorsport', emoji:'🏎️', espnPath:'racing/fia-wec', espnType:'racing' },
+
+  // ── OTHER SPORTS ──────────────────────────────────
+  { id:'nhl',             name:'NHL Hockey',            short:'NHL',          country:'USA/Canada',    sport:'other', emoji:'🏒', espnPath:'hockey/nhl', espnType:'hockey' },
+  { id:'mlb',             name:'MLB Baseball',          short:'MLB',          country:'USA',           sport:'other', emoji:'⚾', espnPath:'baseball/mlb', espnType:'baseball' },
+  { id:'nfl',             name:'NFL American Football', short:'NFL',          country:'USA',           sport:'other', emoji:'🏈', espnPath:'football/nfl', espnType:'football' },
+  { id:'rugby-world',     name:'Rugby World Cup',       short:'Rugby WC',     country:'World',         sport:'other', emoji:'🏉', espnPath:'rugby/world-sevens', espnType:'rugby' },
+  { id:'tennis-atp',      name:'ATP Tennis',            short:'ATP',          country:'World',         sport:'other', emoji:'🎾', espnPath:'tennis/atp', espnType:'tennis' },
+  { id:'tennis-wta',      name:'WTA Tennis',            short:'WTA',          country:'World',         sport:'other', emoji:'🎾', espnPath:'tennis/wta', espnType:'tennis' },
+  { id:'golf-pga',        name:'PGA Tour',              short:'PGA',          country:'USA',           sport:'other', emoji:'⛳', espnPath:'golf/pga', espnType:'golf' },
+  { id:'golf-euro',       name:'DP World Tour',         short:'DP Tour',      country:'Europe',        sport:'other', emoji:'⛳', espnPath:'golf/eur', espnType:'golf' },
+  { id:'mma-ufc',         name:'UFC / MMA',             short:'UFC',          country:'World',         sport:'other', emoji:'🥊', espnPath:'mma/ufc', espnType:'mma' },
 ];
 
 // ── STATE ──
@@ -476,7 +534,39 @@ let allMatches   = [];
 let selectedIds  = new Set();
 let streamLinks  = {};
 let activeLeague = 'all';
+let activeSport  = 'all';
 let activeOffset = 0;
+
+// ── INIT LEAGUE FILTER ──
+function buildLeagueFilter(){
+  const container = document.getElementById('leagueFilter');
+  const leagues = activeSport === 'all' ? ALL_LEAGUES : ALL_LEAGUES.filter(l => l.sport === activeSport);
+
+  let html = `<div class="league-chip active" data-id="all" data-sport="${activeSport}">All</div>`;
+  leagues.forEach(l => {
+    html += `<div class="league-chip" data-id="${l.id}" data-sport="${l.sport}">${l.emoji} ${l.short}</div>`;
+  });
+  container.innerHTML = html;
+
+  // Re-bind clicks
+  container.querySelectorAll('.league-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      container.querySelectorAll('.league-chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      activeLeague = chip.dataset.id;
+      if(allMatches.length > 0) renderEvents();
+    });
+  });
+
+  // Restore active if still valid
+  const existing = container.querySelector(`[data-id="${activeLeague}"]`);
+  if(existing){
+    container.querySelectorAll('.league-chip').forEach(c => c.classList.remove('active'));
+    existing.classList.add('active');
+  } else {
+    activeLeague = 'all';
+  }
+}
 
 // ── DATE UTILS ──
 function getESPNDate(offsetDays = 0){
@@ -487,13 +577,12 @@ function getESPNDate(offsetDays = 0){
 
 function formatTime(isoStr){
   if(!isoStr) return '--:--';
-  try{
-    return new Date(isoStr).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
-  }catch{ return '--:--'; }
+  try{ return new Date(isoStr).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}); }
+  catch{ return '--:--'; }
 }
 
-// ── ESPN DATA NORMALIZATION ──
-function normalizeESPNEvent(ev, league){
+// ── ESPN NORMALIZER (Soccer) ──
+function normalizeESPNSoccer(ev, league){
   try{
     const comp = ev.competitions?.[0];
     if(!comp) return null;
@@ -502,46 +591,96 @@ function normalizeESPNEvent(ev, league){
     if(!home || !away) return null;
     const status = comp.status || {};
     const sType  = status.type?.name || 'STATUS_SCHEDULED';
-
     return {
-      id      : ev.id,
-      date    : ev.date,
-      league  : { name: league.name, country: league.country, id: league.id, logo: ev.leagueLogo || '' },
-      teams   : {
+      id    : ev.id,
+      date  : ev.date,
+      league: { name: league.name, country: league.country, id: league.id, emoji: league.emoji },
+      teams : {
         home: { name: home.team?.displayName || 'Home', logo: home.team?.logo || '' },
         away: { name: away.team?.displayName || 'Away', logo: away.team?.logo || '' }
       },
-      goals   : {
+      goals : {
         home: home.score !== undefined && home.score !== '' ? parseInt(home.score) : null,
         away: away.score !== undefined && away.score !== '' ? parseInt(away.score) : null
       },
-      status  : {
-        type   : sType,
-        elapsed: status.displayClock || '',
-        detail : status.type?.shortDetail || ''
-      },
-      venue: comp.venue?.fullName || comp.venue?.address?.city || 'TBC'
+      status: { type: sType, elapsed: status.displayClock || '', detail: status.type?.shortDetail || '' },
+      venue : comp.venue?.fullName || comp.venue?.address?.city || 'TBC',
+      sport : 'football'
     };
-  }catch(e){ return null; }
+  }catch{ return null; }
+}
+
+// ── ESPN NORMALIZER (Basketball / Hockey / Baseball / NFL) ──
+function normalizeESPNTeamSport(ev, league){
+  try{
+    const comp = ev.competitions?.[0];
+    if(!comp) return null;
+    const home = comp.competitors?.find(c => c.homeAway === 'home');
+    const away = comp.competitors?.find(c => c.homeAway === 'away');
+    if(!home || !away) return null;
+    const status = comp.status || {};
+    const sType  = status.type?.name || 'STATUS_SCHEDULED';
+    return {
+      id    : ev.id,
+      date  : ev.date,
+      league: { name: league.name, country: league.country, id: league.id, emoji: league.emoji },
+      teams : {
+        home: { name: home.team?.displayName || 'Home', logo: home.team?.logo || '' },
+        away: { name: away.team?.displayName || 'Away', logo: away.team?.logo || '' }
+      },
+      goals : {
+        home: home.score !== undefined && home.score !== '' ? parseInt(home.score) : null,
+        away: away.score !== undefined && away.score !== '' ? parseInt(away.score) : null
+      },
+      status: { type: sType, elapsed: status.displayClock || '', detail: status.type?.shortDetail || '' },
+      venue : comp.venue?.fullName || comp.venue?.address?.city || 'TBC',
+      sport : league.sport
+    };
+  }catch{ return null; }
+}
+
+// ── ESPN NORMALIZER (Racing — F1, MotoGP, NASCAR) ──
+function normalizeESPNRacing(ev, league){
+  try{
+    const status = ev.status || {};
+    const sType  = status.type?.name || 'STATUS_SCHEDULED';
+    // Racing uses competitors array or just event name
+    const name   = ev.name || ev.shortName || 'Race Event';
+    return {
+      id    : ev.id,
+      date  : ev.date,
+      league: { name: league.name, country: league.country, id: league.id, emoji: league.emoji },
+      teams : {
+        home: { name: name, logo: '' },
+        away: { name: ev.circuit?.shortName || ev.venue?.fullName || '', logo: '' }
+      },
+      goals : { home: null, away: null },
+      status: { type: sType, elapsed: status.displayClock || '', detail: status.type?.shortDetail || '' },
+      venue : ev.circuit?.fullName || ev.venue?.fullName || 'TBC',
+      sport : 'motorsport',
+      isRacing: true
+    };
+  }catch{ return null; }
 }
 
 function getStatus(m){
   const s = m.status.type;
-  if(s === 'STATUS_IN_PROGRESS' || s === 'STATUS_HALFTIME') return 'live';
-  if(s === 'STATUS_FINAL' || s === 'STATUS_FULL_TIME' || s === 'STATUS_END_PERIOD') return 'end';
+  if(s === 'STATUS_IN_PROGRESS' || s === 'STATUS_HALFTIME' || s === 'STATUS_IN_PROGRESS_2') return 'live';
+  if(s === 'STATUS_FINAL' || s === 'STATUS_FULL_TIME' || s === 'STATUS_END_PERIOD' || s === 'STATUS_FINAL_OT') return 'end';
   return 'upcoming';
 }
 
 function getStatusLabel(m){
   const s = m.status.type;
   if(s === 'STATUS_HALFTIME') return 'HT';
-  if(s === 'STATUS_IN_PROGRESS') return m.status.elapsed ? m.status.elapsed : 'LIVE';
-  if(s === 'STATUS_FINAL' || s === 'STATUS_FULL_TIME') return 'FT';
+  if(s === 'STATUS_IN_PROGRESS' || s === 'STATUS_IN_PROGRESS_2') return m.status.elapsed ? m.status.elapsed : 'LIVE';
+  if(s === 'STATUS_FINAL' || s === 'STATUS_FULL_TIME' || s === 'STATUS_FINAL_OT') return s === 'STATUS_FINAL_OT' ? 'FT OT' : 'FT';
   if(s === 'STATUS_END_PERIOD') return 'FT';
   return 'Upcoming';
 }
 
 function getScore(m){
+  if(m.isRacing) return '🏁';
   if(m.goals.home === null || m.goals.away === null) return 'VS';
   return `${m.goals.home} - ${m.goals.away}`;
 }
@@ -557,26 +696,45 @@ function setStatus(msg, type = ''){
   el.innerHTML = `<div class="dot${type==='loading'?' pulse':''}"></div><span>${msg}</span>`;
 }
 
-// ── FETCH FROM ESPN ──
+// ── BUILD ESPN URL ──
+function buildESPNUrl(league, dateStr){
+  const espnType = league.espnType || 'soccer';
+  // Racing events — no date filter needed (use season)
+  if(espnType === 'racing'){
+    return `https://site.api.espn.com/apis/site/v2/sports/${league.espnPath}/scoreboard?limit=20`;
+  }
+  return `https://site.api.espn.com/apis/site/v2/sports/${league.espnPath}/scoreboard?dates=${dateStr}&limit=50`;
+}
+
+// ── FETCH ──
 async function fetchMatches(){
   const customDate = document.getElementById('customDate').value;
   const dateStr    = customDate ? customDate.replace(/-/g,'') : getESPNDate(activeOffset);
   const displayDate = dateStr.slice(0,4)+'-'+dateStr.slice(4,6)+'-'+dateStr.slice(6,8);
 
-  setStatus(`Fetching from ESPN for ${displayDate}…`, 'loading');
+  setStatus(`Fetching for ${displayDate}…`, 'loading');
   document.getElementById('eventsArea').innerHTML = `
     <div class="loader-wrap">
       <div class="spinner"></div>
-      <div style="font-size:13px;color:var(--txt3)">Fetching matches from ESPN…</div>
+      <div style="font-size:13px;color:var(--txt3)">Fetching from ESPN…</div>
     </div>`;
 
-  // Decide which leagues to fetch
-  const leaguesToFetch = activeLeague === 'all'
-    ? ESPN_LEAGUES
-    : ESPN_LEAGUES.filter(l => l.id === activeLeague);
+  // Which leagues to fetch
+  let leaguesToFetch;
+  if(activeLeague !== 'all'){
+    leaguesToFetch = ALL_LEAGUES.filter(l => l.id === activeLeague);
+  } else if(activeSport !== 'all'){
+    leaguesToFetch = ALL_LEAGUES.filter(l => l.sport === activeSport);
+  } else {
+    // "All" — fetch most common ones to avoid too many requests
+    leaguesToFetch = ALL_LEAGUES.filter(l =>
+      ['eng.1','esp.1','ita.1','ger.1','fra.1','uefa.champions','usa.1',
+       'nba','f1','motogp','nascar-cup','nhl','mlb','nfl','por.1','ned.1','sau.1'].includes(l.id)
+    );
+  }
 
   const fetches = leaguesToFetch.map(league =>
-    fetch(`https://site.api.espn.com/apis/site/v2/sports/soccer/${league.id}/scoreboard?dates=${dateStr}&limit=50`)
+    fetch(buildESPNUrl(league, dateStr))
       .then(r => r.json())
       .then(data => ({ league, events: data.events || [] }))
       .catch(() => ({ league, events: [] }))
@@ -587,13 +745,20 @@ async function fetchMatches(){
     allMatches = [];
 
     results.forEach(({ league, events }) => {
+      const espnType = league.espnType || 'soccer';
       events.forEach(ev => {
-        const m = normalizeESPNEvent(ev, league);
+        let m;
+        if(espnType === 'racing'){
+          m = normalizeESPNRacing(ev, league);
+        } else if(['basketball','hockey','baseball','football'].includes(espnType)){
+          m = normalizeESPNTeamSport(ev, league);
+        } else {
+          m = normalizeESPNSoccer(ev, league);
+        }
         if(m) allMatches.push(m);
       });
     });
 
-    // Sort: live first, then upcoming, then ended — within each group by time
     allMatches.sort((a, b) => {
       const order = { live:0, upcoming:1, end:2 };
       const sa = order[getStatus(a)] ?? 1;
@@ -606,66 +771,69 @@ async function fetchMatches(){
       document.getElementById('eventsArea').innerHTML = `
         <div class="events-empty">
           <span>🔍</span>No matches found for ${displayDate}
-          <small>Try a different date or check back closer to matchday</small>
+          <small>Try a different date, sport, or league filter</small>
         </div>`;
-      setStatus('No matches found for this date', 'err');
+      setStatus('No events found for this date', 'err');
       return;
     }
 
     renderEvents();
-    setStatus(`${allMatches.length} match${allMatches.length!==1?'es':''} loaded from ESPN`, 'ok');
+    setStatus(`${allMatches.length} event${allMatches.length!==1?'s':''} loaded`, 'ok');
   }catch(err){
     setStatus('Fetch error: '+err.message, 'err');
     document.getElementById('eventsArea').innerHTML = `
-      <div class="events-empty">
-        <span>⚠️</span>Error fetching matches
-        <small>${err.message}</small>
-      </div>`;
+      <div class="events-empty"><span>⚠️</span>Error: ${err.message}</div>`;
   }
 }
 
-// ── RENDER EVENTS ──
+// ── RENDER ──
 function renderEvents(){
   const area = document.getElementById('eventsArea');
   let matches = allMatches;
 
-  if(activeLeague !== 'all'){
-    matches = matches.filter(m => m.league.id === activeLeague);
-  }
+  if(activeLeague !== 'all') matches = matches.filter(m => m.league.id === activeLeague);
+  else if(activeSport !== 'all') matches = matches.filter(m => m.sport === activeSport);
 
   if(matches.length === 0){
     area.innerHTML = `<div class="events-empty"><span>🔍</span>No matches for this filter</div>`;
     return;
   }
 
-  // Group by league
   const groups = {};
   matches.forEach(m => {
-    const key = m.league.id;
-    if(!groups[key]) groups[key] = { league: m.league, matches: [] };
-    groups[key].matches.push(m);
+    if(!groups[m.league.id]) groups[m.league.id] = { league: m.league, matches: [] };
+    groups[m.league.id].matches.push(m);
   });
 
   let html = '';
   Object.values(groups).forEach(g => {
     html += `
     <div class="league-header">
+      <span class="sport-icon">${g.league.emoji}</span>
       <span class="league-header-name">${g.league.name.toUpperCase()}</span>
       <span style="font-size:11px;color:var(--txt3)">${g.league.country}</span>
       <span class="league-header-count">${g.matches.length}</span>
     </div>`;
 
     g.matches.forEach(m => {
-      const id    = m.id;
-      const sel   = selectedIds.has(id);
-      const stat  = getStatus(m);
-      const label = getStatusLabel(m);
-      const score = getScore(m);
-      const time  = formatTime(m.date);
-      const hLogo = m.teams.home.logo || teamLogoFallback(m.teams.home.name);
-      const aLogo = m.teams.away.logo || teamLogoFallback(m.teams.away.name);
-      const hFb   = teamLogoFallback(m.teams.home.name);
-      const aFb   = teamLogoFallback(m.teams.away.name);
+      const id   = m.id;
+      const sel  = selectedIds.has(id);
+      const stat = getStatus(m);
+      const label= getStatusLabel(m);
+      const score= getScore(m);
+      const time = formatTime(m.date);
+      const hLogo= m.teams.home.logo || teamLogoFallback(m.teams.home.name);
+      const aLogo= m.isRacing ? '' : (m.teams.away.logo || teamLogoFallback(m.teams.away.name));
+      const hFb  = teamLogoFallback(m.teams.home.name);
+      const aFb  = teamLogoFallback(m.teams.away.name);
+
+      const awayLogoHtml = m.isRacing
+        ? `<span style="font-size:18px">${m.league.emoji}</span>`
+        : `<img class="ev-logo" src="${aLogo}" alt="${m.teams.away.name}" onerror="this.src='${aFb}'"/>`;
+
+      const teamsLabel = m.isRacing
+        ? m.teams.home.name
+        : `${m.teams.home.name} vs ${m.teams.away.name}`;
 
       html += `
       <div class="event-item${sel?' selected':''}" data-id="${id}" onclick="toggleSelect('${id}')">
@@ -676,11 +844,11 @@ function renderEvents(){
         </div>
         <div class="ev-logos">
           <img class="ev-logo" src="${hLogo}" alt="${m.teams.home.name}" onerror="this.src='${hFb}'"/>
-          <span class="ev-vs">VS</span>
-          <img class="ev-logo" src="${aLogo}" alt="${m.teams.away.name}" onerror="this.src='${aFb}'"/>
+          <span class="ev-vs">${m.isRacing ? '' : 'VS'}</span>
+          ${awayLogoHtml}
         </div>
         <div class="ev-info">
-          <div class="ev-teams">${m.teams.home.name} vs ${m.teams.away.name}</div>
+          <div class="ev-teams">${teamsLabel}</div>
           <div class="ev-meta">
             <span class="ev-league">${g.league.name}</span>
             <span>${m.venue}</span>
@@ -723,9 +891,10 @@ function toggleAll(){
 function updateSelCount(){
   const n = selectedIds.size;
   document.getElementById('selCount').textContent = n + ' selected';
+  const allItems = document.querySelectorAll('.event-item');
+  const selItems = document.querySelectorAll('.event-item.selected');
   document.getElementById('selAllBtn').textContent =
-    document.querySelectorAll('.event-item.selected').length === document.querySelectorAll('.event-item').length
-    ? 'Deselect All' : 'Select All';
+    allItems.length > 0 && allItems.length === selItems.length ? 'Deselect All' : 'Select All';
 }
 
 // ── STREAM EDITOR ──
@@ -733,16 +902,14 @@ function updateStreamEditor(){
   const editor = document.getElementById('streamEditor');
   const inputs = document.getElementById('streamInputs');
   const count  = document.getElementById('streamCount');
-
   if(selectedIds.size === 0){ editor.style.display='none'; return; }
   editor.style.display='block';
   count.textContent = selectedIds.size + ' match' + (selectedIds.size!==1?'es':'');
-
   let html = '';
   selectedIds.forEach(id => {
     const m = allMatches.find(x => x.id === id);
     if(!m) return;
-    const label = `${m.teams.home.name} vs ${m.teams.away.name}`;
+    const label = m.isRacing ? m.teams.home.name : `${m.teams.home.name} vs ${m.teams.away.name}`;
     const val   = streamLinks[id] || document.getElementById('defaultStream').value || '';
     html += `
     <div class="stream-row">
@@ -756,7 +923,7 @@ function updateStreamEditor(){
 
 // ── GENERATE WIDGET ──
 function generateWidget(){
-  if(selectedIds.size === 0){ setStatus('Select at least one match first', 'err'); return; }
+  if(selectedIds.size === 0){ setStatus('Select at least one event first', 'err'); return; }
 
   const defaultStream = document.getElementById('defaultStream').value || '#';
   let widgetHTML = '';
@@ -764,15 +931,19 @@ function generateWidget(){
   selectedIds.forEach(id => {
     const m = allMatches.find(x => x.id === id);
     if(!m) return;
-    const stat      = getStatus(m);
-    const label     = getStatusLabel(m);
-    const score     = getScore(m);
-    const time      = formatTime(m.date);
-    const hLogo     = m.teams.home.logo || teamLogoFallback(m.teams.home.name);
-    const aLogo     = m.teams.away.logo || teamLogoFallback(m.teams.away.name);
-    const hFb       = teamLogoFallback(m.teams.home.name);
-    const aFb       = teamLogoFallback(m.teams.away.name);
-    const streamUrl = streamLinks[id] || defaultStream;
+    const stat     = getStatus(m);
+    const label    = getStatusLabel(m);
+    const score    = getScore(m);
+    const time     = formatTime(m.date);
+    const hLogo    = m.teams.home.logo || teamLogoFallback(m.teams.home.name);
+    const aLogo    = m.isRacing ? '' : (m.teams.away.logo || teamLogoFallback(m.teams.away.name));
+    const hFb      = teamLogoFallback(m.teams.home.name);
+    const aFb      = teamLogoFallback(m.teams.away.name);
+    const streamUrl= streamLinks[id] || defaultStream;
+    const awayName = m.isRacing ? m.league.name : m.teams.away.name;
+    const awayImg  = m.isRacing
+      ? `<div class="asm" style="font-size:24px">${m.league.emoji}</div>`
+      : `<div class="Imagee"><img src="${escHtml(aLogo)}" alt="${escHtml(awayName)}" onerror="this.src='${escHtml(aFb)}'"/></div>`;
 
     widgetHTML += `
   <div class="containerMatch">
@@ -788,8 +959,8 @@ function generateWidget(){
           <div class="matchDate ${stat}">${label}</div>
         </div>
         <div class="fareq">
-          <div class="Imagee"><img src="${escHtml(aLogo)}" alt="${escHtml(m.teams.away.name)}" onerror="this.src='${escHtml(aFb)}'"/></div>
-          <div class="asm">${escHtml(m.teams.away.name)}</div>
+          ${awayImg}
+          <div class="asm">${escHtml(awayName)}</div>
         </div>
       </div>
       <ul>
@@ -811,7 +982,7 @@ function generateWidget(){
   document.getElementById('bloggerCssBlock').textContent = cssStr;
 
   document.getElementById('outputArea').scrollIntoView({ behavior:'smooth', block:'start' });
-  setStatus(`Widget generated — ${selectedIds.size} match${selectedIds.size!==1?'es':''}`, 'ok');
+  setStatus(`Widget generated — ${selectedIds.size} event${selectedIds.size!==1?'s':''}`, 'ok');
 }
 
 // ── WIDGET CSS ──
@@ -847,23 +1018,17 @@ async function copyCode(elId, btn, resetLabel){
   const text = document.getElementById(elId).textContent;
   try{
     await navigator.clipboard.writeText(text);
-    btn.classList.add('copied');
-    btn.innerHTML = '✓ Copied!';
+    btn.classList.add('copied'); btn.innerHTML = '✓ Copied!';
     setTimeout(()=>{ btn.classList.remove('copied'); btn.innerHTML = resetLabel; }, 2200);
-  }catch(e){
-    setStatus('Copy failed — please copy manually', 'err');
-  }
+  }catch{ setStatus('Copy failed — copy manually', 'err'); }
 }
 
 async function copyBloggerCSS(btn){
   try{
     await navigator.clipboard.writeText(getWidgetCSS());
-    btn.classList.add('copied');
-    btn.innerHTML = '✓ Copied!';
+    btn.classList.add('copied'); btn.innerHTML = '✓ Copied!';
     setTimeout(()=>{ btn.classList.remove('copied'); btn.innerHTML = '📋 Copy Blogger Theme CSS'; }, 2200);
-  }catch(e){
-    setStatus('Copy failed — please copy manually', 'err');
-  }
+  }catch{ setStatus('Copy failed', 'err'); }
 }
 
 // ── OUTPUT TABS ──
@@ -886,12 +1051,14 @@ document.querySelectorAll('.date-tab').forEach(tab => {
   });
 });
 
-// ── LEAGUE FILTER ──
-document.querySelectorAll('.league-chip').forEach(chip => {
-  chip.addEventListener('click', () => {
-    document.querySelectorAll('.league-chip').forEach(c => c.classList.remove('active'));
-    chip.classList.add('active');
-    activeLeague = chip.dataset.id;
+// ── SPORT CATEGORY TABS ──
+document.querySelectorAll('.sport-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.sport-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    activeSport  = tab.dataset.sport;
+    activeLeague = 'all';
+    buildLeagueFilter();
     if(allMatches.length > 0) renderEvents();
   });
 });
@@ -902,7 +1069,9 @@ if(savedStream) document.getElementById('defaultStream').value = savedStream;
 document.getElementById('defaultStream').addEventListener('input', e => {
   localStorage.setItem('s803_stream', e.target.value);
 });
-</script>
 
+// ── INIT ──
+buildLeagueFilter();
+</script>
 </body>
 </html>
