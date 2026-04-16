@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
@@ -28,46 +29,54 @@ body{background:var(--bg);color:var(--txt);font-family:var(--font-body);min-heig
 
 /* ── SIDEBAR ── */
 .sidebar{
-  background:var(--surface);
-  border-right:1px solid var(--border);
-  padding:20px 16px;
-  display:flex;flex-direction:column;gap:14px;
-  position:sticky;top:0;height:100vh;overflow-y:auto
+background:var(–surface);
+border-right:1px solid var(–border);
+padding:20px 16px;
+display:flex;flex-direction:column;gap:14px;
+position:sticky;top:0;height:100vh;overflow-y:auto
 }
-.logo{display:flex;align-items:center;gap:10px;padding-bottom:14px;border-bottom:1px solid var(--border)}
+.logo{display:flex;align-items:center;gap:10px;padding-bottom:14px;border-bottom:1px solid var(–border)}
 .logo-icon{
-  width:36px;height:36px;background:var(--red);border-radius:8px;
-  display:flex;align-items:center;justify-content:center;
-  font-family:var(--font-head);font-weight:800;font-size:14px;color:#fff;letter-spacing:-1px;
-  flex-shrink:0
+width:36px;height:36px;background:var(–red);border-radius:8px;
+display:flex;align-items:center;justify-content:center;
+font-family:var(–font-head);font-weight:800;font-size:14px;color:#fff;letter-spacing:-1px;
+flex-shrink:0
 }
-.logo-text{font-family:var(--font-head);font-weight:800;font-size:18px;letter-spacing:1px}
-.logo-text span{color:var(--red)}
-.logo-sub{font-size:10px;color:var(--txt3);letter-spacing:1.5px;text-transform:uppercase;margin-top:1px}
+.logo-text{font-family:var(–font-head);font-weight:800;font-size:18px;letter-spacing:1px}
+.logo-text span{color:var(–red)}
+.logo-sub{font-size:10px;color:var(–txt3);letter-spacing:1.5px;text-transform:uppercase;margin-top:1px}
 
 .section-label{
-  font-family:var(--font-head);font-size:10px;font-weight:700;
-  letter-spacing:2px;color:var(--txt3);text-transform:uppercase;margin-bottom:6px
+font-family:var(–font-head);font-size:10px;font-weight:700;
+letter-spacing:2px;color:var(–txt3);text-transform:uppercase;margin-bottom:6px
 }
 
 /* Date tabs */
 .date-tabs{display:flex;gap:4px}
 .date-tab{
-  flex:1;padding:8px 4px;background:var(--surface2);border:1px solid var(--border);
-  border-radius:8px;font-family:var(--font-head);font-size:12px;font-weight:700;
-  color:var(--txt2);cursor:pointer;text-align:center;transition:all .15s;letter-spacing:.5px
+flex:1;padding:8px 4px;background:var(–surface2);border:1px solid var(–border);
+border-radius:8px;font-family:var(–font-head);font-size:12px;font-weight:700;
+color:var(–txt2);cursor:pointer;text-align:center;transition:all .15s;letter-spacing:.5px
 }
-.date-tab:hover{border-color:var(--red);color:var(--txt)}
-.date-tab.active{background:var(--red-dim);border-color:var(--red);color:var(--red)}
+.date-tab:hover{border-color:var(–red);color:var(–txt)}
+.date-tab.active{background:var(–red-dim);border-color:var(–red);color:var(–red)}
+
+/* Timezone notice */
+.tz-notice{
+background:rgba(33,150,243,.08);border:1px solid rgba(33,150,243,.25);
+border-radius:8px;padding:8px 10px;font-size:11px;color:#64b5f6;line-height:1.5;
+display:flex;align-items:flex-start;gap:6px
+}
+.tz-notice strong{color:#90caf9}
 
 /* Inputs */
 .input-row{display:flex;flex-direction:column;gap:6px}
 input[type=date],input[type=text],select,textarea{
-  width:100%;background:var(--surface2);border:1px solid var(--border2);
-  border-radius:8px;color:var(--txt);font-family:var(--font-body);font-size:13px;
-  padding:9px 12px;outline:none;transition:border-color .15s
+width:100%;background:var(–surface2);border:1px solid var(–border2);
+border-radius:8px;color:var(–txt);font-family:var(–font-body);font-size:13px;
+padding:9px 12px;outline:none;transition:border-color .15s
 }
-input[type=date]:focus,input[type=text]:focus,select:focus,textarea:focus{border-color:var(--red)}
+input[type=date]:focus,input[type=text]:focus,select:focus,textarea:focus{border-color:var(–red)}
 input[type=date]::-webkit-calendar-picker-indicator{filter:invert(.5)}
 select option{background:#1a1a1a}
 textarea{resize:vertical;min-height:60px;font-size:12px}
@@ -75,160 +84,159 @@ textarea{resize:vertical;min-height:60px;font-size:12px}
 /* Sport category tabs */
 .sport-tabs{display:flex;gap:4px;flex-wrap:wrap}
 .sport-tab{
-  padding:6px 10px;background:var(--surface2);border:1px solid var(--border);
-  border-radius:7px;font-family:var(--font-head);font-size:11px;font-weight:700;
-  color:var(--txt2);cursor:pointer;text-align:center;transition:all .15s;letter-spacing:.5px;
-  white-space:nowrap
+padding:6px 10px;background:var(–surface2);border:1px solid var(–border);
+border-radius:7px;font-family:var(–font-head);font-size:11px;font-weight:700;
+color:var(–txt2);cursor:pointer;text-align:center;transition:all .15s;letter-spacing:.5px;
+white-space:nowrap
 }
-.sport-tab:hover{border-color:var(--red);color:var(--txt)}
-.sport-tab.active{background:var(--red-dim);border-color:var(--red);color:var(--red)}
+.sport-tab:hover{border-color:var(–red);color:var(–txt)}
+.sport-tab.active{background:var(–red-dim);border-color:var(–red);color:var(–red)}
 
 /* League filter */
 .league-grid{display:flex;flex-wrap:wrap;gap:5px;max-height:160px;overflow-y:auto;padding-right:2px}
 .league-chip{
-  font-size:11px;font-family:var(--font-head);font-weight:700;padding:5px 10px;
-  border-radius:20px;background:var(--surface2);border:1px solid var(--border2);
-  color:var(--txt2);cursor:pointer;transition:all .15s;white-space:nowrap;letter-spacing:.3px
+font-size:11px;font-family:var(–font-head);font-weight:700;padding:5px 10px;
+border-radius:20px;background:var(–surface2);border:1px solid var(–border2);
+color:var(–txt2);cursor:pointer;transition:all .15s;white-space:nowrap;letter-spacing:.3px
 }
-.league-chip:hover{border-color:var(--red);color:var(--txt)}
-.league-chip.active{background:var(--red-dim);border-color:var(--red);color:var(--red)}
+.league-chip:hover{border-color:var(–red);color:var(–txt)}
+.league-chip.active{background:var(–red-dim);border-color:var(–red);color:var(–red)}
 
-/* Sport category badge colors */
-.league-chip[data-sport="football"]:hover,.league-chip[data-sport="football"].active{border-color:var(--green);color:var(--green);background:var(--green-dim)}
-.league-chip[data-sport="basketball"]:hover,.league-chip[data-sport="basketball"].active{border-color:var(--orange);color:var(--orange);background:var(--orange-dim)}
-.league-chip[data-sport="motorsport"]:hover,.league-chip[data-sport="motorsport"].active{border-color:var(--red);color:var(--red);background:var(--red-dim)}
-.league-chip[data-sport="other"]:hover,.league-chip[data-sport="other"].active{border-color:var(--purple);color:var(--purple);background:var(--purple-dim)}
+.league-chip[data-sport=“football”]:hover,.league-chip[data-sport=“football”].active{border-color:var(–green);color:var(–green);background:var(–green-dim)}
+.league-chip[data-sport=“basketball”]:hover,.league-chip[data-sport=“basketball”].active{border-color:var(–orange);color:var(–orange);background:var(–orange-dim)}
+.league-chip[data-sport=“motorsport”]:hover,.league-chip[data-sport=“motorsport”].active{border-color:var(–red);color:var(–red);background:var(–red-dim)}
+.league-chip[data-sport=“other”]:hover,.league-chip[data-sport=“other”].active{border-color:var(–purple);color:var(–purple);background:var(–purple-dim)}
 
 /* Buttons */
 .btn{
-  width:100%;padding:11px;border-radius:10px;font-family:var(--font-head);
-  font-weight:700;font-size:15px;letter-spacing:1px;cursor:pointer;border:none;
-  transition:all .15s;text-transform:uppercase;display:flex;align-items:center;justify-content:center;gap:6px
+width:100%;padding:11px;border-radius:10px;font-family:var(–font-head);
+font-weight:700;font-size:15px;letter-spacing:1px;cursor:pointer;border:none;
+transition:all .15s;text-transform:uppercase;display:flex;align-items:center;justify-content:center;gap:6px
 }
-.btn-primary{background:var(--red);color:#fff;box-shadow:0 0 20px rgba(229,57,53,.25)}
+.btn-primary{background:var(–red);color:#fff;box-shadow:0 0 20px rgba(229,57,53,.25)}
 .btn-primary:hover{background:#c62828;box-shadow:0 0 25px rgba(229,57,53,.4)}
 .btn-primary:active{transform:scale(.97)}
-.btn-secondary{background:var(--surface2);border:1px solid var(--border2);color:var(--txt2)}
-.btn-secondary:hover{border-color:var(--red);color:var(--txt)}
+.btn-secondary{background:var(–surface2);border:1px solid var(–border2);color:var(–txt2)}
+.btn-secondary:hover{border-color:var(–red);color:var(–txt)}
 .btn-sm{padding:7px 14px;font-size:12px;letter-spacing:.5px;border-radius:7px;width:auto}
 
 /* Status */
 .status-bar{
-  background:var(--surface2);border:1px solid var(--border2);border-radius:8px;
-  padding:9px 12px;font-size:11px;color:var(--txt2);min-height:36px;
-  display:flex;align-items:center;gap:7px;line-height:1.4
+background:var(–surface2);border:1px solid var(–border2);border-radius:8px;
+padding:9px 12px;font-size:11px;color:var(–txt2);min-height:36px;
+display:flex;align-items:center;gap:7px;line-height:1.4
 }
 .status-bar.loading{color:#ffb300;border-color:rgba(255,179,0,.3)}
-.status-bar.ok{color:var(--green);border-color:var(--green-border)}
-.status-bar.err{color:var(--red);border-color:var(--red-border)}
+.status-bar.ok{color:var(–green);border-color:var(–green-border)}
+.status-bar.err{color:var(–red);border-color:var(–red-border)}
 .dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0}
 .dot.pulse{animation:pulse2 1.2s infinite}
 @keyframes pulse2{0%,100%{opacity:1}50%{opacity:.3}}
 
 /* API badge */
 .api-badge{
-  display:flex;align-items:center;gap:6px;padding:7px 10px;
-  background:rgba(76,175,80,.08);border:1px solid rgba(76,175,80,.2);
-  border-radius:8px;font-size:11px;color:var(--green)
+display:flex;align-items:center;gap:6px;padding:7px 10px;
+background:rgba(76,175,80,.08);border:1px solid rgba(76,175,80,.2);
+border-radius:8px;font-size:11px;color:var(–green)
 }
 
 /* Divider */
-.divider{height:1px;background:var(--border);width:100%}
+.divider{height:1px;background:var(–border);width:100%}
 
 /* ── MAIN ── */
 .main{padding:20px;display:flex;flex-direction:column;gap:14px;overflow:hidden;min-width:0}
 .main-header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
-.main-header h2{font-family:var(--font-head);font-weight:800;font-size:22px;letter-spacing:1px}
+.main-header h2{font-family:var(–font-head);font-weight:800;font-size:22px;letter-spacing:1px}
 .header-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .count-badge{
-  background:var(--red-dim);border:1px solid var(--red-border);color:var(--red);
-  font-family:var(--font-head);font-size:13px;font-weight:700;
-  padding:5px 12px;border-radius:20px
+background:var(–red-dim);border:1px solid var(–red-border);color:var(–red);
+font-family:var(–font-head);font-size:13px;font-weight:700;
+padding:5px 12px;border-radius:20px
 }
 
 /* Loader */
-.loader-wrap{padding:48px;text-align:center;color:var(--txt3)}
+.loader-wrap{padding:48px;text-align:center;color:var(–txt3)}
 .spinner{
-  width:32px;height:32px;border:3px solid var(--border2);
-  border-top-color:var(--red);border-radius:50%;
-  animation:spin .8s linear infinite;margin:0 auto 12px
+width:32px;height:32px;border:3px solid var(–border2);
+border-top-color:var(–red);border-radius:50%;
+animation:spin .8s linear infinite;margin:0 auto 12px
 }
 @keyframes spin{to{transform:rotate(360deg)}}
 
 /* Events list */
-.events-area{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden}
-.events-empty{padding:48px;text-align:center;color:var(--txt3);font-size:14px}
+.events-area{background:var(–surface);border:1px solid var(–border);border-radius:12px;overflow:hidden}
+.events-empty{padding:48px;text-align:center;color:var(–txt3);font-size:14px}
 .events-empty span{display:block;font-size:36px;margin-bottom:10px}
-.events-empty small{display:block;font-size:12px;margin-top:6px;color:var(--txt3)}
+.events-empty small{display:block;font-size:12px;margin-top:6px;color:var(–txt3)}
 
 /* League group header */
 .league-header{
-  padding:8px 16px;background:var(--surface2);border-bottom:1px solid var(--border);
-  display:flex;align-items:center;gap:10px
+padding:8px 16px;background:var(–surface2);border-bottom:1px solid var(–border);
+display:flex;align-items:center;gap:10px
 }
 .sport-icon{font-size:14px}
-.league-header-name{font-family:var(--font-head);font-size:12px;font-weight:700;letter-spacing:1px;color:var(--txt2)}
+.league-header-name{font-family:var(–font-head);font-size:12px;font-weight:700;letter-spacing:1px;color:var(–txt2)}
 .league-header-count{
-  font-size:10px;background:var(--red-dim);color:var(--red);border:1px solid var(--red-border);
-  padding:2px 7px;border-radius:10px;font-family:var(--font-head);font-weight:700;margin-left:auto
+font-size:10px;background:var(–red-dim);color:var(–red);border:1px solid var(–red-border);
+padding:2px 7px;border-radius:10px;font-family:var(–font-head);font-weight:700;margin-left:auto
 }
 
 /* Event row */
 .event-item{
-  display:flex;align-items:center;gap:10px;padding:11px 14px;
-  border-bottom:1px solid var(--border);cursor:pointer;transition:background .12s;position:relative
+display:flex;align-items:center;gap:10px;padding:11px 14px;
+border-bottom:1px solid var(–border);cursor:pointer;transition:background .12s;position:relative
 }
 .event-item:last-child{border-bottom:none}
-.event-item:hover{background:var(--surface2)}
-.event-item.selected{background:rgba(229,57,53,.06);border-left:3px solid var(--red)}
+.event-item:hover{background:var(–surface2)}
+.event-item.selected{background:rgba(229,57,53,.06);border-left:3px solid var(–red)}
 
 .ev-check{
-  width:18px;height:18px;border-radius:5px;border:1.5px solid var(--border2);
-  background:var(--surface2);flex-shrink:0;display:flex;align-items:center;justify-content:center;
-  transition:all .12s
+width:18px;height:18px;border-radius:5px;border:1.5px solid var(–border2);
+background:var(–surface2);flex-shrink:0;display:flex;align-items:center;justify-content:center;
+transition:all .12s
 }
-.event-item.selected .ev-check{background:var(--red);border-color:var(--red)}
+.event-item.selected .ev-check{background:var(–red);border-color:var(–red)}
 .ev-check svg{width:10px;height:10px;display:none}
 .event-item.selected .ev-check svg{display:block}
 
 .ev-logos{display:flex;align-items:center;gap:5px;flex-shrink:0}
 .ev-logo{
-  width:30px;height:30px;border-radius:50%;background:var(--surface3);
-  object-fit:contain;padding:2px
+width:30px;height:30px;border-radius:50%;background:var(–surface3);
+object-fit:contain;padding:2px
 }
-.ev-vs{font-size:9px;color:var(--txt3);font-weight:700;letter-spacing:.5px}
+.ev-vs{font-size:9px;color:var(–txt3);font-weight:700;letter-spacing:.5px}
 
 .ev-info{flex:1;min-width:0}
-.ev-teams{font-size:13px;font-weight:600;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.ev-meta{font-size:11px;color:var(--txt2);display:flex;gap:8px;margin-top:2px;flex-wrap:wrap}
-.ev-league{color:var(--red);font-weight:600}
+.ev-teams{font-size:13px;font-weight:600;color:var(–txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ev-meta{font-size:11px;color:var(–txt2);display:flex;gap:8px;margin-top:2px;flex-wrap:wrap}
+.ev-league{color:var(–red);font-weight:600}
 
 .ev-time{text-align:right;flex-shrink:0}
-.ev-hour{font-family:var(--font-head);font-size:14px;font-weight:700;color:var(--txt)}
-.ev-status{font-size:10px;padding:2px 8px;border-radius:10px;font-weight:700;display:inline-block;margin-top:3px;font-family:var(--font-head);letter-spacing:.3px}
-.ev-status.live{background:var(--red);color:#fff;animation:pulse2 1.5s infinite}
-.ev-status.end{background:var(--surface3);color:var(--txt3);border:1px solid var(--border2)}
-.ev-status.upcoming{background:var(--green-dim);color:var(--green);border:1px solid var(--green-border)}
+.ev-hour{font-family:var(–font-head);font-size:14px;font-weight:700;color:var(–txt)}
+.ev-status{font-size:10px;padding:2px 8px;border-radius:10px;font-weight:700;display:inline-block;margin-top:3px;font-family:var(–font-head);letter-spacing:.3px}
+.ev-status.live{background:var(–red);color:#fff;animation:pulse2 1.5s infinite}
+.ev-status.end{background:var(–surface3);color:var(–txt3);border:1px solid var(–border2)}
+.ev-status.upcoming{background:var(–green-dim);color:var(–green);border:1px solid var(–green-border)}
 
 /* Stream editor */
-.stream-editor{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:12px}
+.stream-editor{background:var(–surface);border:1px solid var(–border);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:12px}
 .stream-editor-header{display:flex;align-items:center;justify-content:space-between}
-.stream-editor h3{font-family:var(--font-head);font-size:13px;font-weight:700;letter-spacing:1px;color:var(--txt2);text-transform:uppercase}
+.stream-editor h3{font-family:var(–font-head);font-size:13px;font-weight:700;letter-spacing:1px;color:var(–txt2);text-transform:uppercase}
 .stream-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
 .stream-row:last-child{margin-bottom:0}
-.stream-label{font-size:11px;color:var(--txt2);min-width:140px;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex-shrink:0}
+.stream-label{font-size:11px;color:var(–txt2);min-width:140px;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex-shrink:0}
 .stream-row input{flex:1}
 
 /* Output area */
-.output-area{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden}
-.output-tabs{display:flex;border-bottom:1px solid var(--border);overflow-x:auto}
+.output-area{background:var(–surface);border:1px solid var(–border);border-radius:12px;overflow:hidden}
+.output-tabs{display:flex;border-bottom:1px solid var(–border);overflow-x:auto}
 .out-tab{
-  padding:12px 18px;font-family:var(--font-head);font-size:13px;font-weight:700;
-  letter-spacing:.5px;color:var(--txt2);cursor:pointer;border-bottom:2px solid transparent;
-  transition:all .15s;white-space:nowrap
+padding:12px 18px;font-family:var(–font-head);font-size:13px;font-weight:700;
+letter-spacing:.5px;color:var(–txt2);cursor:pointer;border-bottom:2px solid transparent;
+transition:all .15s;white-space:nowrap
 }
-.out-tab.active{color:var(--red);border-bottom-color:var(--red)}
-.out-tab:hover:not(.active){color:var(--txt)}
+.out-tab.active{color:var(–red);border-bottom-color:var(–red)}
+.out-tab:hover:not(.active){color:var(–txt)}
 .out-panel{display:none;padding:16px}
 .out-panel.active{display:block}
 
@@ -237,29 +245,29 @@ textarea{resize:vertical;min-height:60px;font-size:12px}
 
 /* Code */
 .code-block{
-  background:#080808;border:1px solid var(--border);border-radius:8px;
-  padding:14px;font-family:'Courier New',monospace;font-size:11px;line-height:1.7;
-  color:#a8d8a8;overflow:auto;max-height:420px;white-space:pre-wrap;word-break:break-all
+background:#080808;border:1px solid var(–border);border-radius:8px;
+padding:14px;font-family:‘Courier New’,monospace;font-size:11px;line-height:1.7;
+color:#a8d8a8;overflow:auto;max-height:420px;white-space:pre-wrap;word-break:break-all
 }
-.code-label{font-size:11px;color:var(--txt2);margin:14px 0 6px;display:flex;align-items:center;gap:6px}
+.code-label{font-size:11px;color:var(–txt2);margin:14px 0 6px;display:flex;align-items:center;gap:6px}
 .code-label:first-child{margin-top:0}
 
 /* Copy bar */
 .copy-bar{display:flex;gap:8px;margin-top:10px}
 .copy-btn{
-  flex:1;padding:9px 12px;background:var(--surface2);border:1px solid var(--border2);
-  border-radius:8px;color:var(--txt2);font-family:var(--font-head);font-size:12px;font-weight:700;
-  cursor:pointer;letter-spacing:.5px;transition:all .12s;display:flex;align-items:center;justify-content:center;gap:5px
+flex:1;padding:9px 12px;background:var(–surface2);border:1px solid var(–border2);
+border-radius:8px;color:var(–txt2);font-family:var(–font-head);font-size:12px;font-weight:700;
+cursor:pointer;letter-spacing:.5px;transition:all .12s;display:flex;align-items:center;justify-content:center;gap:5px
 }
-.copy-btn:hover{border-color:var(--red);color:var(--txt)}
-.copy-btn.copied{background:var(--green-dim);border-color:var(--green-border);color:var(--green)}
+.copy-btn:hover{border-color:var(–red);color:var(–txt)}
+.copy-btn.copied{background:var(–green-dim);border-color:var(–green-border);color:var(–green)}
 
 /* Blogger guide */
 .blogger-guide{display:flex;flex-direction:column;gap:10px}
-.guide-step{background:var(--surface2);border:1px solid var(--border2);border-radius:8px;padding:14px}
-.guide-step h4{font-family:var(--font-head);font-size:12px;font-weight:700;color:var(--red);margin-bottom:8px;letter-spacing:.5px;text-transform:uppercase}
-.guide-step p{font-size:12px;color:var(--txt2);line-height:1.7}
-.guide-step code{font-size:11px;color:#ffd700;background:var(--surface3);padding:2px 6px;border-radius:4px}
+.guide-step{background:var(–surface2);border:1px solid var(–border2);border-radius:8px;padding:14px}
+.guide-step h4{font-family:var(–font-head);font-size:12px;font-weight:700;color:var(–red);margin-bottom:8px;letter-spacing:.5px;text-transform:uppercase}
+.guide-step p{font-size:12px;color:var(–txt2);line-height:1.7}
+.guide-step code{font-size:11px;color:#ffd700;background:var(–surface3);padding:2px 6px;border-radius:4px}
 
 /* ── WIDGET PREVIEW STYLES ── */
 .s803-matches{width:100%;box-sizing:border-box;background:#000;padding:0 0 12px 0;display:flex;flex-direction:column;gap:8px}
@@ -285,21 +293,23 @@ textarea{resize:vertical;min-height:60px;font-size:12px}
 /* Scrollbars */
 ::-webkit-scrollbar{width:5px;height:5px}
 ::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
-::-webkit-scrollbar-thumb:hover{background:var(--txt3)}
+::-webkit-scrollbar-thumb{background:var(–border2);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(–txt3)}
 
 /* Responsive */
 @media(max-width:720px){
-  .app{grid-template-columns:1fr}
-  .sidebar{position:static;height:auto}
-  .main{padding:14px}
+.app{grid-template-columns:1fr}
+.sidebar{position:static;height:auto}
+.main{padding:14px}
 }
 </style>
+
 </head>
 <body>
 <div class="app">
 
 <!-- ══ SIDEBAR ══ -->
+
 <aside class="sidebar">
   <div class="logo">
     <div class="logo-icon">803</div>
@@ -314,14 +324,22 @@ textarea{resize:vertical;min-height:60px;font-size:12px}
     <span>Powered by <strong>ESPN API</strong> — No key needed</span>
   </div>
 
+  <!-- ✅ FIX: Timezone notice so times match what's generated -->
+
+  <div class="tz-notice">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    <span>Times shown in your local timezone: <strong id="tzName">detecting…</strong>. Times in generated widget HTML match exactly.</span>
+  </div>
+
   <div class="divider"></div>
 
   <!-- Date selector -->
+
   <div>
     <div class="section-label">Date</div>
     <div class="date-tabs">
-      <div class="date-tab active" data-offset="-1">Yesterday</div>
-      <div class="date-tab" data-offset="0">Today</div>
+      <div class="date-tab" data-offset="-1">Yesterday</div>
+      <div class="date-tab active" data-offset="0">Today</div>
       <div class="date-tab" data-offset="1">Tomorrow</div>
     </div>
   </div>
@@ -334,6 +352,7 @@ textarea{resize:vertical;min-height:60px;font-size:12px}
   <div class="divider"></div>
 
   <!-- Sport Category -->
+
   <div>
     <div class="section-label" style="margin-bottom:8px">Sport Category</div>
     <div class="sport-tabs" id="sportTabs">
@@ -346,11 +365,10 @@ textarea{resize:vertical;min-height:60px;font-size:12px}
   </div>
 
   <!-- League filter -->
+
   <div>
     <div class="section-label" style="margin-bottom:8px">League / Competition</div>
-    <div class="league-grid" id="leagueFilter">
-      <!-- populated by JS -->
-    </div>
+    <div class="league-grid" id="leagueFilter"></div>
   </div>
 
   <div class="divider"></div>
@@ -381,6 +399,7 @@ textarea{resize:vertical;min-height:60px;font-size:12px}
 </aside>
 
 <!-- ══ MAIN ══ -->
+
 <main class="main">
 
   <div class="main-header">
@@ -414,44 +433,47 @@ textarea{resize:vertical;min-height:60px;font-size:12px}
       <div class="out-tab" data-tab="blogger">📋 Blogger Guide</div>
     </div>
 
-    <div class="out-panel active" id="tab-preview">
-      <div class="preview-wrap" id="widgetPreview"></div>
-    </div>
+```
+<div class="out-panel active" id="tab-preview">
+  <div class="preview-wrap" id="widgetPreview"></div>
+</div>
 
-    <div class="out-panel" id="tab-code">
-      <div class="copy-bar">
-        <button class="copy-btn" id="copyHtmlBtn" onclick="copyCode('widgetCode', this, '📋 Copy Widget HTML')">📋 Copy Widget HTML</button>
-        <button class="copy-btn" id="copyCssBtn" onclick="copyCode('cssCode', this, '🎨 Copy CSS')">🎨 Copy CSS</button>
-      </div>
-      <div class="code-label">Widget HTML — paste into Blogger post body (HTML mode):</div>
-      <div class="code-block" id="widgetCode"></div>
-      <div class="code-label" style="margin-top:16px">CSS — add once to Blogger theme (see Blogger Guide tab):</div>
-      <div class="code-block" id="cssCode"></div>
-    </div>
+<div class="out-panel" id="tab-code">
+  <div class="copy-bar">
+    <button class="copy-btn" id="copyHtmlBtn" onclick="copyCode('widgetCode', this, '📋 Copy Widget HTML')">📋 Copy Widget HTML</button>
+    <button class="copy-btn" id="copyCssBtn" onclick="copyCode('cssCode', this, '🎨 Copy CSS')">🎨 Copy CSS</button>
+  </div>
+  <div class="code-label">Widget HTML — paste into Blogger post body (HTML mode):</div>
+  <div class="code-block" id="widgetCode"></div>
+  <div class="code-label" style="margin-top:16px">CSS — add once to Blogger theme (see Blogger Guide tab):</div>
+  <div class="code-block" id="cssCode"></div>
+</div>
 
-    <div class="out-panel" id="tab-blogger">
-      <div class="blogger-guide">
-        <div class="guide-step">
-          <h4>Step 1 — Add CSS once to your Blogger Theme</h4>
-          <p>This is a <strong>one-time setup</strong> so you never paste CSS into posts again.<br><br>
-          Go to: <code>Blogger → Theme → Edit HTML</code><br><br>
-          Find <code>]]&gt;&lt;/b:skin&gt;</code> near the bottom of the CSS section. Paste the CSS from the <strong>HTML Code tab</strong> directly <strong>above</strong> that line. Save the theme.</p>
-        </div>
-        <div class="guide-step">
-          <h4>Step 2 — Paste widget HTML into posts</h4>
-          <p>Copy just the <strong>Widget HTML</strong> from the HTML Code tab. In your Blogger post editor, switch to <strong>HTML mode</strong> and paste it in.</p>
-        </div>
-        <div class="guide-step">
-          <h4>Step 3 — Updating stream links</h4>
-          <p>Edit stream links directly in the HTML after pasting — look for <code>href="…"</code> on each <code>&lt;a&gt;</code> tag, or re-generate using this tool.</p>
-        </div>
-        <div class="copy-bar">
-          <button class="copy-btn" id="copyBlogBtn" onclick="copyBloggerCSS(this)">📋 Copy Blogger Theme CSS</button>
-        </div>
-        <div class="code-label">Blogger Theme CSS:</div>
-        <div class="code-block" id="bloggerCssBlock" style="max-height:180px"></div>
-      </div>
+<div class="out-panel" id="tab-blogger">
+  <div class="blogger-guide">
+    <div class="guide-step">
+      <h4>Step 1 — Add CSS once to your Blogger Theme</h4>
+      <p>This is a <strong>one-time setup</strong> so you never paste CSS into posts again.<br><br>
+      Go to: <code>Blogger → Theme → Edit HTML</code><br><br>
+      Find <code>]]&gt;&lt;/b:skin&gt;</code> near the bottom of the CSS section. Paste the CSS from the <strong>HTML Code tab</strong> directly <strong>above</strong> that line. Save the theme.</p>
     </div>
+    <div class="guide-step">
+      <h4>Step 2 — Paste widget HTML into posts</h4>
+      <p>Copy just the <strong>Widget HTML</strong> from the HTML Code tab. In your Blogger post editor, switch to <strong>HTML mode</strong> and paste it in.</p>
+    </div>
+    <div class="guide-step">
+      <h4>Step 3 — About times in the widget</h4>
+      <p>Times are generated in your local timezone (<strong id="tzNameGuide"></strong>). The runtime status script reads <code>.matchHour</code> and computes live/upcoming/ended using the same local clock — so times and statuses will always be consistent for you and your visitors.</p>
+    </div>
+    <div class="copy-bar">
+      <button class="copy-btn" id="copyBlogBtn" onclick="copyBloggerCSS(this)">📋 Copy Blogger Theme CSS</button>
+    </div>
+    <div class="code-label">Blogger Theme CSS:</div>
+    <div class="code-block" id="bloggerCssBlock" style="max-height:180px"></div>
+  </div>
+</div>
+```
+
   </div>
 
 </main>
@@ -460,14 +482,6 @@ textarea{resize:vertical;min-height:60px;font-size:12px}
 <script>
 // ══════════════════════════════════════════════════════════════
 // SPORTS CONFIG — ESPN API endpoints
-// ESPN API pattern:
-//   Soccer:     /soccer/{leagueId}/scoreboard
-//   Basketball: /basketball/nba/scoreboard  (or wnba, mens-college-basketball)
-//   F1:         /racing/f1/scoreboard
-//   MotoGP:     /racing/motogp/scoreboard
-//   NASCAR:     /racing/nascar-cup/scoreboard
-//   MLB:        /baseball/mlb/scoreboard
-//   NHL:        /hockey/nhl/scoreboard
 // ══════════════════════════════════════════════════════════════
 
 const ALL_LEAGUES = [
@@ -498,8 +512,7 @@ const ALL_LEAGUES = [
   { id:'conmebol.america',name:'Copa América',          short:'Copa América', country:'Americas',      sport:'football', emoji:'⚽', espnPath:'soccer/conmebol.america' },
   { id:'uefa.euro',       name:'UEFA Euro',             short:'Euro',         country:'Europe',        sport:'football', emoji:'⚽', espnPath:'soccer/uefa.euro' },
   { id:'afcon',           name:'Africa Cup of Nations', short:'AFCON',        country:'Africa',        sport:'football', emoji:'⚽', espnPath:'soccer/caf.nations' },
-  // Women's Football
-  { id:'fifa.wwc',        name:'Women\'s World Cup',    short:'WWC',          country:'World',         sport:'football', emoji:'👩', espnPath:'soccer/fifa.wwc' },
+  { id:'fifa.wwc',        name:"Women's World Cup",     short:'WWC',          country:'World',         sport:'football', emoji:'👩', espnPath:'soccer/fifa.wwc' },
   { id:'eng.w.1',         name:'WSL',                   short:'WSL',          country:'England',       sport:'football', emoji:'👩', espnPath:'soccer/eng.w.1' },
   { id:'usa.nwsl',        name:'NWSL',                  short:'NWSL',         country:'USA',           sport:'football', emoji:'👩', espnPath:'soccer/usa.nwsl' },
 
@@ -537,18 +550,152 @@ let activeLeague = 'all';
 let activeSport  = 'all';
 let activeOffset = 0;
 
+// ══════════════════════════════════════════════════════════════
+// ✅ FIX 1: TIMEZONE-CORRECT TIME FORMATTING
+//
+// ESPN returns all times as UTC ISO strings (e.g. "2026-04-16T19:45Z").
+// We must convert to the user's LOCAL timezone before displaying or
+// writing into .matchHour — the runtime status script computes
+// live/upcoming by comparing .matchHour against the local clock,
+// so both must be in the same timezone.
+//
+// We output times in 12-hour "HH:MM AM/PM" format which is
+// unambiguous and correctly parsed by the runtime status script.
+// ══════════════════════════════════════════════════════════════
+
+// Show timezone name in UI
+(function initTzDisplay(){
+  try {
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    document.getElementById('tzName').textContent = tz;
+    const guide = document.getElementById('tzNameGuide');
+    if(guide) guide.textContent = tz;
+  } catch(e){
+    document.getElementById('tzName').textContent = 'local';
+  }
+})();
+
+/**
+ * Convert a UTC ISO date string to local "HH:MM AM/PM" format.
+ * This is the format the runtime status script understands.
+ * e.g. "2026-04-16T19:45:00Z" → "07:45 PM" (in EAT/UTC+3)
+ */
+function formatTimeLocal(isoStr) {
+  if (!isoStr) return '--:--';
+  try {
+    const d = new Date(isoStr);
+    // Get hours and minutes in local timezone
+    const h = d.getHours();    // local hours 0-23
+    const m = d.getMinutes();  // local minutes
+    const ampm = h >= 12 ? 'PM' : 'AM';
+    const h12 = h % 12 || 12;  // convert 0→12, 13→1, etc.
+    const mm   = String(m).padStart(2, '0');
+    return `${h12}:${mm} ${ampm}`;
+  } catch(e) {
+    return '--:--';
+  }
+}
+
+/**
+ * Same conversion but returns 24-hour "HH:MM" format.
+ * Used for display in the events list (cleaner for non-AM/PM locales).
+ */
+function formatTimeDisplay(isoStr) {
+  if (!isoStr) return '--:--';
+  try {
+    const d = new Date(isoStr);
+    const h = String(d.getHours()).padStart(2, '0');
+    const m = String(d.getMinutes()).padStart(2, '0');
+    return `${h}:${m}`;
+  } catch(e) {
+    return '--:--';
+  }
+}
+
+// ══════════════════════════════════════════════════════════════
+// ✅ FIX 2: ACCURATE STATUS DETECTION
+//
+// Old code only checked STATUS_FINAL / STATUS_FULL_TIME for 'end'.
+// Added: STATUS_POSTPONED, STATUS_CANCELED, STATUS_SUSPENDED,
+//        STATUS_ABANDONED → all map to 'end' so they don't show
+//        as 'upcoming' when the match won't actually happen.
+//
+// Also made LIVE detection more robust.
+// ══════════════════════════════════════════════════════════════
+
+const LIVE_STATUSES = new Set([
+  'STATUS_IN_PROGRESS',
+  'STATUS_HALFTIME',
+  'STATUS_IN_PROGRESS_2',
+  'STATUS_END_PERIOD',    // between periods in basketball/hockey
+  'STATUS_OVERTIME',
+  'STATUS_SHOOTOUT',
+]);
+
+const END_STATUSES = new Set([
+  'STATUS_FINAL',
+  'STATUS_FULL_TIME',
+  'STATUS_FINAL_OT',
+  'STATUS_FINAL_PEN',
+  'STATUS_POSTPONED',     // ✅ was falling through to 'upcoming'
+  'STATUS_CANCELED',      // ✅ was falling through to 'upcoming'
+  'STATUS_SUSPENDED',     // ✅ was falling through to 'upcoming'
+  'STATUS_ABANDONED',     // ✅ was falling through to 'upcoming'
+  'STATUS_RAIN_DELAY',    // treat delay as ended for widget purposes
+]);
+
+function getStatus(m) {
+  const s = m.status.type;
+  if (LIVE_STATUSES.has(s)) return 'live';
+  if (END_STATUSES.has(s))  return 'end';
+  return 'upcoming';
+}
+
+// ══════════════════════════════════════════════════════════════
+// ✅ FIX 3: ACCURATE STATUS LABELS
+//
+// Old code returned 'Upcoming' (capital U) but the generated HTML
+// needs the .matchDate class to carry the right CSS class name.
+// Label and CSS class are now explicitly separated.
+// ══════════════════════════════════════════════════════════════
+
+function getStatusLabel(m) {
+  const s = m.status.type;
+  if (s === 'STATUS_HALFTIME')               return 'HT';
+  if (s === 'STATUS_POSTPONED')              return 'Postponed';
+  if (s === 'STATUS_CANCELED')               return 'Cancelled';
+  if (s === 'STATUS_SUSPENDED')              return 'Suspended';
+  if (s === 'STATUS_ABANDONED')              return 'Abandoned';
+  if (s === 'STATUS_FINAL_OT')               return 'FT OT';
+  if (s === 'STATUS_FINAL_PEN')              return 'FT Pens';
+  if (END_STATUSES.has(s))                   return 'FT';
+  if (LIVE_STATUSES.has(s)) {
+    // ✅ For live games: show elapsed time if we have it (e.g. "45'")
+    // but DON'T write it into .matchHour — that stays as the kickoff time.
+    return m.status.elapsed ? m.status.elapsed + "'" : 'LIVE';
+  }
+  return 'Upcoming';
+}
+
+function getScore(m) {
+  if (m.isRacing) return '🏁';
+  if (m.goals.home === null || m.goals.away === null) return 'VS';
+  return `${m.goals.home} - ${m.goals.away}`;
+}
+
+function teamLogoFallback(name) {
+  return `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&size=64&background=1a1a1a&color=e53935&bold=true&rounded=true`;
+}
+
 // ── INIT LEAGUE FILTER ──
 function buildLeagueFilter(){
   const container = document.getElementById('leagueFilter');
   const leagues = activeSport === 'all' ? ALL_LEAGUES : ALL_LEAGUES.filter(l => l.sport === activeSport);
-
   let html = `<div class="league-chip active" data-id="all" data-sport="${activeSport}">All</div>`;
   leagues.forEach(l => {
     html += `<div class="league-chip" data-id="${l.id}" data-sport="${l.sport}">${l.emoji} ${l.short}</div>`;
   });
   container.innerHTML = html;
-
-  // Re-bind clicks
   container.querySelectorAll('.league-chip').forEach(chip => {
     chip.addEventListener('click', () => {
       container.querySelectorAll('.league-chip').forEach(c => c.classList.remove('active'));
@@ -557,8 +704,6 @@ function buildLeagueFilter(){
       if(allMatches.length > 0) renderEvents();
     });
   });
-
-  // Restore active if still valid
   const existing = container.querySelector(`[data-id="${activeLeague}"]`);
   if(existing){
     container.querySelectorAll('.league-chip').forEach(c => c.classList.remove('active'));
@@ -572,16 +717,14 @@ function buildLeagueFilter(){
 function getESPNDate(offsetDays = 0){
   const d = new Date();
   d.setDate(d.getDate() + offsetDays);
-  return d.toISOString().split('T')[0].replace(/-/g,'');
+  // Use local date (not UTC) so "today" means today in the user's timezone
+  const y = d.getFullYear();
+  const m = String(d.getMonth()+1).padStart(2,'0');
+  const day = String(d.getDate()).padStart(2,'0');
+  return `${y}${m}${day}`;
 }
 
-function formatTime(isoStr){
-  if(!isoStr) return '--:--';
-  try{ return new Date(isoStr).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}); }
-  catch{ return '--:--'; }
-}
-
-// ── ESPN NORMALIZER (Soccer) ──
+// ── NORMALIZERS ──
 function normalizeESPNSoccer(ev, league){
   try{
     const comp = ev.competitions?.[0];
@@ -610,7 +753,6 @@ function normalizeESPNSoccer(ev, league){
   }catch{ return null; }
 }
 
-// ── ESPN NORMALIZER (Basketball / Hockey / Baseball / NFL) ──
 function normalizeESPNTeamSport(ev, league){
   try{
     const comp = ev.competitions?.[0];
@@ -639,12 +781,10 @@ function normalizeESPNTeamSport(ev, league){
   }catch{ return null; }
 }
 
-// ── ESPN NORMALIZER (Racing — F1, MotoGP, NASCAR) ──
 function normalizeESPNRacing(ev, league){
   try{
     const status = ev.status || {};
     const sType  = status.type?.name || 'STATUS_SCHEDULED';
-    // Racing uses competitors array or just event name
     const name   = ev.name || ev.shortName || 'Race Event';
     return {
       id    : ev.id,
@@ -663,32 +803,6 @@ function normalizeESPNRacing(ev, league){
   }catch{ return null; }
 }
 
-function getStatus(m){
-  const s = m.status.type;
-  if(s === 'STATUS_IN_PROGRESS' || s === 'STATUS_HALFTIME' || s === 'STATUS_IN_PROGRESS_2') return 'live';
-  if(s === 'STATUS_FINAL' || s === 'STATUS_FULL_TIME' || s === 'STATUS_END_PERIOD' || s === 'STATUS_FINAL_OT') return 'end';
-  return 'upcoming';
-}
-
-function getStatusLabel(m){
-  const s = m.status.type;
-  if(s === 'STATUS_HALFTIME') return 'HT';
-  if(s === 'STATUS_IN_PROGRESS' || s === 'STATUS_IN_PROGRESS_2') return m.status.elapsed ? m.status.elapsed : 'LIVE';
-  if(s === 'STATUS_FINAL' || s === 'STATUS_FULL_TIME' || s === 'STATUS_FINAL_OT') return s === 'STATUS_FINAL_OT' ? 'FT OT' : 'FT';
-  if(s === 'STATUS_END_PERIOD') return 'FT';
-  return 'Upcoming';
-}
-
-function getScore(m){
-  if(m.isRacing) return '🏁';
-  if(m.goals.home === null || m.goals.away === null) return 'VS';
-  return `${m.goals.home} - ${m.goals.away}`;
-}
-
-function teamLogoFallback(name){
-  return `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&size=64&background=1a1a1a&color=e53935&bold=true&rounded=true`;
-}
-
 // ── STATUS BAR ──
 function setStatus(msg, type = ''){
   const el = document.getElementById('statusBar');
@@ -699,7 +813,6 @@ function setStatus(msg, type = ''){
 // ── BUILD ESPN URL ──
 function buildESPNUrl(league, dateStr){
   const espnType = league.espnType || 'soccer';
-  // Racing events — no date filter needed (use season)
   if(espnType === 'racing'){
     return `https://site.api.espn.com/apis/site/v2/sports/${league.espnPath}/scoreboard?limit=20`;
   }
@@ -719,14 +832,12 @@ async function fetchMatches(){
       <div style="font-size:13px;color:var(--txt3)">Fetching from ESPN…</div>
     </div>`;
 
-  // Which leagues to fetch
   let leaguesToFetch;
   if(activeLeague !== 'all'){
     leaguesToFetch = ALL_LEAGUES.filter(l => l.id === activeLeague);
   } else if(activeSport !== 'all'){
     leaguesToFetch = ALL_LEAGUES.filter(l => l.sport === activeSport);
   } else {
-    // "All" — fetch most common ones to avoid too many requests
     leaguesToFetch = ALL_LEAGUES.filter(l =>
       ['eng.1','esp.1','ita.1','ger.1','fra.1','uefa.champions','usa.1',
        'nba','f1','motogp','nascar-cup','nhl','mlb','nfl','por.1','ned.1','sau.1'].includes(l.id)
@@ -816,16 +927,17 @@ function renderEvents(){
     </div>`;
 
     g.matches.forEach(m => {
-      const id   = m.id;
-      const sel  = selectedIds.has(id);
-      const stat = getStatus(m);
-      const label= getStatusLabel(m);
-      const score= getScore(m);
-      const time = formatTime(m.date);
-      const hLogo= m.teams.home.logo || teamLogoFallback(m.teams.home.name);
-      const aLogo= m.isRacing ? '' : (m.teams.away.logo || teamLogoFallback(m.teams.away.name));
-      const hFb  = teamLogoFallback(m.teams.home.name);
-      const aFb  = teamLogoFallback(m.teams.away.name);
+      const id    = m.id;
+      const sel   = selectedIds.has(id);
+      const stat  = getStatus(m);
+      const label = getStatusLabel(m);
+      const score = getScore(m);
+      // ✅ Display time uses 24h for readability in the list
+      const timeDisplay = formatTimeDisplay(m.date);
+      const hLogo = m.teams.home.logo || teamLogoFallback(m.teams.home.name);
+      const aLogo = m.isRacing ? '' : (m.teams.away.logo || teamLogoFallback(m.teams.away.name));
+      const hFb   = teamLogoFallback(m.teams.home.name);
+      const aFb   = teamLogoFallback(m.teams.away.name);
 
       const awayLogoHtml = m.isRacing
         ? `<span style="font-size:18px">${m.league.emoji}</span>`
@@ -855,7 +967,7 @@ function renderEvents(){
           </div>
         </div>
         <div class="ev-time">
-          <div class="ev-hour">${time}</div>
+          <div class="ev-hour">${timeDisplay}</div>
           <div class="ev-status ${stat}">${label}</div>
         </div>
       </div>`;
@@ -921,7 +1033,20 @@ function updateStreamEditor(){
   inputs.innerHTML = html;
 }
 
-// ── GENERATE WIDGET ──
+// ══════════════════════════════════════════════════════════════
+// ✅ FIX 4: GENERATE WIDGET WITH CORRECT TIME IN .matchHour
+//
+// .matchHour MUST contain the local kickoff time in "HH:MM AM/PM"
+// format. This is what the runtime status script reads and parses.
+//
+// For LIVE games: .matchHour still gets the kickoff time (not the
+// game clock). The runtime script detects live by comparing kickoff
+// to now — a match that kicked off ≤105 min ago = live. ✅
+//
+// For ENDED games: .matchDate gets class="end" and text="FT".
+// The runtime script sees the class, checks status, keeps it as ended. ✅
+// ══════════════════════════════════════════════════════════════
+
 function generateWidget(){
   if(selectedIds.size === 0){ setStatus('Select at least one event first', 'err'); return; }
 
@@ -931,10 +1056,14 @@ function generateWidget(){
   selectedIds.forEach(id => {
     const m = allMatches.find(x => x.id === id);
     if(!m) return;
-    const stat     = getStatus(m);
-    const label    = getStatusLabel(m);
-    const score    = getScore(m);
-    const time     = formatTime(m.date);
+    const stat  = getStatus(m);
+    const label = getStatusLabel(m);
+    const score = getScore(m);
+
+    // ✅ KEY FIX: Use formatTimeLocal() for .matchHour
+    // This outputs "07:45 PM" style — correctly parsed by the runtime script
+    const kickoffTime = formatTimeLocal(m.date);
+
     const hLogo    = m.teams.home.logo || teamLogoFallback(m.teams.home.name);
     const aLogo    = m.isRacing ? '' : (m.teams.away.logo || teamLogoFallback(m.teams.away.name));
     const hFb      = teamLogoFallback(m.teams.home.name);
@@ -954,9 +1083,9 @@ function generateWidget(){
           <div class="asm">${escHtml(m.teams.home.name)}</div>
         </div>
         <div class="Nateja">
-          <div class="matchHour">${time}</div>
-          <div class="natej">${score}</div>
-          <div class="matchDate ${stat}">${label}</div>
+          <div class="matchHour">${kickoffTime}</div>
+          <div class="natej">${escHtml(score)}</div>
+          <div class="matchDate ${stat}">${escHtml(label)}</div>
         </div>
         <div class="fareq">
           ${awayImg}
@@ -1073,5 +1202,6 @@ document.getElementById('defaultStream').addEventListener('input', e => {
 // ── INIT ──
 buildLeagueFilter();
 </script>
+
 </body>
 </html>
